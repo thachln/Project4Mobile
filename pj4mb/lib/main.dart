@@ -1,10 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:pj4mb/screens/Account/Debt.dart';
-import 'package:pj4mb/screens/Account/Group.dart';
 import 'package:pj4mb/screens/Home.dart';
-import 'package:pj4mb/screens/Introduce.dart';
-import 'package:pj4mb/screens/Account/MyWallet.dart';
-import 'package:pj4mb/screens/Overview.dart';
+
 
 void main() {
   runApp(const MyApp());

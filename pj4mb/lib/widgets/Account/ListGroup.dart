@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class ListGroup extends StatelessWidget {
-  const ListGroup({super.key});
+  const ListGroup({super.key, required void Function(dynamic value) onSave});
 
   @override
   Widget build(BuildContext context) {

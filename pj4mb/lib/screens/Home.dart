@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:pj4mb/screens/AddTransaction.dart';
 import 'package:pj4mb/screens/Overview.dart';
 import 'package:pj4mb/screens/TransactionsScreen.dart';
+import 'package:pj4mb/screens/BudgetPage.dart';
+import 'package:pj4mb/screens/page/AccountsPage.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -15,12 +17,12 @@ class _HomePageState extends State<HomePage> {
 
   // Screens for each tab
   final List<Widget> _children = [
-    Overview(), // Tổng quan
-    TransactionsScreen(), // Số giao dịch
-    Container(), // Placeholder for Button Thêm
-    BudgetScreen(), // Ngân sách
-    AccountsScreen(), // Tài khoản
-  ];
+  Overview(), // Tổng quan
+  TransactionsScreen(), // Số giao dịch
+  Container(), // Placeholder for Button Thêm
+  BudgetPage(), // Ngân sách
+  AccountsPage(), // Tài khoản
+];
 
   void onTabTapped(int index) {
     setState(() {
@@ -81,17 +83,9 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
-
-class BudgetScreen extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Center(child: Text("Ngân sách Screen"));
-  }
-}
-
-class AccountsScreen extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Center(child: Text("Tài khoản Screen"));
-  }
-}
+// class AccountsScreen extends StatelessWidget {
+//   @override
+//   Widget build(BuildContext context) {
+//     return Center(child: Text("Tài khoản Screen"));
+//   }
+// }
