@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:pj4mb/screens/Login.dart';
-import 'package:pj4mb/screens/SignIn.dart';
+import 'package:pj4mb/screens/SignUp.dart';
 
 class IntroducePage extends StatefulWidget {
   const IntroducePage({super.key});
@@ -71,7 +71,7 @@ class _IntroducePageState extends State<IntroducePage> {
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: () {
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => SignInPage()));
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => SignUpPage()));
                   },
                   style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.all(

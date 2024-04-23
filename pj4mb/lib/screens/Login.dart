@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:pj4mb/screens/Home.dart';
+import 'package:pj4mb/screens/SignUp.dart';
+import 'package:pj4mb/services/Login_service.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -54,12 +56,89 @@ class _LoginPageState extends State<LoginPage> {
           SizedBox(
             width: double.infinity,
             child: ElevatedButton(
-              onPressed: () {
-
-                if(email.text == '123@gmail.com' && password.text == '123')
-                {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => HomePage()));
-                  //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => HomePage()));
+              onPressed: () async {
+                if (email.text == '' || password.text == '') {
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: Text('Thông báo'),
+                        content: Text('Vui lòng nhập đầy đủ thông tin'),
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: Text('OK'),
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                  return;
+                } else {
+                  var user =
+                      await LoginService().login(email.text, password.text);
+                  print(user);
+                  if (user.is_enabled == true) {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => HomePage()));
+                  } else if (user.statusCode == '401') {
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: Text('Thông báo'),
+                          content: Text(user.message),
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                              child: Text('OK'),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  } else if (!user.is_enabled) {
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: Text('Thông báo'),
+                          content: Text('Tài khoản của bạn chưa xác thực'),
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                              child: Text('OK'),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  } else {
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: Text('Thông báo'),
+                          content: Text(
+                              'Error: ${user.statusCode} - ${user.message}'),
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                              child: Text('OK'),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  }
                 }
               },
               style: ButtonStyle(
@@ -70,19 +149,20 @@ class _LoginPageState extends State<LoginPage> {
             ),
           ),
           Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  InkWell(
-                    onTap: () {},
-                    child: Text('Đăng ký'),
-                  ),
-                  InkWell(
-                    onTap: () {},
-                    child: Text('Quên mật khẩu'),
-                  )
-                ],
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              InkWell(
+                onTap: () {
+                   Navigator.push(context, MaterialPageRoute(builder: (context) => SignUpPage()));
+                },
+                child: Text('Đăng ký'),
               ),
-          
+              InkWell(
+                onTap: () {},
+                child: Text('Quên mật khẩu'),
+              )
+            ],
+          ),
         ]),
       ),
     );

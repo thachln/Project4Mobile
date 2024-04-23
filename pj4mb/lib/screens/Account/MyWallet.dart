@@ -1,5 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:pj4mb/models/Wallet/Wallet.dart';
+import 'package:pj4mb/services/Wallet_service.dart';
+import 'package:pj4mb/widgets/Account/ListWallet.dart';
 
 class MyWalletPage extends StatefulWidget {
   const MyWalletPage({super.key});
@@ -10,6 +13,13 @@ class MyWalletPage extends StatefulWidget {
 
 class _MyWalletPageState extends State<MyWalletPage> {
   String? selectedWallet; // Thông tin ví đã chọn
+  late Future<List<Wallet>> walletList;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    walletList = WalletService().GetWallet("1");
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -19,49 +29,42 @@ class _MyWalletPageState extends State<MyWalletPage> {
       ),
       body: Column(
         children: [
-          SizedBox(
-            height: 40,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'Tính vào tổng',
-                  textAlign: TextAlign.left,
-                )
-              ],
-            ),
-          ),
+          // SizedBox(
+          //   height: 40,
+          //   child: Row(
+          //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          //     children: [
+          //       Text(
+          //         'Tính vào tổng',
+          //         textAlign: TextAlign.left,
+          //       )
+          //     ],
+          //   ),
+          // ),
           Container(
-            color: Colors.blueGrey[200],
-            child: ListView.builder(
-                itemCount: 1,
-                shrinkWrap: true,
-                itemBuilder: (context, index) {
-                  return ListTile(
-                    leading: Text('Avatar'),
-                    title: Text('1'),
-                    subtitle: Text('ID:'),
-                    trailing: Icon(Icons.arrow_forward_ios), // Mũi tên
-                    onTap: () {
-                      setState(() {
-                        selectedWallet = '1'; //Lưu giá trị ví chọn
-                      });
-                      Navigator.pop(context, selectedWallet);
-                    },
-                  );
-                }),
-          ),
-          selectedWallet != null
-              ? Text("Ví hiện tại của bạn: $selectedWallet")
-              : Container(), // Hiển thị ví đã chọn
-          ElevatedButton(
-            child: Text("SAVE"),
-            onPressed: () {
-              Navigator.pop(context, selectedWallet);
-            },
+            child: FutureBuilder<List<Wallet>>(
+              future: walletList,
+              builder:
+                  (BuildContext context, AsyncSnapshot<List<Wallet>> snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(child: CircularProgressIndicator());
+                } else if (snapshot.hasError) {
+                  return Center(child: Text('Error: ${snapshot.error}'));
+                } else {
+                  return ListWallet(listWallet: snapshot.data!);
+                }
+              },
+            ),
           ),
         ],
       ),
+      floatingActionButton: FloatingActionButton(
+          child: Icon(Icons.add, color: Colors.white),
+          onPressed: () {},
+          backgroundColor: Colors.pink[200],
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20.0),
+          )),
     );
   }
 }

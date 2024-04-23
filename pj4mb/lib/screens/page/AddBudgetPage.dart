@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pj4mb/screens/Account/MyWallet.dart';
 
-import '../Account/Group.dart';
+import '../Account/Category.dart';
 
 class AddBudgetPage extends StatefulWidget {
   @override
@@ -44,7 +44,7 @@ class _AddBudgetPageState extends State<AddBudgetPage> {
             onTap: () async {
               final result = await Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => GroupPage()),
+                MaterialPageRoute(builder: (context) => CategoryPage()),
               );
 
               if (result != null) {

@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:pj4mb/screens/Account/Category.dart';
+import 'package:pj4mb/screens/Account/MyWallet.dart';
+
 
 class AccountsPage extends StatefulWidget {
   const AccountsPage({Key? key}) : super(key: key);
@@ -19,7 +22,7 @@ class _AccountsPageState extends State<AccountsPage> {
               child: ListTile(
                 title: Center(
                   child: CircleAvatar(
-                    backgroundImage: AssetImage("assets/images/img/onedrive_logo.png"),
+                    backgroundImage: AssetImage("assets/images/welcome_screen.png"),
                     radius: 30,
                   ),
                 ),
@@ -55,14 +58,18 @@ class _AccountsPageState extends State<AccountsPage> {
               leading: Icon(Icons.account_balance_wallet),
               title: Text("My Wallet"),
               trailing: Icon(Icons.arrow_forward_ios),
-              onTap: () {},
+              onTap: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => MyWalletPage()));             
+              },
             ),
 
             ListTile(
               leading: Icon(Icons.group),
               title: Text("Group"),
               trailing: Icon(Icons.arrow_forward_ios),
-              onTap: () {},
+              onTap: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => CategoryPage()));        
+              },
             ),
             
             // Your other ListTiles go here
