@@ -18,10 +18,16 @@ class EndPoint{
 
   //Wallet
   static const String GetWallet = '$baseUrl/wallets/users/{userId}';
+  static const String GetWalletType = '$baseUrl/wallet_types';
+  static const String InsertWallet = '$baseUrl/wallets/create';
+  static const String GetWalletTypeWithID = '$baseUrl/wallet_types/{typeID}';
   //
 
   //Category
   static const String GetCategory = '$baseUrl/categories/user/{userId}';
+  static const String InsertCategory = '$baseUrl/categories/create';
+  static const String UpdateCategory = '$baseUrl/categories/update';
+  static const String GetIcon = '$baseUrl/categories/icons';
   //
 
 }
