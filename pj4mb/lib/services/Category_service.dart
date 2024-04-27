@@ -64,6 +64,19 @@ class CategoryService {
       return false;
     }
   }
+
+  Future<bool> DeleteCategory(int categoryID) async {
+    final response = await http
+        .delete(Uri.parse(EndPoint.DeleteCategory.replaceAll("{categoryID}", categoryID.toString())),headers: {
+          'Content-Type': 'application/json',
+        });
+    if (response.statusCode == 200) {
+      return true;
+    }    
+    else{
+      return false;
+    }
+  }
   Future<List<Cat_Icon>> GetIcon() async {
 
     final response = await http

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:pj4mb/screens/Account/Category.dart';
 import 'package:pj4mb/screens/Account/MyWallet.dart';
+import 'package:pj4mb/screens/Login.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 
 class AccountsPage extends StatefulWidget {
@@ -69,6 +71,37 @@ class _AccountsPageState extends State<AccountsPage> {
               trailing: Icon(Icons.arrow_forward_ios),
               onTap: () {
                 Navigator.push(context, MaterialPageRoute(builder: (context) => CategoryPage()));        
+              },
+            ),
+             ListTile(
+              leading: Icon(Icons.logout),
+              title: Text("Log out"),
+              onTap: () {
+                showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: Text('Warning'),
+                        content: Text('You really want to log out?'),
+                        actions: [
+                          TextButton(
+                            onPressed: () async {
+                              SharedPreferences prefs = await SharedPreferences.getInstance();
+                              prefs.setString('userid','');
+                              Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => LoginPage()), (route) => false);
+                            },
+                            child: Text('OK'),
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: Text('Cancle'),
+                          ),
+                        ],
+                      );
+                    },
+                  );        
               },
             ),
             

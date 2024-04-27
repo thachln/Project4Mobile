@@ -62,9 +62,33 @@ class WalletService {
       return false;
     }
   }
+  Future<bool> UpdateWallet(Wallet wallet) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var userid = prefs.getString('userid');
+    wallet.userId = int.parse(userid!);
+    print(wallet.toJson());
+    final response = await http.put(Uri.parse(EndPoint.UpdateWallet.replaceAll("{walletID}", wallet.walletID.toString())),body: jsonEncode(wallet.toJson()),headers: {
+      'Content-Type': 'application/json',
+    });
+    if (response.statusCode == 200) {     
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  Future<bool> DeleteWallet(int walletID) async {
+    final response = await http.delete(Uri.parse(EndPoint.DeleteWallet.replaceAll("{walletID}", walletID.toString())),headers: {
+      'Content-Type': 'application/json',
+    });
+    if (response.statusCode == 200) {     
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   Future<WalletType> GetWalletTypeWithID(int id) async  {
-    SharedPreferences prefs = await SharedPreferences.getInstance() ;
-    
     final response = await http.get(Uri.parse(EndPoint.GetWalletTypeWithID.replaceAll("{typeID}", id.toString())));
     if (response.statusCode == 200) {
       final Map<String, dynamic> parsed = jsonDecode(response.body);

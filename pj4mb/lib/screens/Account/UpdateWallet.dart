@@ -10,7 +10,13 @@ import 'package:pj4mb/services/Category_service.dart';
 import 'package:pj4mb/services/Wallet_service.dart';
 
 class UpdateWalletPage extends StatefulWidget {
-  const UpdateWalletPage({super.key, required this.walletName, required this.balance, required this.walletTypeIDParam, required this.currency, required this.walletID});
+  const UpdateWalletPage(
+      {super.key,
+      required this.walletName,
+      required this.balance,
+      required this.walletTypeIDParam,
+      required this.currency,
+      required this.walletID});
   final int walletID;
   final String walletName;
   final double balance;
@@ -27,7 +33,6 @@ class _UpdateWalletPageState extends State<UpdateWalletPage> {
   late TextEditingController walletTypeId;
   late TextEditingController currency;
   late Future<List<WalletType>> listWalletType;
-  late Future<WalletType> WalletTypeFirst;
   String dropdownValue = 'VND';
   WalletType? selectedWalletType;
 
@@ -67,30 +72,21 @@ class _UpdateWalletPageState extends State<UpdateWalletPage> {
   }
 
   void loadWalletTypeFirst() async {
-  listWalletType =  WalletService().GetWalletType();
-  print(widget.walletTypeIDParam);
-  WalletTypeFirst = WalletService().GetWalletTypeWithID(widget.walletTypeIDParam); // Future<WalletType>
-  WalletTypeFirst.then((walletTypeResult) {
-    // Cập nhật giá trị được chọn trên giao diện người dùng sau khi được tải từ API
-    setState(() {
-      selectedWalletType = walletTypeResult;
-      print(selectedWalletType!.toJson());
-    });
-  });
+    listWalletType = WalletService().GetWalletType();   
   }
-  
+
   @override
   Widget build(BuildContext context) {
     walletName.text = widget.walletName;
     balance.text = widget.balance.toString();
-    
+
     currency.text = widget.currency;
 
     return Scaffold(
       //backgroundColor: Colors.black87,
       appBar: AppBar(
           title: Text(
-        "Add new wallet",
+        "Update wallet",
       )),
       body: Container(
         margin: EdgeInsets.only(top: 20),
@@ -183,11 +179,14 @@ class _UpdateWalletPageState extends State<UpdateWalletPage> {
                       } else if (snapshot.hasError) {
                         return Center(child: Text('Error: ${snapshot.error}'));
                       } else {
+                        selectedWalletType = snapshot.data!.firstWhere((element) => element.TypeID == widget.walletTypeIDParam);
+                        walletType.text = selectedWalletType!.TypeName;
+                        walletTypeId.text = selectedWalletType!.TypeID.toString();
                         return DropdownButtonFormField<WalletType>(
                           decoration: InputDecoration(
                             hintText: 'Wallet Type',
                           ),
-                          value: null,
+                          value: selectedWalletType,
                           onChanged: (WalletType? value) {
                             setState(() {
                               walletType.text = value!.TypeName;
@@ -210,7 +209,7 @@ class _UpdateWalletPageState extends State<UpdateWalletPage> {
             ElevatedButton(
               onPressed: () async {
                 Wallet wallet = Wallet(
-                  walletID: 0,
+                  walletID: widget.walletID,
                   walletName: walletName.text,
                   balance: double.parse(balance.text),
                   walletTypeID: int.parse(walletTypeId.text),
@@ -219,14 +218,14 @@ class _UpdateWalletPageState extends State<UpdateWalletPage> {
                   bankName: '',
                   bankAccountNum: '',
                 );
-                var result = await WalletService().InsertWallet(wallet);
+                var result = await WalletService().UpdateWallet(wallet);
                 if (result) {
                   showDialog(
                     context: context,
                     builder: (BuildContext context) {
                       return AlertDialog(
                         title: Text('Thông báo'),
-                        content: Text('Insert success!'),
+                        content: Text('Update success!'),
                         actions: [
                           TextButton(
                             onPressed: () {
@@ -245,7 +244,7 @@ class _UpdateWalletPageState extends State<UpdateWalletPage> {
                     builder: (BuildContext context) {
                       return AlertDialog(
                         title: Text('Thông báo'),
-                        content: Text('Error: Insert fail!'),
+                        content: Text('Error: Update fail!'),
                         actions: [
                           TextButton(
                             onPressed: () {
@@ -259,7 +258,7 @@ class _UpdateWalletPageState extends State<UpdateWalletPage> {
                   );
                 }
               },
-              child: Text('Save'),
+              child: Text('Update Wallet'),
             )
           ],
         ),
