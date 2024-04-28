@@ -75,7 +75,6 @@ class _LoginPageState extends State<LoginPage> {
                       );
                     },
                   );
-                  return;
                 } else {
                   var user =
                       await LoginService().login(email.text, password.text);

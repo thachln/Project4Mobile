@@ -2,9 +2,14 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:pj4mb/models/Expense/Expense.dart';
+import 'package:pj4mb/models/Wallet/Wallet.dart';
 import 'package:pj4mb/screens/Account/Debt.dart';
 import 'package:pj4mb/screens/Account/MyWallet.dart';
 import 'package:pj4mb/screens/TransactionsScreen.dart';
+import 'package:pj4mb/services/Wallet_service.dart';
+import 'package:pj4mb/widgets/Account/ListWallet.dart';
+import 'package:pj4mb/widgets/Account/ListWalletOverview.dart';
 import 'package:pj4mb/widgets/Overview/ListOverview.dart';
 
 class Overview extends StatefulWidget {
@@ -17,11 +22,12 @@ class Overview extends StatefulWidget {
 class _OverviewState extends State<Overview> with TickerProviderStateMixin {
   TabController? _tabController;
   bool _isObscure = true;
+  late Future<List<Wallet>> walletList;
   @override
   void initState() {
     super.initState();
-
     _tabController = TabController(length: 2, vsync: this);
+    walletList = WalletService().GetWallet();
   }
 
   @override
@@ -93,15 +99,31 @@ class _OverviewState extends State<Overview> with TickerProviderStateMixin {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Row(
-                          children: [
-                            Icon(Icons.wallet_travel, size: 30.0),
-                            SizedBox(width: 8.0),
-                            Text('Tiền mặt'),
-                          ],
+                        Expanded(
+                          child: FutureBuilder<List<Wallet>>(
+                            future: walletList,
+                            builder: (BuildContext context,
+                                AsyncSnapshot<List<Wallet>> snapshot) {
+                              if (snapshot.connectionState ==
+                                  ConnectionState.waiting) {
+                                return Center(
+                                    child: CircularProgressIndicator());
+                              } else if (snapshot.hasError) {
+                                return Center(
+                                    child: Text('Error: ${snapshot.error}'));
+                              } else {
+                                return ListWalletOverview(
+                                    listWallet: snapshot.data!,
+                                    onSave: (value) {
+                                      setState(() {
+                                        walletList =
+                                            WalletService().GetWallet();
+                                      });
+                                    });
+                              }
+                            },
+                          ),
                         ),
-                        Text('20,000,000đ',
-                            style: TextStyle(fontWeight: FontWeight.bold)),
                       ],
                     )
                   ],

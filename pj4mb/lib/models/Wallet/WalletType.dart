@@ -1,5 +1,5 @@
 class WalletType{
-  final String TypeID;
+  final int TypeID;
   final String TypeName;
 
   WalletType({required this.TypeID,required this.TypeName});
@@ -7,14 +7,14 @@ class WalletType{
 
   factory WalletType.fromJson(Map<String, dynamic> json) {
     return WalletType(
-      TypeID: json['TypeID'],
-      TypeName: json['TypeName'],
+      TypeID: json['typeId'],
+      TypeName: json['typeName'],
     );
   }
 
   Map<String, dynamic> toJson() => {
-    'TypeID': TypeID,
-    'TypeName': TypeName,
+    'typeId': TypeID,
+    'typeName': TypeName,
   };
 
 }

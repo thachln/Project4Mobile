@@ -3,11 +3,11 @@ import 'package:pj4mb/models/Category/CateTypeENum.dart';
 import 'package:pj4mb/models/User/User.dart';
 
 class Category{
-  final int categoryID;
-  final String name;
-  final CateTypeENum CategoryType;
-  final Cat_Icon icon;
-  final int user;
+  late final int categoryID;
+  late final String name;
+  late final CateTypeENum CategoryType;
+  late final Cat_Icon icon;
+  late final int user;
   
 
   Category({required this.categoryID,required this.name,required this.CategoryType,required this.icon,required this.user});
@@ -27,7 +27,7 @@ class Category{
   Map<String, dynamic> toJson() => {
     'id': categoryID,
     'name': name,
-    'CategoryType': CategoryType.toString().split('.').last,
+    'type': CategoryType.toString().split('.').last,
     'icon': icon.toJson(),
     'userId': user,
   };

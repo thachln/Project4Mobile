@@ -20,7 +20,7 @@ class _CategoryPageState extends State<CategoryPage>
   void initState() {
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
-    cateList = CategoryService().GetCategory('1');
+    cateList = CategoryService().GetCategory();
   }
 
   @override
@@ -72,7 +72,9 @@ class _CategoryPageState extends State<CategoryPage>
                         } else {
                           return ListCategory(
                             onSave: (value) {
-                              print('Saved: $value');
+                              setState(() {
+                                cateList = CategoryService().GetCategory();
+                              });
                             },
                             listCategory: snapshot.data!.where((element) => element.CategoryType == CateTypeENum.EXPENSE).toList(),categoryType: 'Expense',
                           );
@@ -92,7 +94,9 @@ class _CategoryPageState extends State<CategoryPage>
                         } else {
                           return ListCategory(
                             onSave: (value) {
-                              print('Saved: $value');
+                               setState(() {
+                                cateList = CategoryService().GetCategory();
+                              });
                             },
                             listCategory: snapshot.data!.where((element) => element.CategoryType == CateTypeENum.INCOME).toList(),categoryType: 'Income',
                           );
@@ -112,7 +116,9 @@ class _CategoryPageState extends State<CategoryPage>
                         } else {
                           return ListCategory(
                             onSave: (value) {                            
-                              print('Saved: $value');
+                               setState(() {
+                                cateList = CategoryService().GetCategory();
+                              });
                             },
                             listCategory: snapshot.data!.where((element) => element.CategoryType == CateTypeENum.DEBT).toList(), categoryType: 'Debt',
                           );

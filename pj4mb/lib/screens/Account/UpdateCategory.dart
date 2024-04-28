@@ -6,18 +6,20 @@ import 'package:pj4mb/models/Category/Category.dart';
 import 'package:pj4mb/screens/Account/Category.dart';
 import 'package:pj4mb/services/Category_service.dart';
 
-class AddCategoryPage extends StatefulWidget {
-  const AddCategoryPage({super.key, required this.categoryType});
+class UpdateCategoryPage extends StatefulWidget {
+  const UpdateCategoryPage({super.key, required this.categoryType, required this.categoryName, required this.categoryIcon, required this.categoryID});
   final String categoryType;
+  final String categoryName;
+  final String categoryIcon;
+  final int categoryID;
   @override
-  State<AddCategoryPage> createState() => _AddCategoryPageState();
+  State<UpdateCategoryPage> createState() => _UpdateCategoryPageState();
 }
 
-class _AddCategoryPageState extends State<AddCategoryPage> {
+class _UpdateCategoryPageState extends State<UpdateCategoryPage> {
   late TextEditingController categoryName;
   late TextEditingController categoryIcon;
   late TextEditingController categoryTypeValue;
-
   List<String> icons = [
     'assets/icon/anotherbill.png',
     'assets/icon/beauty.png',
@@ -52,11 +54,14 @@ class _AddCategoryPageState extends State<AddCategoryPage> {
 
   @override
   Widget build(BuildContext context) {
+    categoryName.text = widget.categoryName;
+    categoryTypeValue.text = widget.categoryType;
+    categoryIcon.text = widget.categoryIcon;
     return Scaffold(
       //backgroundColor: Colors.black87,
       appBar: AppBar(
           title: Text(
-        "Add new category",
+        "Edit category",
       )),
       body: Container(
         margin: EdgeInsets.only(top: 20),
@@ -161,9 +166,9 @@ class _AddCategoryPageState extends State<AddCategoryPage> {
                         : CateTypeENum.DEBT;
                 var listIcons = await CategoryService().GetIcon();
                 var element = listIcons.firstWhere((element) => element.path == categoryIcon.text.replaceAll('assets/icon/',''));
-                print(element.toJson());
+
                 Category category = new Category(
-                    categoryID: 0,
+                    categoryID: widget.categoryID,
                     name: categoryName.text.toString(),
                     CategoryType: typeCategory,
                     icon: element,
@@ -175,7 +180,7 @@ class _AddCategoryPageState extends State<AddCategoryPage> {
                     builder: (BuildContext context) {
                       return AlertDialog(
                         title: Text('Thông báo'),
-                        content: Text('Insert success!'),
+                        content: Text('Update success!'),
                         actions: [
                           TextButton(
                             onPressed: () {
@@ -208,7 +213,7 @@ class _AddCategoryPageState extends State<AddCategoryPage> {
                   );
                 }
               },
-              child: Text('Save'),
+              child: Text('Update'),
             )
           ],
         ),

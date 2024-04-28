@@ -3,7 +3,7 @@ import 'package:pj4mb/models/User/User.dart';
 class Wallet{
   final int walletID;
   final String walletName;
-  final int user;
+  late int userId;
   final double balance;
   final String bankName;
   final String bankAccountNum;
@@ -11,14 +11,14 @@ class Wallet{
   final String currency;
 
   //write the constructor
-  Wallet({required this.walletID,required this.walletName,required this.user,required this.balance,required this.bankName,required this.bankAccountNum,required this.walletTypeID,required this.currency});
+  Wallet({required this.walletID,required this.walletName,required this.userId,required this.balance,required this.bankName,required this.bankAccountNum,required this.walletTypeID,required this.currency});
 
   
   factory Wallet.fromJson(Map<String, dynamic> json) {
     return Wallet(
       walletID: json['walletId'],
       walletName: json['walletName'],
-      user: json["userId"],
+      userId: json["userId"],
       balance: json['balance'],
       bankName: json['bankName'],
       bankAccountNum: json['bankAccountNum'],
@@ -30,7 +30,7 @@ class Wallet{
   Map<String, dynamic> toJson() => {
     'walletID': walletID,
     'walletName': walletName,
-    'user': user,
+    'userId': userId,
     'balance': balance,
     'bankName': bankName,
     'bankAccountNum': bankAccountNum,

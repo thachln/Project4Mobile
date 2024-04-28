@@ -1,6 +1,6 @@
 class Cat_Icon{
-  final int id;
-  final String path;
+  late final int id;
+  late final String path;
 
   Cat_Icon({required this.id,required this.path});
 
