@@ -27,6 +27,12 @@ class LoginService {
   }
 
   Future<ResponseApi> SignUp(String email, String password,String username,String confirmPassword) async {
+    print(jsonEncode({
+          'username': username,
+          'email': email,
+          'password': password,
+          'confirmPassword':confirmPassword
+        }));
     final response = await http.post(Uri.parse(EndPoint.SignUp),
         body: jsonEncode({
           'username': username,
