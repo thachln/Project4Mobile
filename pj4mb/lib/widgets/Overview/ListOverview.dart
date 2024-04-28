@@ -15,10 +15,10 @@ class ListWithTime extends StatelessWidget {
             style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
         SizedBox(height: 24.0),
         Container(
-          height: 200, // Đặt chiều cao cho container biểu đồ
+          height: 200, 
           child: BarChart(
             BarChartData(
-                // Thiết lập dữ liệu và các thuộc tính cho biểu đồ cột tại đây
+                
                 ),
           ),
         ),
