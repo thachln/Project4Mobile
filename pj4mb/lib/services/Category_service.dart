@@ -10,8 +10,14 @@ class CategoryService {
   Future<List<Category>> GetCategory() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var userid = prefs.getString('userid');
+    var token = prefs.getString('token');
+    var headersValue = {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer $token',
+    };
+    print(token);
     final response = await http
-        .get(Uri.parse(EndPoint.GetCategory.replaceAll("{userId}", userid!)));
+        .get(Uri.parse(EndPoint.GetCategory.replaceAll("{userId}", userid!)),headers: headersValue);
     //print(response.body);
     if (response.statusCode == 200) {
       final List<dynamic> parsed = jsonDecode(response.body);
@@ -33,12 +39,14 @@ class CategoryService {
   Future<bool> InsertCategory(Category category) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var userid = prefs.getString('userid');
+    var token = prefs.getString('token');
     category.user = int.parse(userid!);
-   
+   var headersValue = {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer $token',
+    };
     final response = await http
-        .post(Uri.parse(EndPoint.InsertCategory), body: jsonEncode(category.toJson()),headers: {
-          'Content-Type': 'application/json',
-        });
+        .post(Uri.parse(EndPoint.InsertCategory), body: jsonEncode(category.toJson()),headers: headersValue);
    
     if (response.statusCode == 201) {
       return true;
@@ -50,12 +58,14 @@ class CategoryService {
   Future<bool> updateCategory(Category category) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var userid = prefs.getString('userid');
+    var token = prefs.getString('token');
     category.user = int.parse(userid!);
-   
+   var headersValue = {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer $token',
+    };
     final response = await http
-        .put(Uri.parse(EndPoint.GetCategory.replaceAll("{userId}", userid)), body: jsonEncode(category.toJson()),headers: {
-          'Content-Type': 'application/json',
-        });
+        .put(Uri.parse(EndPoint.GetCategory.replaceAll("{userId}", userid)), body: jsonEncode(category.toJson()),headers: headersValue);
    
     if (response.statusCode == 201) {
       return true;
@@ -66,10 +76,15 @@ class CategoryService {
   }
 
   Future<bool> DeleteCategory(int categoryID) async {
+     SharedPreferences prefs = await SharedPreferences.getInstance();
+    var userid = prefs.getString('userid');
+    var token = prefs.getString('token');
+     var headersValue = {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer $token',
+    };
     final response = await http
-        .delete(Uri.parse(EndPoint.DeleteCategory.replaceAll("{categoryID}", categoryID.toString())),headers: {
-          'Content-Type': 'application/json',
-        });
+        .delete(Uri.parse(EndPoint.DeleteCategory.replaceAll("{categoryID}", categoryID.toString())),headers: headersValue);
     if (response.statusCode == 200) {
       return true;
     }    
@@ -78,9 +93,15 @@ class CategoryService {
     }
   }
   Future<List<Cat_Icon>> GetIcon() async {
-
+ SharedPreferences prefs = await SharedPreferences.getInstance();
+    var userid = prefs.getString('userid');
+    var token = prefs.getString('token');
+     var headersValue = {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer $token',
+    };
     final response = await http
-        .get(Uri.parse(EndPoint.GetIcon));
+        .get(Uri.parse(EndPoint.GetIcon),headers: headersValue);
     if (response.statusCode == 200) {
       return (jsonDecode(response.body) as List).map((e) => Cat_Icon.fromJson(e)).toList();
     }    

@@ -14,12 +14,15 @@ class LoginService {
           'password': password,
         }),
         headers: {
-          'Content-Type': 'application/json',
+          'Content-Type': 'application/json',      
         });
     if (response.statusCode == 200) {     
       final Map<String, dynamic> parsed = jsonDecode(response.body);
       SharedPreferences prefs = await SharedPreferences.getInstance();
       await prefs.setString('userid', parsed['id'].toString());
+      await prefs.setString('token', parsed['accessToken'].toString());
+      print(parsed);
+      print('Token ne' + prefs.getString('token')!);
       return User.fromJson(parsed);
     } else {
       return new User(id: 0, username: "0", email: "0", password: "0", is_enabled: false, statusCode: response.statusCode.toString(), message: response.body);

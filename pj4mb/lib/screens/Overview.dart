@@ -9,7 +9,7 @@ import 'package:pj4mb/screens/Account/MyWallet.dart';
 import 'package:pj4mb/screens/TransactionsScreen.dart';
 import 'package:pj4mb/services/Wallet_service.dart';
 import 'package:pj4mb/widgets/Account/ListWallet.dart';
-import 'package:pj4mb/widgets/Account/ListWalletOverview.dart';
+import 'package:pj4mb/widgets/Overview/ListWalletOverview.dart';
 import 'package:pj4mb/widgets/Overview/ListOverview.dart';
 
 class Overview extends StatefulWidget {

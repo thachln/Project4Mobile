@@ -10,7 +10,12 @@ class WalletService {
   Future<List<Wallet>> GetWallet() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var userid = prefs.getString('userid');
-    final response = await http.get(Uri.parse(EndPoint.GetWallet.replaceAll("{userId}", userid!)));
+     var token = prefs.getString('token');
+     var headersValue = {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer $token',
+    };
+    final response = await http.get(Uri.parse(EndPoint.GetWallet.replaceAll("{userId}", userid!)),headers: headersValue );
     //print(response.body);
     if (response.statusCode == 200) {
       final List<dynamic> parsed = jsonDecode(response.body);
@@ -30,7 +35,13 @@ class WalletService {
   }
 
   Future<List<WalletType>> GetWalletType() async {
-    final response = await http.get(Uri.parse(EndPoint.GetWalletType));
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var token = prefs.getString('token');
+     var headersValue = {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer $token',
+    };
+    final response = await http.get(Uri.parse(EndPoint.GetWalletType),headers: headersValue);
     if (response.statusCode == 200) {
       final List<dynamic> parsed = jsonDecode(response.body);
       List<WalletType> walletType = [];
@@ -50,11 +61,14 @@ class WalletService {
   Future<bool> InsertWallet(Wallet wallet) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var userid = prefs.getString('userid');
+    var token = prefs.getString('token');
+     var headersValue = {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer $token',
+    };
     wallet.userId = int.parse(userid!);
     print(wallet.toJson());
-    final response = await http.post(Uri.parse(EndPoint.InsertWallet),body: jsonEncode(wallet.toJson()),headers: {
-      'Content-Type': 'application/json',
-    });
+    final response = await http.post(Uri.parse(EndPoint.InsertWallet),body: jsonEncode(wallet.toJson()),headers: headersValue);
     print(response.statusCode);
     if (response.statusCode == 201) {     
       return true;
@@ -65,11 +79,14 @@ class WalletService {
   Future<bool> UpdateWallet(Wallet wallet) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var userid = prefs.getString('userid');
+    var token = prefs.getString('token');
+     var headersValue = {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer $token',
+    };
     wallet.userId = int.parse(userid!);
     print(wallet.toJson());
-    final response = await http.put(Uri.parse(EndPoint.UpdateWallet.replaceAll("{walletID}", wallet.walletID.toString())),body: jsonEncode(wallet.toJson()),headers: {
-      'Content-Type': 'application/json',
-    });
+    final response = await http.put(Uri.parse(EndPoint.UpdateWallet.replaceAll("{walletID}", wallet.walletID.toString())),body: jsonEncode(wallet.toJson()),headers: headersValue);
     if (response.statusCode == 200) {     
       return true;
     } else {
@@ -78,9 +95,14 @@ class WalletService {
   }
 
   Future<bool> DeleteWallet(int walletID) async {
-    final response = await http.delete(Uri.parse(EndPoint.DeleteWallet.replaceAll("{walletID}", walletID.toString())),headers: {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var userid = prefs.getString('userid');
+    var token = prefs.getString('token');
+     var headersValue = {
       'Content-Type': 'application/json',
-    });
+      'Authorization': 'Bearer $token',
+    };
+    final response = await http.delete(Uri.parse(EndPoint.DeleteWallet.replaceAll("{walletID}", walletID.toString())),headers: headersValue);
     if (response.statusCode == 200) {     
       return true;
     } else {
@@ -89,7 +111,14 @@ class WalletService {
   }
 
   Future<WalletType> GetWalletTypeWithID(int id) async  {
-    final response = await http.get(Uri.parse(EndPoint.GetWalletTypeWithID.replaceAll("{typeID}", id.toString())));
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var userid = prefs.getString('userid');
+    var token = prefs.getString('token');
+     var headersValue = {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer $token',
+    };
+    final response = await http.get(Uri.parse(EndPoint.GetWalletTypeWithID.replaceAll("{typeID}", id.toString())),headers: headersValue);
     if (response.statusCode == 200) {
       final Map<String, dynamic> parsed = jsonDecode(response.body);
       return WalletType.fromJson(parsed);
