@@ -4,37 +4,99 @@ import 'package:pj4mb/models/User/User.dart';
 
 class Budget{
   final int budgetId;
-  final User user;
-  final Category category;
+  late int userId;
+  final int categoryId;
   final double amount;
   final double threshold_amount;
   final DateTime period_start;
   final DateTime period_end;
-  final Recurrence recurrence;
 
-  Budget({required this.budgetId,required this.user,required this.category,required this.amount,required this.threshold_amount,required this.period_start,required this.period_end,required this.recurrence});
+  Budget({
+    required this.budgetId,
+    required this.userId,
+    required this.categoryId,
+    required this.amount,
+    required this.threshold_amount,
+    required this.period_start,
+    required this.period_end
+  });
+
+  
 
   factory Budget.fromJson(Map<String, dynamic> json) {
     return Budget(
       budgetId: json['budgetId'],
-      user: User.fromJson(json['user']),
-      category: Category.fromJson(json['category']),
+      userId: json['userId'],
+      categoryId: json['categoryId'],
+      amount: json['amount'],
+      threshold_amount: json['threshold_amount'],
+      period_start: DateTime.parse(json['period_start']),
+      period_end: DateTime.parse(json['period_end'])
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'budgetId': budgetId,
+      'userId': userId,
+      'categoryId': categoryId,
+      'amount': amount,
+      'threshold_amount': threshold_amount,
+      'period_start': period_start.toIso8601String(),
+      'period_end': period_end.toIso8601String()
+    };
+  }
+}
+
+class BudgetResponse extends Budget{
+  late String categoryName;
+  late String iconCategory;
+  BudgetResponse({
+    required int budgetId,
+    required int userId,
+    required int categoryId,
+    required double amount,
+    required double threshold_amount,
+    required DateTime period_start,
+    required DateTime period_end,
+    required this.categoryName,
+    required this.iconCategory
+  }) : super(
+    budgetId: budgetId,
+    userId: userId,
+    categoryId: categoryId,
+    amount: amount,
+    threshold_amount: threshold_amount,
+    period_start: period_start,
+    period_end: period_end
+  );
+
+  factory BudgetResponse.fromJson(Map<String, dynamic> json) {
+    return BudgetResponse(
+      budgetId: json['budgetId'],
+      userId: json['userId'],
+      categoryId: json['categoryId'],
       amount: json['amount'],
       threshold_amount: json['threshold_amount'],
       period_start: DateTime.parse(json['period_start']),
       period_end: DateTime.parse(json['period_end']),
-      recurrence: Recurrence.fromJson(json['recurrence']),
+      categoryName: json['categoryName'],
+      iconCategory: json['iconCategory']
     );
   }
 
-  Map<String, dynamic> toJson() => {
-    'budgetId': budgetId,
-    'user': user.toJson(),
-    'category': category.toJson(),
-    'amount': amount,
-    'threshold_amount': threshold_amount,
-    'period_start': period_start.toString(),
-    'period_end': period_end.toString(),
-    'recurrence': recurrence.toJson(),
-  };
+  Map<String, dynamic> toJson() {
+    return {
+      'budgetId': budgetId,
+      'userId': userId,
+      'categoryId': categoryId,
+      'amount': amount,
+      'threshold_amount': threshold_amount,
+      'period_start': period_start.toIso8601String(),
+      'period_end': period_end.toIso8601String(),
+      'categoryName': categoryName,
+      'iconCategory': iconCategory
+    };
+  }
+
 }

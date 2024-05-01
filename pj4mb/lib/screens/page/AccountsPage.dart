@@ -16,7 +16,7 @@ class _AccountsPageState extends State<AccountsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white, // Change background color to white
+      backgroundColor: Colors.white, 
       body: SafeArea(
         child: ListView(
           children: <Widget>[
@@ -61,7 +61,7 @@ class _AccountsPageState extends State<AccountsPage> {
               title: Text("My Wallet"),
               trailing: Icon(Icons.arrow_forward_ios),
               onTap: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => MyWalletPage()));             
+                Navigator.push(context, MaterialPageRoute(builder: (context) => MyWalletPage(flag: true,)));             
               },
             ),
 
@@ -70,7 +70,7 @@ class _AccountsPageState extends State<AccountsPage> {
               title: Text("Group"),
               trailing: Icon(Icons.arrow_forward_ios),
               onTap: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => CategoryPage()));        
+                Navigator.push(context, MaterialPageRoute(builder: (context) => CategoryPage(flag: true,)));        
               },
             ),
              ListTile(
@@ -88,6 +88,7 @@ class _AccountsPageState extends State<AccountsPage> {
                             onPressed: () async {
                               SharedPreferences prefs = await SharedPreferences.getInstance();
                               prefs.setString('userid','');
+                              prefs.setString('token','');
                               Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => LoginPage()), (route) => false);
                             },
                             child: Text('OK'),

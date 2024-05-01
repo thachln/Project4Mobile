@@ -7,7 +7,7 @@ class Category{
   late final String name;
   late final CateTypeENum CategoryType;
   late final Cat_Icon icon;
-  late final int user;
+  late int user;
   
 
   Category({required this.categoryID,required this.name,required this.CategoryType,required this.icon,required this.user});

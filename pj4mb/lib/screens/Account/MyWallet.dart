@@ -5,9 +5,11 @@ import 'package:pj4mb/models/Wallet/WalletType.dart';
 import 'package:pj4mb/screens/Account/AddWallet.dart';
 import 'package:pj4mb/services/Wallet_service.dart';
 import 'package:pj4mb/widgets/Account/ListWallet.dart';
+import 'package:pj4mb/widgets/Budget/ListWalletBudget.dart';
 
 class MyWalletPage extends StatefulWidget {
-  const MyWalletPage({super.key});
+  const MyWalletPage({super.key, required this.flag});
+  final bool flag;
 
   @override
   _MyWalletPageState createState() => _MyWalletPageState();
@@ -25,7 +27,9 @@ class _MyWalletPageState extends State<MyWalletPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    if(widget.flag)
+    {
+return Scaffold(
       appBar: AppBar(
         title: Text('My Wallet'),
       ),
@@ -73,5 +77,57 @@ class _MyWalletPageState extends State<MyWalletPage> {
             borderRadius: BorderRadius.circular(20.0),
           )),
     );
+    }
+    else{
+      return Scaffold(
+      appBar: AppBar(
+        title: Text('My Wallet'),
+      ),
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [         
+            Container(
+              child: FutureBuilder<List<Wallet>>(
+                future: walletList,
+                builder:
+                    (BuildContext context, AsyncSnapshot<List<Wallet>> snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Center(child: CircularProgressIndicator());
+                  } else if (snapshot.hasError) {
+                    return Center(child: Text('Error: ${snapshot.error}'));
+                  } else {
+                    return ListWalletBudget(
+                        listWallet: snapshot.data!,
+                        onSave: (value) {
+                          setState(() {
+                            walletList = WalletService().GetWallet();
+                          });
+                        });
+                  }
+                },
+              ),
+            ),
+          ],
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+          child: Icon(Icons.add, color: Colors.white),
+          onPressed: () async {
+            var result = await Navigator.push(context,
+                MaterialPageRoute(builder: (context) => AddWalletPage()));
+            if (result) {
+              setState(() {
+                walletList = WalletService().GetWallet();
+              });
+            }
+          },
+          backgroundColor: Colors.pink[200],
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20.0),
+          )),
+    );
+    }
+    
   }
 }

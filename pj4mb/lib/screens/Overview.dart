@@ -3,12 +3,16 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:pj4mb/models/Expense/Expense.dart';
+import 'package:pj4mb/models/Transaction/Transaction.dart';
+import 'package:pj4mb/models/Transaction/TransactionView.dart';
 import 'package:pj4mb/models/Wallet/Wallet.dart';
 import 'package:pj4mb/screens/Account/Debt.dart';
 import 'package:pj4mb/screens/Account/MyWallet.dart';
 import 'package:pj4mb/screens/TransactionsScreen.dart';
+import 'package:pj4mb/services/Transacsion_service.dart';
 import 'package:pj4mb/services/Wallet_service.dart';
 import 'package:pj4mb/widgets/Account/ListWallet.dart';
+import 'package:pj4mb/widgets/Overview/ListTop5NewTransaction.dart';
 import 'package:pj4mb/widgets/Overview/ListWalletOverview.dart';
 import 'package:pj4mb/widgets/Overview/ListOverview.dart';
 
@@ -23,11 +27,17 @@ class _OverviewState extends State<Overview> with TickerProviderStateMixin {
   TabController? _tabController;
   bool _isObscure = true;
   late Future<List<Wallet>> walletList;
+  late Future<List<TransactionView>> transactionListTop5;
+  late Future<List<TransactionView>> transactionListTop5NewTransaction;
+
+  
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
     walletList = WalletService().GetWallet();
+    transactionListTop5 = TransactionService().getTop5TransactionHightestMoney();
+    transactionListTop5NewTransaction = TransactionService().getTop5NewTransaction();
   }
 
   @override
@@ -88,7 +98,7 @@ class _OverviewState extends State<Overview> with TickerProviderStateMixin {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => MyWalletPage()));
+                                    builder: (context) => MyWalletPage(flag: true,)));
                           },
                           child: Text('Xem tất cả',
                               style: TextStyle(color: Colors.blue)),
@@ -169,10 +179,47 @@ class _OverviewState extends State<Overview> with TickerProviderStateMixin {
                             child: TabBarView(
                               controller: _tabController,
                               children: [
-                                Container(child: ListWithTime()),
-                                Container(
-                                  child: ListWithTime(),
+                                FutureBuilder<List<TransactionView>>(
+                                  future: transactionListTop5,
+                                  builder: (BuildContext context,
+                                      AsyncSnapshot<List<TransactionView>> snapshot) {
+                                    if (snapshot.connectionState ==
+                                        ConnectionState.waiting) {
+                                      return Center(
+                                          child: CircularProgressIndicator());
+                                    } else if (snapshot.hasError) {
+                                      return Center(
+                                          child:
+                                              Text('Error: ${snapshot.error}'));
+                                    } else {
+                                      return ListWithTime(
+                                        listTransactionTop5: snapshot.data!, 
+                                        listTransactionWithTime: [],
+                                      );
+                                    }
+                                  },
                                 ),
+                                // FutureBuilder<List<TransactionView>>(
+                                //   future: transactionListTop5,
+                                //   builder: (BuildContext context,
+                                //       AsyncSnapshot<List<TransactionView>> snapshot) {
+                                //     if (snapshot.connectionState ==
+                                //         ConnectionState.waiting) {
+                                //       return Center(
+                                //           child: CircularProgressIndicator());
+                                //     } else if (snapshot.hasError) {
+                                //       return Center(
+                                //           child:
+                                //               Text('Error: ${snapshot.error}'));
+                                //     } else {
+                                //        return ListWithTime(
+                                //         listTransactionTop5: snapshot.data!, 
+                                //         listTransactionWithTime: [],
+                                //       );
+                                //     }
+                                //   },
+                                // ),
+                                Text('Trang 2')
                               ],
                             ),
                           ),
@@ -204,17 +251,25 @@ class _OverviewState extends State<Overview> with TickerProviderStateMixin {
                   ),
                   borderRadius: BorderRadius.circular(8.0),
                 ),
-                child: ListView.builder(
-                    itemCount: 1,
-                    shrinkWrap: true,
-                    itemBuilder: (context, index) {
-                      return ListTile(
-                        leading: Text('Avatar'),
-                        title: Text('1'),
-                        subtitle: Text('ID:'),
-                        trailing: Text('2.000.000'),
-                      );
-                    }),
+                child: FutureBuilder<List<TransactionView>>(
+                                  future: transactionListTop5NewTransaction,
+                                  builder: (BuildContext context,
+                                      AsyncSnapshot<List<TransactionView>> snapshot) {
+                                    if (snapshot.connectionState ==
+                                        ConnectionState.waiting) {
+                                      return Center(
+                                          child: CircularProgressIndicator());
+                                    } else if (snapshot.hasError) {
+                                      return Center(
+                                          child:
+                                              Text('Error: ${snapshot.error}'));
+                                    } else {
+                                      return ListTop5NewTransaction(
+                                        listTransactionTop5: snapshot.data!
+                                      );
+                                    }
+                                  },
+                                ),
               )
             ],
           ),
