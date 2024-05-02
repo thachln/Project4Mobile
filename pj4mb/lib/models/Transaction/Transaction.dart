@@ -5,37 +5,47 @@ import 'package:pj4mb/models/Wallet/Wallet.dart';
 
 class Transaction{
   final int transactionId;
-  final User user;
-  final Wallet wallet;
+  late  int userId;
+  final int walletId;
   final double amount;
   final DateTime transactionDate;
-  final Category category;
+  final int categoryId;
   final String notes;
-  final Recurrence recurrence;
 
-  Transaction({required this.transactionId,required this.user,required this.wallet,required this.amount,required this.transactionDate,required this.category,required this.notes,required this.recurrence});
+
+  Transaction({
+    required this.transactionId,
+    required this.userId,
+    required this.walletId,
+    required this.amount,
+    required this.transactionDate,
+    required this.categoryId,
+    required this.notes
+  });
+
 
   factory Transaction.fromJson(Map<String, dynamic> json) {
     return Transaction(
       transactionId: json['transactionId'],
-      user: User.fromJson(json['user']),
-      wallet: Wallet.fromJson(json['wallet']),
+      userId: json['userId'],
+      walletId: json['walletId'],
       amount: json['amount'],
       transactionDate: DateTime.parse(json['transactionDate']),
-      category: Category.fromJson(json['category']),
-      notes: json['notes'],
-      recurrence: Recurrence.fromJson(json['recurrence']),
+      categoryId: json['categoryId'],
+      notes: json['notes']
     );
   }
 
-  Map<String, dynamic> toJson() => {
-    'transactionId': transactionId,
-    'user': user.toJson(),
-    'wallet': wallet.toJson(),
-    'amount': amount,
-    'transactionDate': transactionDate.toString(),
-    'category': category.toJson(),
-    'notes': notes,
-    'recurrence': recurrence.toJson(),
-  };
+
+  Map<String, dynamic> toJson() {
+    return {
+      'transactionId': transactionId,
+      'userId': userId,
+      'walletId': walletId,
+      'amount': amount,
+      'transactionDate': transactionDate.toIso8601String(),
+      'categoryId': categoryId,
+      'notes': notes
+    };
+  }
 }

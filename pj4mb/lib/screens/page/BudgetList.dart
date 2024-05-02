@@ -15,7 +15,7 @@ class BudgetList extends StatelessWidget {
       itemCount: listBudget.length,
       itemBuilder: (context, index) {
         var budget = listBudget[index];
-        double progress = ((budget.amount * 100) / budget.threshold_amount);
+        double progress = ((budget.amount * 100) / budget.thresholdAmount) / 100;
         return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -26,7 +26,7 @@ class BudgetList extends StatelessWidget {
               budget.categoryName,
               style: TextStyle(fontWeight: FontWeight.bold),
             ),
-            Text('${budget.threshold_amount}đ'),
+            Text('${budget.thresholdAmount}đ'),
           ],
         ),
         Padding(
@@ -56,9 +56,10 @@ class BudgetList extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
-            Text('Còn lại: ${budget.threshold_amount - budget.amount}đ'),
+            Text('Còn lại: ${budget.thresholdAmount - budget.amount}đ'),
           ],
         ),
+        SizedBox(height: 25,)
       ],
     );
       },

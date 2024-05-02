@@ -1,6 +1,7 @@
 class EndPoint{
 
-  static const String baseUrl = 'http://192.168.1.3:8080/api'; // Sửa lại ip máy
+  //static const String baseUrl = 'http://192.168.1.3:8080/api'; // Sửa lại ip máy
+  static const String baseUrl = 'http://172.16.39.60:8080/api'; // Sửa lại ip máy
 
   //Login
   static const String SignIn = '$baseUrl/auth/signin';
@@ -10,6 +11,7 @@ class EndPoint{
   //Transaction
   static const String Get5TransactionNewest = '$baseUrl/transactions/getTop5NewTransaction/users/{userId}';
   static const String Get5TransactionHigtest = '$baseUrl/transactions/getTop5TransactionHightestMoney/users/{userId}';
+  static const String InsertTransaction = '$baseUrl/transactions/create';
   //
 
 

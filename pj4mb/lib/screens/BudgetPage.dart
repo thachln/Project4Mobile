@@ -1,6 +1,11 @@
+import 'dart:ffi';
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:pj4mb/models/Budget/Budget.dart';
 import 'package:pj4mb/models/Budget/ListDateTime.dart';
+import 'package:pj4mb/models/Budget/ParamBudget.dart';
 import 'package:pj4mb/screens/page/AddBudgetPage.dart';
 import 'package:pj4mb/screens/page/BudgetList.dart';
 import 'package:pj4mb/services/Budget_service.dart';
@@ -17,15 +22,18 @@ class BudgetPage extends StatefulWidget {
 class _BudgetPageState extends State<BudgetPage>
     with SingleTickerProviderStateMixin {
   TabController? _tabController;
-  late List<BudgetResponse> listBudget;
+  late Future<List<BudgetResponse>> listBudget;
   late ListDateTime listDateTime;
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 1, vsync: this);
     listDateTime = getFullDays(DateTime.now());
-    listBudget = Budget_Service().GetBudgetWithTime();
-    
+    var param = ParamPudget(
+        userId: 0,
+        fromDate: listDateTime.startOfMonth,
+        toDate: listDateTime.endOfMonth);
+    listBudget = Budget_Service().GetBudgetWithTime(param);
   }
 
   @override
@@ -33,9 +41,8 @@ class _BudgetPageState extends State<BudgetPage>
     _tabController?.dispose();
     super.dispose();
   }
-  
-  List<Widget> budgetCharts = [
 
+  List<Widget> budgetCharts = [
     CustomPaint(
       painter: CustomArc180Painter(
         drwArcs: [
@@ -69,92 +76,66 @@ class _BudgetPageState extends State<BudgetPage>
 
   @override
   Widget build(BuildContext context) {
-    var media = MediaQuery.of(context);
     return Scaffold(
-      backgroundColor: Colors.white,
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(top: 35, right: 10),
-            child: Row(
-              children: [
-                Spacer(),
-                IconButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => AddBudgetPage()),
-                    );
-                  },
-                  icon: Ink(
-                    decoration: const ShapeDecoration(
-                      color: Colors.red, // Bạn có thể thay màu này.
-                      shape: CircleBorder(),
-                    ),
-                    child: const Icon(Icons.add, color: Colors.white),
-                  ),
-                )
-              ],
-            ),
-          ),
-          Stack(
-            alignment: Alignment.bottomCenter,
-            children: [
-              Container(
-                width: media.size.width * 0.5,
-                height: media.size.width * 0.30,
-                child: budgetCharts[_tabController!.index],
-              ),
-              budgetInfo[_tabController!.index],
-            ],
-          ),
-          const SizedBox(
-            height: 40,
-          ),
-          Expanded(
-            child: Container(
-              decoration: BoxDecoration(
-                color: Colors.white,
-                border: Border.all(
-                  color: Colors.grey.shade300,
-                ),
-                borderRadius: BorderRadius.circular(8.0),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  TabBar(
-                    controller: _tabController,
-                    tabs: [
-                      Tab(text: 'Tháng này'),                
-                    ],
-                  ),
-                  Expanded(
-                    child: TabBarView(
-                      controller: _tabController,
-                      children: [
-                        BudgetList(),
-                      ],
-                    ),
-                  ),
+        appBar: AppBar(
+          title: Text('Ngân sách'),
+          centerTitle: true,
+          backgroundColor: Colors.white,
+          elevation: 0,
+        ),
+        body: SingleChildScrollView(
+          child: Column(
+            children: [           
+              TabBar(
+                controller: _tabController,
+                tabs: [
+                  Tab(text: 'Tháng này'),
                 ],
               ),
-            ),
+              Container(
+                height: MediaQuery.of(context).size.height * 0.6,
+                child: TabBarView(
+                  controller: _tabController,
+                  children: [
+                    FutureBuilder<List<BudgetResponse>>(
+                      future: listBudget,
+                      builder: (BuildContext context,
+                          AsyncSnapshot<List<BudgetResponse>> snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return Center(child: CircularProgressIndicator());
+                        } else if (snapshot.hasError) {
+                          return Center(
+                              child: Text('Error: ${snapshot.error}'));
+                        } else {
+                          return BudgetList(listBudget: snapshot.data ?? []);
+                        }
+                      },
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ),
-        ],
-      ),
-    );
+        ),
+        floatingActionButton: FloatingActionButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => AddBudgetPage()),
+              );
+            },
+            child: Icon(Icons.add, color: Colors.white),
+            backgroundColor: Colors.pink[200],
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20.0),
+            )));
   }
 
   ListDateTime getFullDays(DateTime dateTime) {
-
-   
-
     //Month
     DateTime startOfMonth = DateTime(dateTime.year, dateTime.month, 1);
     DateTime endOfMonth = DateTime(dateTime.year, dateTime.month + 1, 0);
-
-   
 
     ListDateTime listDateTime = ListDateTime(
         startOfWeek: DateTime.now(),
@@ -166,5 +147,5 @@ class _BudgetPageState extends State<BudgetPage>
         startOfYear: DateTime.now(),
         endOfYear: DateTime.now());
     return listDateTime;
-  } 
+  }
 }

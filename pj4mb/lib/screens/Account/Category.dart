@@ -5,10 +5,11 @@ import 'package:pj4mb/models/Category/Category.dart';
 import 'package:pj4mb/services/Category_service.dart';
 import 'package:pj4mb/widgets/Account/ListCategory.dart';
 import 'package:pj4mb/widgets/Budget/ListCategoryBudget.dart';
+import 'package:pj4mb/widgets/Transactions/ListCategoryTransaction.dart';
 
 class CategoryPage extends StatefulWidget {
   const CategoryPage({Key? key, required this.flag}) : super(key: key);
-  final bool flag;
+  final int flag;
   @override
   State<CategoryPage> createState() => _CategoryPageState();
 }
@@ -20,13 +21,14 @@ class _CategoryPageState extends State<CategoryPage>
   @override
   void initState() {
     super.initState();
-    if(widget.flag)
+    if(widget.flag == 0 || widget.flag == 2)
     {
       _tabController = TabController(length: 3, vsync: this);
     }
-    else{
+    else if(widget.flag == 1){
       _tabController = TabController(length: 2, vsync: this);
     }
+    
     
     cateList = CategoryService().GetCategory();
   }
@@ -40,7 +42,7 @@ class _CategoryPageState extends State<CategoryPage>
 
   @override
   Widget build(BuildContext context) {
-    if(widget.flag)
+    if(widget.flag == 0 || widget.flag == 2)
     {
       // #region nomal
       return Scaffold(
@@ -66,7 +68,7 @@ class _CategoryPageState extends State<CategoryPage>
                 ],
               ),
               Container(
-                height: MediaQuery.of(context).size.height * 0.7,
+                height: MediaQuery.of(context).size.height * 0.78,
                 child: TabBarView(
                   controller: _tabController,
                   children: [
@@ -81,7 +83,9 @@ class _CategoryPageState extends State<CategoryPage>
                           return Center(
                               child: Text('Error: ${snapshot.error}'));
                         } else {
-                          return ListCategory(
+                          if(widget.flag == 0)
+                          {
+                             return ListCategory(
                             onSave: (value) {
                               setState(() {
                                 cateList = CategoryService().GetCategory();
@@ -89,28 +93,18 @@ class _CategoryPageState extends State<CategoryPage>
                             },
                             listCategory: snapshot.data!.where((element) => element.CategoryType == CateTypeENum.EXPENSE).toList(),categoryType: 'Expense',
                           );
-                        }
-                      },
-                    ),
-                    FutureBuilder<List<Category>>(
-                      future: cateList,
-                      builder: (BuildContext context,
-                          AsyncSnapshot<List<Category>> snapshot) {
-                        if (snapshot.connectionState ==
-                            ConnectionState.waiting) {
-                          return Center(child: CircularProgressIndicator());
-                        } else if (snapshot.hasError) {
-                          return Center(
-                              child: Text('Error: ${snapshot.error}'));
-                        } else {
-                          return ListCategory(
+                          }
+                          else{
+                             return ListCategoryTransaction(
                             onSave: (value) {
-                               setState(() {
+                              setState(() {
                                 cateList = CategoryService().GetCategory();
                               });
                             },
-                            listCategory: snapshot.data!.where((element) => element.CategoryType == CateTypeENum.INCOME).toList(),categoryType: 'Income',
+                            listCategory: snapshot.data!.where((element) => element.CategoryType == CateTypeENum.EXPENSE).toList(),categoryType: 'Expense',
                           );
+                          }
+                         
                         }
                       },
                     ),
@@ -125,14 +119,64 @@ class _CategoryPageState extends State<CategoryPage>
                           return Center(
                               child: Text('Error: ${snapshot.error}'));
                         } else {
-                          return ListCategory(
-                            onSave: (value) {                            
-                               setState(() {
+                          if(widget.flag == 0)
+                          {
+                             return ListCategory(
+                            onSave: (value) {
+                              setState(() {
                                 cateList = CategoryService().GetCategory();
                               });
                             },
-                            listCategory: snapshot.data!.where((element) => element.CategoryType == CateTypeENum.DEBT).toList(), categoryType: 'Debt',
+                            listCategory: snapshot.data!.where((element) => element.CategoryType == CateTypeENum.INCOME).toList(),categoryType: 'Expense',
                           );
+                          }
+                          else{
+                             return ListCategoryTransaction(
+                            onSave: (value) {
+                              setState(() {
+                                cateList = CategoryService().GetCategory();
+                              });
+                            },
+                            listCategory: snapshot.data!.where((element) => element.CategoryType == CateTypeENum.INCOME).toList(),categoryType: 'Expense',
+                          );
+                          }
+                          
+                        }
+                      },
+                    ),
+                    FutureBuilder<List<Category>>(
+                      future: cateList,
+                      builder: (BuildContext context,
+                          AsyncSnapshot<List<Category>> snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return Center(child: CircularProgressIndicator());
+                        } else if (snapshot.hasError) {
+                          return Center(
+                              child: Text('Error: ${snapshot.error}'));
+                        } else {
+                          if(widget.flag == 0)
+                          {
+                             return ListCategory(
+                            onSave: (value) {
+                              setState(() {
+                                cateList = CategoryService().GetCategory();
+                              });
+                            },
+                            listCategory: snapshot.data!.where((element) => element.CategoryType == CateTypeENum.DEBT).toList(),categoryType: 'Expense',
+                          );
+                          }
+                          else{
+                             return ListCategoryTransaction(
+                            onSave: (value) {
+                              setState(() {
+                                cateList = CategoryService().GetCategory();
+                              });
+                            },
+                            listCategory: snapshot.data!.where((element) => element.CategoryType == CateTypeENum.DEBT).toList(),categoryType: 'Expense',
+                          );
+                          }
+                        
                         }
                       },
                     ),
@@ -195,29 +239,7 @@ class _CategoryPageState extends State<CategoryPage>
                           );
                         }
                       },
-                    ),
-                    // FutureBuilder<List<Category>>(
-                    //   future: cateList,
-                    //   builder: (BuildContext context,
-                    //       AsyncSnapshot<List<Category>> snapshot) {
-                    //     if (snapshot.connectionState ==
-                    //         ConnectionState.waiting) {
-                    //       return Center(child: CircularProgressIndicator());
-                    //     } else if (snapshot.hasError) {
-                    //       return Center(
-                    //           child: Text('Error: ${snapshot.error}'));
-                    //     } else {
-                    //       return ListCategory(
-                    //         onSave: (value) {
-                    //            setState(() {
-                    //             cateList = CategoryService().GetCategory();
-                    //           });
-                    //         },
-                    //         listCategory: snapshot.data!.where((element) => element.CategoryType == CateTypeENum.INCOME).toList(),categoryType: 'Income',
-                    //       );
-                    //     }
-                    //   },
-                    // ),
+                    ),                  
                     FutureBuilder<List<Category>>(
                       future: cateList,
                       builder: (BuildContext context,
@@ -250,6 +272,7 @@ class _CategoryPageState extends State<CategoryPage>
     );
       // #endregion
     }
+    
     
   }
 }

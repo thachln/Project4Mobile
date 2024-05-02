@@ -70,7 +70,7 @@ class _AccountsPageState extends State<AccountsPage> {
               title: Text("Group"),
               trailing: Icon(Icons.arrow_forward_ios),
               onTap: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => CategoryPage(flag: true,)));        
+                Navigator.push(context, MaterialPageRoute(builder: (context) => CategoryPage(flag: 0,)));        
               },
             ),
              ListTile(

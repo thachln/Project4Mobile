@@ -78,10 +78,9 @@ class _LoginPageState extends State<LoginPage> {
                 } else {
                   var user =
                       await LoginService().login(email.text, password.text);
-                  print(user);
                   if (user.is_enabled == true) {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => HomePage()));
+                    Navigator.pushAndRemoveUntil(context,
+                        MaterialPageRoute(builder: (context) => HomePage()), (route) => false);
                   } else if (user.statusCode == '401') {
                     showDialog(
                       context: context,

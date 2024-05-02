@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:pj4mb/models/Budget/Budget.dart';
@@ -14,19 +13,20 @@ class AddBudgetPage extends StatefulWidget {
   @override
   _AddBudgetPageState createState() => _AddBudgetPageState();
 }
+
 enum TimeSelection { week, month, quarter, year, custom }
+
 class _AddBudgetPageState extends State<AddBudgetPage> {
   TimeSelection _timeSelection = TimeSelection.week;
   String dropdownValue = 'VND';
   late ListDateTime listDateTime;
- 
-  late DateTime selectedDateStart = new DateTime(1,1,1);
-  late DateTime selectedDateEnd = new DateTime(1,1,1);
+
+  late DateTime selectedDateStart = new DateTime(1, 1, 1);
+  late DateTime selectedDateEnd = new DateTime(1, 1, 1);
   late TextEditingController amountController;
   String categoryName = '';
   int categoryId = 0;
   String walletName = '';
-  
 
   @override
   void initState() {
@@ -34,6 +34,7 @@ class _AddBudgetPageState extends State<AddBudgetPage> {
     amountController = TextEditingController();
     listDateTime = getFullDays(DateTime.now());
   }
+
   @override
   Widget build(BuildContext context) {
     Category? valueCate;
@@ -59,12 +60,11 @@ class _AddBudgetPageState extends State<AddBudgetPage> {
                       context,
                       MaterialPageRoute(
                           builder: (context) => CategoryPage(
-                                flag: false,
+                                flag: 1,
                               )),
                     );
 
                     setState(() {
-                      
                       if (valueCate != null) {
                         // Update here using the selected category name
                         categoryName = valueCate!.name;
@@ -98,38 +98,7 @@ class _AddBudgetPageState extends State<AddBudgetPage> {
             ),
             SizedBox(
               height: 25,
-            ),       
-            // Row(
-            //   children: [
-            //     Icon(Icons.currency_exchange_rounded),
-            //     SizedBox(
-            //       width: 10,
-            //     ),
-            //     DropdownButton<String>(
-            //       value: dropdownValue,
-            //       icon: Icon(Icons.arrow_downward),
-            //       iconSize: 24,
-            //       elevation: 16,
-            //       style: TextStyle(color: Colors.deepPurple),
-            //       underline: Container(
-            //         height: 2,
-            //         color: Colors.deepPurpleAccent,
-            //       ),
-            //       onChanged: (String? newValue) {
-            //         setState(() {
-            //           dropdownValue = newValue!;
-            //         });
-            //       },
-            //       items: <String>['VND', 'USD']
-            //           .map<DropdownMenuItem<String>>((String value) {
-            //         return DropdownMenuItem<String>(
-            //           value: value,
-            //           child: Text(value),
-            //         );
-            //       }).toList(),
-            //     )
-            //   ],
-            // ),
+            ),
             Row(
               children: [
                 Icon(Icons.date_range),
@@ -139,22 +108,25 @@ class _AddBudgetPageState extends State<AddBudgetPage> {
                 Expanded(
                     child: InkWell(
                   onTap: _showTimeSelectionDialog,
-                  child: DateFormat('dd-MM-yyyy').format(selectedDateStart) == '01-01-0001'
+                  child: DateFormat('dd-MM-yyyy').format(selectedDateStart) ==
+                          '01-01-0001'
                       ? Text('Choose date')
-                      : Text('${DateFormat('dd-MM-yyyy').format(selectedDateStart)} - ${DateFormat('dd-MM-yyyy').format(selectedDateEnd)}' ),
+                      : Text(
+                          '${DateFormat('dd-MM-yyyy').format(selectedDateStart)} - ${DateFormat('dd-MM-yyyy').format(selectedDateEnd)}'),
                 ))
               ],
             ),
             ElevatedButton(
               onPressed: () async {
-               Budget budget = new Budget(
+                Budget budget = new Budget(
                   threshold_amount: double.parse(amountController.text),
                   categoryId: categoryId,
                   userId: 0,
                   period_start: selectedDateStart,
-                  period_end: selectedDateEnd, budgetId: 0, amount: 0,                 
+                  period_end: selectedDateEnd,
+                  budgetId: 0,
+                  amount: 0,
                 );
-                print(budget.toJson());
                 var result = await Budget_Service().InsertBudget(budget);
                 if (result) {
                   showDialog(
@@ -197,37 +169,6 @@ class _AddBudgetPageState extends State<AddBudgetPage> {
               },
               child: Text('Save'),
             )
-          //  Row(
-          //     children: [
-          //       Icon(Icons.wallet),
-          //       SizedBox(
-          //         width: 10,
-          //       ),
-          //       Expanded(
-          //           child: InkWell(
-          //         onTap: () async {
-          //           valueCate = await Navigator.push(
-          //             context,
-          //             MaterialPageRoute(
-          //                 builder: (context) => CategoryPage(
-          //                       flag: false,
-          //                     )),
-          //           );
-
-          //           setState(() {
-          //             print(valueCate!.name);
-          //             if (valueCate != null) {
-          //               // Update here using the selected category name
-          //               categoryName = valueCate!.name;
-          //             }
-          //           });
-          //         },
-          //         child: walletName.trim().isEmpty
-          //             ? Text('Chosse wallet')
-          //             : Text(walletName),
-          //       ))
-          //     ],
-          //   ),
           ],
         ),
       ),
@@ -252,7 +193,8 @@ class _AddBudgetPageState extends State<AddBudgetPage> {
                   mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
                     RadioListTile<TimeSelection>(
-                      title: Text('Tuần này (${DateFormat('dd-MM').format(listDateTime.startOfWeek)} - ${DateFormat('dd-MM').format(listDateTime.endOfWeek)})'),
+                      title: Text(
+                          'Tuần này (${DateFormat('dd-MM').format(listDateTime.startOfWeek)} - ${DateFormat('dd-MM').format(listDateTime.endOfWeek)})'),
                       value: TimeSelection.week,
                       groupValue: localSelection,
                       onChanged: (TimeSelection? value) {
@@ -266,7 +208,8 @@ class _AddBudgetPageState extends State<AddBudgetPage> {
                       },
                     ),
                     RadioListTile<TimeSelection>(
-                      title: Text('Tháng này (${DateFormat('dd-MM').format(listDateTime.startOfMonth)} - ${DateFormat('dd-MM').format(listDateTime.endOfMonth)})'),
+                      title: Text(
+                          'Tháng này (${DateFormat('dd-MM').format(listDateTime.startOfMonth)} - ${DateFormat('dd-MM').format(listDateTime.endOfMonth)})'),
                       value: TimeSelection.month,
                       groupValue: localSelection,
                       onChanged: (TimeSelection? value) {
@@ -280,7 +223,8 @@ class _AddBudgetPageState extends State<AddBudgetPage> {
                       },
                     ),
                     RadioListTile<TimeSelection>(
-                      title: Text('Quý này (${DateFormat('dd-MM').format(listDateTime.firstDayOfQuarter)} - ${DateFormat('dd-MM').format(listDateTime.lastDayOfQuarter)})'),
+                      title: Text(
+                          'Quý này (${DateFormat('dd-MM').format(listDateTime.firstDayOfQuarter)} - ${DateFormat('dd-MM').format(listDateTime.lastDayOfQuarter)})'),
                       value: TimeSelection.quarter,
                       groupValue: localSelection,
                       onChanged: (TimeSelection? value) {
@@ -294,7 +238,8 @@ class _AddBudgetPageState extends State<AddBudgetPage> {
                       },
                     ),
                     RadioListTile<TimeSelection>(
-                      title: Text('Năm này (${DateFormat('dd-MM-yyyy').format(listDateTime.startOfYear)} - ${DateFormat('dd-MM-yyyy').format(listDateTime.endOfYear)})'),
+                      title: Text(
+                          'Năm này (${DateFormat('dd-MM-yyyy').format(listDateTime.startOfYear)} - ${DateFormat('dd-MM-yyyy').format(listDateTime.endOfYear)})'),
                       value: TimeSelection.year,
                       groupValue: localSelection,
                       onChanged: (TimeSelection? value) {
@@ -335,14 +280,16 @@ class _AddBudgetPageState extends State<AddBudgetPage> {
                             });
                           }
                         },
-                        child: Text('Chọn ngày bắt đầu: ${localCustomStartDate.toString().split(' ')[0]}'),
+                        child: Text(
+                            'Chọn ngày bắt đầu: ${localCustomStartDate.toString().split(' ')[0]}'),
                       ),
                       ElevatedButton(
                         onPressed: () async {
                           DateTime? endDate = await showDatePicker(
                             context: context,
                             initialDate: localCustomEndDate,
-                            firstDate: localCustomStartDate, // Ngày kết thúc không thể trước ngày bắt đầu
+                            firstDate:
+                                localCustomStartDate, // Ngày kết thúc không thể trước ngày bắt đầu
                             lastDate: DateTime(2100),
                           );
                           if (endDate != null) {
@@ -354,7 +301,8 @@ class _AddBudgetPageState extends State<AddBudgetPage> {
                             });
                           }
                         },
-                        child: Text('Chọn ngày kết thúc: ${localCustomEndDate.toString().split(' ')[0]}'),
+                        child: Text(
+                            'Chọn ngày kết thúc: ${localCustomEndDate.toString().split(' ')[0]}'),
                       ),
                     ],
                   ],
@@ -370,6 +318,15 @@ class _AddBudgetPageState extends State<AddBudgetPage> {
                 TextButton(
                   child: Text('Xác nhận'),
                   onPressed: () {
+                    if (DateFormat('dd-MM-yyyy').format(selectedDateStart) ==
+                            '01-01-0001' &&
+                        DateFormat('dd-MM-yyyy').format(selectedDateEnd) ==
+                            '01-01-0001') {
+                      setState(() {
+                        selectedDateStart = listDateTime.startOfWeek;
+                        selectedDateEnd = listDateTime.endOfWeek;
+                      });
+                    }
                     // setState(() {
                     //   _timeSelection = localSelection;
                     //   selectedDateStart = localCustomStartDate;
@@ -387,9 +344,9 @@ class _AddBudgetPageState extends State<AddBudgetPage> {
   }
 
   ListDateTime getFullDays(DateTime dateTime) {
-
     //Weeks
-    DateTime startOfWeek =dateTime.subtract(Duration(days: dateTime.weekday - 1));
+    DateTime startOfWeek =
+        dateTime.subtract(Duration(days: dateTime.weekday - 1));
     DateTime endOfWeek = startOfWeek.add(Duration(days: 6));
     //
 

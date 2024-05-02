@@ -48,54 +48,37 @@ class Budget{
   }
 }
 
-class BudgetResponse extends Budget{
+class BudgetResponse {
   late String categoryName;
-  late String iconCategory;
+  late String categoryIcon;
+  late double amount;
+	late double thresholdAmount;
+  
+
   BudgetResponse({
-    required int budgetId,
-    required int userId,
-    required int categoryId,
-    required double amount,
-    required double threshold_amount,
-    required DateTime period_start,
-    required DateTime period_end,
     required this.categoryName,
-    required this.iconCategory
-  }) : super(
-    budgetId: budgetId,
-    userId: userId,
-    categoryId: categoryId,
-    amount: amount,
-    threshold_amount: threshold_amount,
-    period_start: period_start,
-    period_end: period_end
-  );
+    required this.categoryIcon,
+    required this.amount,
+    required this.thresholdAmount
+  });
+
 
   factory BudgetResponse.fromJson(Map<String, dynamic> json) {
     return BudgetResponse(
-      budgetId: json['budgetId'],
-      userId: json['userId'],
-      categoryId: json['categoryId'],
-      amount: json['amount'],
-      threshold_amount: json['threshold_amount'],
-      period_start: DateTime.parse(json['period_start']),
-      period_end: DateTime.parse(json['period_end']),
       categoryName: json['categoryName'],
-      iconCategory: json['iconCategory']
+      categoryIcon: json['categoryIcon'],
+      amount: json['amount'],
+      thresholdAmount: json['thresholdAmount']
     );
   }
 
+
   Map<String, dynamic> toJson() {
     return {
-      'budgetId': budgetId,
-      'userId': userId,
-      'categoryId': categoryId,
-      'amount': amount,
-      'threshold_amount': threshold_amount,
-      'period_start': period_start.toIso8601String(),
-      'period_end': period_end.toIso8601String(),
       'categoryName': categoryName,
-      'iconCategory': iconCategory
+      'categoryIcon': categoryIcon,
+      'amount': amount,
+      'thresholdAmount': thresholdAmount
     };
   }
 
