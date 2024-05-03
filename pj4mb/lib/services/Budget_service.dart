@@ -18,6 +18,7 @@ class Budget_Service{
       'Content-Type': 'application/json',
       'Authorization': 'Bearer $token',
     };
+    print(budget.toJson());
     final response = await http
         .post(Uri.parse(EndPoint.InsertBudget), body: jsonEncode(budget.toJson()),headers: headersValue);
         print(response.statusCode);

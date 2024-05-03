@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:pj4mb/api/endpoint.dart';
+import 'package:pj4mb/models/Budget/ParamBudget.dart';
 import 'package:pj4mb/models/Transaction/Transaction.dart';
 import 'package:pj4mb/models/Transaction/TransactionView.dart';
 
@@ -65,6 +66,75 @@ class TransactionService {
       
   }
 
+  Future<List<TransactionData>> GetTransactionWithTime(ParamPudget param) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var token = prefs.getString('token');
+    var user = prefs.getString('userid');
+    param.userId = int.parse(user!);
+    var headersValue = {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer $token'
+    };
+    var bodyValue = jsonEncode(param.toJson());
+    var url = Uri.parse(EndPoint.GetTransactionWithTime);
+    var response = await http.post(url,body: bodyValue, headers: headersValue);
+    if (response.statusCode == 200) {
+      print(response.body);
+      final List<dynamic> parsed = jsonDecode(response.body);
+      //return parsed.map((e) => Category.fromJson(e)).toList();
+      List<TransactionData> transaction = [];
+      for (var item in parsed) {
+        if (item is Map<String, dynamic>) {
+          transaction.add(TransactionData.fromJson(item));
+        } else {
+          throw Exception('Invalid item format');
+        }
+      }
+      return transaction;
+    }
+    else{
+      return [];
+    }
+      
+  }
+
+  Future<List<TransactionReport>> GetTransactionReport(ParamPudget param) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var token = prefs.getString('token');
+    var user = prefs.getString('userid');
+    param.userId = int.parse(user!);
+    var headersValue = {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer $token'
+    };
+    print(param.toJson());
+    var bodyValue = jsonEncode(param.toJson());
+    var url = Uri.parse(EndPoint.GetTransactionReport);
+    var response = await http.post(url,body: bodyValue, headers: headersValue);
+    if (response.statusCode == 200) {
+      print(response.body);
+      final List<dynamic> parsed = jsonDecode(response.body);
+      //return parsed.map((e) => Category.fromJson(e)).toList();
+      List<TransactionReport> transaction = [];
+     
+      for (var item in parsed) {
+        if (item is Map<String, dynamic>) {
+          transaction.add(TransactionReport.fromJson(item));
+        } else {
+          throw Exception('Invalid item format');
+        }
+      }
+      print(transaction[0].amount);
+      print(transaction[1].amount);
+      print(transaction[2].amount);
+      return transaction;
+    }
+    else{
+      return [];
+    }
+      
+  }
+
   Future<bool> InsertTransaction(Transaction trans) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var userid = prefs.getString('userid');
@@ -77,9 +147,9 @@ class TransactionService {
     trans.userId = int.parse(userid!);
     print(token);
     print(trans.toJson());
-    final response = await http.post(Uri.parse(EndPoint.InsertWallet),body: jsonEncode(trans.toJson()),headers: headersValue);
+    final response = await http.post(Uri.parse(EndPoint.InsertTransaction),body: jsonEncode(trans.toJson()),headers: headersValue);
     print(response.statusCode);
-    if (response.statusCode == 201) {     
+    if (response.statusCode == 200) {     
       return true;
     } else {
       return false;

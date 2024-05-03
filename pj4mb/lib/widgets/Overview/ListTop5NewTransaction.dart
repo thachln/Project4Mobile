@@ -8,16 +8,20 @@ class ListTop5NewTransaction extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-        itemCount: listTransactionTop5.length,
-        shrinkWrap: true,
-        itemBuilder: (context, index) {
-          TransactionView transaction = listTransactionTop5[index];
-          return ListTile(
-            leading: Image.asset("assets/icon/${transaction.cateIcon}"),
-            title: Text(transaction.categoryName),
-            trailing: Text(transaction.amount.toString()),
-          );
-        });
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: ListView.builder(
+          itemCount: listTransactionTop5.length,
+          shrinkWrap: true,
+          itemBuilder: (context, index) {
+            TransactionView transaction = listTransactionTop5[index];
+            return ListTile(
+              leading: Image.asset("assets/icon/${transaction.cateIcon}"),
+              title: Text(transaction.categoryName),
+              trailing: Text(transaction.amount.toString()),
+              contentPadding: EdgeInsets.only(top: 10),
+            );
+          }),
+    );
   }
 }

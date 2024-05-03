@@ -30,8 +30,8 @@ class Budget{
       categoryId: json['categoryId'],
       amount: json['amount'],
       threshold_amount: json['threshold_amount'],
-      period_start: DateTime.parse(json['period_start']),
-      period_end: DateTime.parse(json['period_end'])
+      period_start: DateTime.parse(json['periodStart']),
+      period_end: DateTime.parse(json['periodEnd'])
     );
   }
 
@@ -42,8 +42,8 @@ class Budget{
       'categoryId': categoryId,
       'amount': amount,
       'threshold_amount': threshold_amount,
-      'period_start': period_start.toIso8601String(),
-      'period_end': period_end.toIso8601String()
+      'periodStart': period_start.toIso8601String(),
+      'periodEnd': period_end.toIso8601String()
     };
   }
 }

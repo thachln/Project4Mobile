@@ -12,6 +12,8 @@ class EndPoint{
   static const String Get5TransactionNewest = '$baseUrl/transactions/getTop5NewTransaction/users/{userId}';
   static const String Get5TransactionHigtest = '$baseUrl/transactions/getTop5TransactionHightestMoney/users/{userId}';
   static const String InsertTransaction = '$baseUrl/transactions/create';
+  static const String GetTransactionWithTime = '$baseUrl/transactions/GetTransactionWithTime';
+  static const String GetTransactionReport = '$baseUrl/transactions/GetTransactionReport';
   //
 
 

@@ -2,6 +2,8 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:pj4mb/models/Budget/ListDateTime.dart';
+import 'package:pj4mb/models/Budget/ParamBudget.dart';
 import 'package:pj4mb/models/Expense/Expense.dart';
 import 'package:pj4mb/models/Transaction/Transaction.dart';
 import 'package:pj4mb/models/Transaction/TransactionView.dart';
@@ -29,8 +31,9 @@ class _OverviewState extends State<Overview> with TickerProviderStateMixin {
   late Future<List<Wallet>> walletList;
   late Future<List<TransactionView>> transactionListTop5;
   late Future<List<TransactionView>> transactionListTop5NewTransaction;
-
-  
+  late Future<List<TransactionReport>> getTransactionReportThisWeek;
+  late Future<List<TransactionReport>> getTransactionReportThisMonth;
+  late ListDateTime listDateTime;
   @override
   void initState() {
     super.initState();
@@ -38,6 +41,17 @@ class _OverviewState extends State<Overview> with TickerProviderStateMixin {
     walletList = WalletService().GetWallet();
     transactionListTop5 = TransactionService().getTop5TransactionHightestMoney();
     transactionListTop5NewTransaction = TransactionService().getTop5NewTransaction();
+    listDateTime = getFullDays(DateTime.now());
+    ParamPudget paramThisWeek = new ParamPudget(
+        userId: 0,
+        fromDate: listDateTime.startOfWeek,
+        toDate: listDateTime.endOfWeek);
+     ParamPudget paramThisMonth = new ParamPudget(
+        userId: 0,
+        fromDate: listDateTime.startOfMonth,
+        toDate: listDateTime.endOfMonth);
+    getTransactionReportThisWeek = TransactionService().GetTransactionReport(paramThisWeek);
+    getTransactionReportThisMonth = TransactionService().GetTransactionReport(paramThisMonth);
   }
 
   @override
@@ -49,21 +63,7 @@ class _OverviewState extends State<Overview> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            Text(_isObscure ? '*********' : '20.000.000 đ'),
-            IconButton(
-              onPressed: () {
-                setState(() {
-                  _isObscure = !_isObscure;
-                });
-              },
-              icon: Icon(_isObscure ? Icons.visibility_off : Icons.visibility),
-            )
-          ],
-        ),
+      appBar: AppBar(      
         actions: [
           IconButton(
             onPressed: () {},
@@ -161,14 +161,13 @@ class _OverviewState extends State<Overview> with TickerProviderStateMixin {
                   ),
                   borderRadius: BorderRadius.circular(8.0),
                 ),
-                child: DefaultTabController(
-                    length: 2,
-                    child: Container(
+                child:  Container(
                       padding: EdgeInsets.all(16.0),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
                           TabBar(
+                            controller: _tabController,
                             tabs: [
                               Tab(text: 'Tuần'),
                               Tab(text: 'Tháng'),
@@ -179,10 +178,10 @@ class _OverviewState extends State<Overview> with TickerProviderStateMixin {
                             child: TabBarView(
                               controller: _tabController,
                               children: [
-                                FutureBuilder<List<TransactionView>>(
-                                  future: transactionListTop5,
+                                FutureBuilder<List<dynamic>>(
+                                  future: Future.wait([transactionListTop5, getTransactionReportThisWeek]) ,
                                   builder: (BuildContext context,
-                                      AsyncSnapshot<List<TransactionView>> snapshot) {
+                                      AsyncSnapshot<List<dynamic>> snapshot) {
                                     if (snapshot.connectionState ==
                                         ConnectionState.waiting) {
                                       return Center(
@@ -191,41 +190,46 @@ class _OverviewState extends State<Overview> with TickerProviderStateMixin {
                                       return Center(
                                           child:
                                               Text('Error: ${snapshot.error}'));
-                                    } else {
+                                    } else {                                
+
+                                        List<TransactionView> listTransactionTop5 = snapshot.data![0];
+                                        List<TransactionReport> listTransactionReport = snapshot.data![1];                                       
                                       return ListWithTime(
-                                        listTransactionTop5: snapshot.data!, 
-                                        listTransactionWithTime: [],
+                                        listTransactionTop5: listTransactionTop5, 
+                                        listTransactionReport: listTransactionReport,
                                       );
                                     }
                                   },
                                 ),
-                                // FutureBuilder<List<TransactionView>>(
-                                //   future: transactionListTop5,
-                                //   builder: (BuildContext context,
-                                //       AsyncSnapshot<List<TransactionView>> snapshot) {
-                                //     if (snapshot.connectionState ==
-                                //         ConnectionState.waiting) {
-                                //       return Center(
-                                //           child: CircularProgressIndicator());
-                                //     } else if (snapshot.hasError) {
-                                //       return Center(
-                                //           child:
-                                //               Text('Error: ${snapshot.error}'));
-                                //     } else {
-                                //        return ListWithTime(
-                                //         listTransactionTop5: snapshot.data!, 
-                                //         listTransactionWithTime: [],
-                                //       );
-                                //     }
-                                //   },
-                                // ),
-                                Text('Trang 2')
+                                FutureBuilder<List<dynamic>>(
+                                  future: Future.wait([transactionListTop5, getTransactionReportThisMonth]) ,
+                                  builder: (BuildContext context,
+                                      AsyncSnapshot<List<dynamic>> snapshot) {
+                                    if (snapshot.connectionState ==
+                                        ConnectionState.waiting) {
+                                      return Center(
+                                          child: CircularProgressIndicator());
+                                    } else if (snapshot.hasError) {
+                                      return Center(
+                                          child:
+                                              Text('Error: ${snapshot.error}'));
+                                    } else {                                
+
+                                        List<TransactionView> listTransactionTop5 = snapshot.data![0];
+                                        List<TransactionReport> listTransactionReport = snapshot.data![1];                                       
+                                      return ListWithTime(
+                                        listTransactionTop5: listTransactionTop5, 
+                                        listTransactionReport: listTransactionReport,
+                                      );
+                                    }
+                                  },
+                                ),
                               ],
                             ),
                           ),
                         ],
                       ),
-                    )),
+                    ),
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -276,5 +280,29 @@ class _OverviewState extends State<Overview> with TickerProviderStateMixin {
         ),
       ),
     );
+  }
+
+   ListDateTime getFullDays(DateTime dateTime) {
+    //Weeks
+    DateTime startOfWeek =
+        dateTime.subtract(Duration(days: dateTime.weekday - 1));
+    DateTime endOfWeek = startOfWeek.add(Duration(days: 6));
+    //
+
+    //Month
+    DateTime startOfMonth = DateTime(dateTime.year, dateTime.month, 1);
+    DateTime endOfMonth = DateTime(dateTime.year, dateTime.month + 1, 0);
+
+
+    ListDateTime listDateTime = ListDateTime(
+        startOfWeek: startOfWeek,
+        endOfWeek: endOfWeek,
+        startOfMonth: startOfMonth,
+        endOfMonth: endOfMonth,
+        firstDayOfQuarter: DateTime.now(),
+        lastDayOfQuarter: DateTime.now(),
+        startOfYear: DateTime.now(),
+        endOfYear: DateTime.now());
+    return listDateTime;
   }
 }
