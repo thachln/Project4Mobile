@@ -66,40 +66,11 @@ class _TransactionsScreenState extends State<TransactionsScreen>
               ],
             ),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      'Số dư',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    Text(
-                      '1,000,000đ',
-                      style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.blue,
-                      ),
-                    ),
-                  ],
-                ),
-                Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
                     Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        IconButton(
-                          onPressed: () {},
-                          icon: Icon(Icons.search),
-                          tooltip: 'Tìm kiếm',
-                        ),
+                      mainAxisSize: MainAxisSize.max,
+                      children: [                    
                         IconButton(
                           onPressed: () {},
                           icon: Icon(Icons.more_horiz),
@@ -107,8 +78,7 @@ class _TransactionsScreenState extends State<TransactionsScreen>
                         ),
                       ],
                     ),
-                  ],
-                ),
+                
               ],
             ),
           ),

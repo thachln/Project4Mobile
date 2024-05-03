@@ -16,6 +16,16 @@ class ListWithTime extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if(listTransactionReport.length == 0){
+      return Center(
+        child: Text('Không có dữ liệu'),
+      );
+    }
+    if(listTransactionTop5.length == 0){
+      return Center(
+        child: Text('Không có dữ liệu'),
+      );
+    }
     var maxAmount = listTransactionReport.map((transaction) => transaction.amount).reduce((value, element) => value > element ? value : element);
     return Column(
       children: [
