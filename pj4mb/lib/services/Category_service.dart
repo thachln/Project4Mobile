@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:pj4mb/api/endpoint.dart';
 import 'package:pj4mb/models/Category/Cat_Icon.dart';
+import 'package:pj4mb/models/Category/CateTypeENum.dart';
 import 'package:pj4mb/models/Category/Category.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -15,10 +16,10 @@ class CategoryService {
       'Content-Type': 'application/json',
       'Authorization': 'Bearer $token',
     };
-    print(token);
+    
     final response = await http
         .get(Uri.parse(EndPoint.GetCategory.replaceAll("{userId}", userid!)),headers: headersValue);
-    //print(response.body);
+    print(response.body);
     if (response.statusCode == 200) {
       final List<dynamic> parsed = jsonDecode(response.body);
       //return parsed.map((e) => Category.fromJson(e)).toList();
@@ -33,6 +34,31 @@ class CategoryService {
       return categories;
     } else {
       return [];
+    }
+  }
+
+  Future<CategoryResponse> GetCategoryWithId(int categoryID) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var userid = prefs.getString('userid');
+    var token = prefs.getString('token');
+    var headersValue = {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer $token',
+    };
+    
+    final response = await http
+        .get(Uri.parse(EndPoint.GetCategoryWithId.replaceAll("{categoryId}", categoryID.toString())),headers: headersValue);
+    print(response.body);
+    if (response.statusCode == 200) {
+
+      final Map<String, dynamic> parsed = jsonDecode(response.body);
+      //return parsed.map((e) => Category.fromJson(e)).toList();
+     CategoryResponse category = CategoryResponse.fromJson(parsed);
+      
+      
+      return category;
+    } else {
+      return CategoryResponse(categoryID: 0, name: '', CategoryType: CateTypeENum.EXPENSE, icon: '', user: 0);
     }
   }
 

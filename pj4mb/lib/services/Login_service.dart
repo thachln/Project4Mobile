@@ -21,6 +21,8 @@ class LoginService {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       await prefs.setString('userid', parsed['id'].toString());
       await prefs.setString('token', parsed['accessToken'].toString());
+      await prefs.setString('username', parsed['username'].toString());
+      await prefs.setString('email', parsed['email'].toString());
       print(parsed);
       print('Token ne' + prefs.getString('token')!);
       return User.fromJson(parsed);

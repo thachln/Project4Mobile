@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pj4mb/screens/Account/Category.dart';
 import 'package:pj4mb/screens/Account/MyWallet.dart';
+import 'package:pj4mb/screens/Bill/BillPage.dart';
 import 'package:pj4mb/screens/Login.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -13,6 +14,22 @@ class AccountsPage extends StatefulWidget {
 }
 
 class _AccountsPageState extends State<AccountsPage> {
+  late SharedPreferences prefs;
+  String userName = "";
+  String email = "";
+  @override
+  void initState() {
+    super.initState();
+    loadUserData();
+  }
+
+  void loadUserData() async {
+    prefs = await SharedPreferences.getInstance(); 
+    setState(() {
+      userName = prefs.getString('username') ?? ""; 
+      email = prefs.getString('email') ?? "";
+    });
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -31,20 +48,20 @@ class _AccountsPageState extends State<AccountsPage> {
                 subtitle: Column(
                   children: [
                     Text(
-                      "tranhoangtu007",
+                      userName,
                       textAlign: TextAlign.center,
                       style: TextStyle(
-                        color: Colors.black, // May want to change color to black for better contrast
+                        color: Colors.black, 
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                     SizedBox(height: 8),
                     Text(
-                      "tranhoangtu007@gmail.com",
+                      email,
                       textAlign: TextAlign.center,
                       style: TextStyle(
-                        color: Colors.black, // May want to change color to black for better contrast
+                        color: Colors.black,
                         fontSize: 14,
                         fontWeight: FontWeight.normal
                       ),
@@ -52,7 +69,6 @@ class _AccountsPageState extends State<AccountsPage> {
                   ],
                 ),
                 onTap: () {},
-                trailing: Icon(Icons.arrow_forward_ios),
               ),
             ),
 
@@ -68,6 +84,22 @@ class _AccountsPageState extends State<AccountsPage> {
             ListTile(
               leading: Icon(Icons.group),
               title: Text("Group"),
+              trailing: Icon(Icons.arrow_forward_ios),
+              onTap: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => CategoryPage(flag: 0,)));        
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.document_scanner),
+              title: Text("Bill"),
+              trailing: Icon(Icons.arrow_forward_ios),
+              onTap: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => BillPage()));        
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.info),
+              title: Text("Information"),
               trailing: Icon(Icons.arrow_forward_ios),
               onTap: () {
                 Navigator.push(context, MaterialPageRoute(builder: (context) => CategoryPage(flag: 0,)));        

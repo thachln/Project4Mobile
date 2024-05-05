@@ -1,0 +1,4 @@
+enum MonthOption {
+    SAMEDAY,
+    DAYOFWEEKOFMONTH
+}

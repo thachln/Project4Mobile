@@ -10,7 +10,7 @@ class Transaction{
   final double amount;
   final DateTime transactionDate;
   final int categoryId;
-  final String notes;
+  final String? notes;
 
 
   Transaction({

@@ -40,7 +40,6 @@ class _TransactionsScreenState extends State<TransactionsScreen>
 
   @override
   void dispose() {
-    // Giải phóng TabController khi State bị loại bỏ
     _tabController?.dispose();
     super.dispose();
   }
@@ -105,7 +104,6 @@ class _TransactionsScreenState extends State<TransactionsScreen>
                   ),
                   Expanded(
                     child: TabBarView(
-                      // Đặt controller cho TabBarView để đồng bộ với TabBar
                       controller: _tabController,
                       children: [
                         FutureBuilder<List<TransactionData>>(
@@ -119,7 +117,25 @@ class _TransactionsScreenState extends State<TransactionsScreen>
                               return Center(
                                   child: Text('Error: ${snapshot.error}'));
                             } else {
-                              return HistoryWidgets(listTransaction: snapshot.data!);
+                              return HistoryWidgets(listTransaction: snapshot.data!, onSave: (value) {  
+                                if(value)
+                                {
+                                  setState(() {
+                                  listTransactionThisMonth = TransactionService().GetTransactionWithTime(ParamPudget(
+                                    userId: 0,
+                                    fromDate: listDateTimeThisMonth.startOfMonth,
+                                    toDate: listDateTimeThisMonth.endOfMonth
+                                  ));
+                                  listTransactionLastMonth = TransactionService().GetTransactionWithTime(ParamPudget(
+                                    userId: 0,
+                                    fromDate: listDateTimeLastMonth.startOfMonth,
+                                    toDate: listDateTimeLastMonth.endOfMonth
+                                  ));
+                                });
+                                }
+                                 
+
+                              },);
                             }
                           },
                         ),
@@ -134,7 +150,24 @@ class _TransactionsScreenState extends State<TransactionsScreen>
                               return Center(
                                   child: Text('Error: ${snapshot.error}'));
                             } else {
-                              return HistoryWidgets(listTransaction: snapshot.data!);
+                              return HistoryWidgets(listTransaction: snapshot.data!, onSave: (value) { 
+                                if(value)
+                                {
+                                  setState(() {
+                                  listTransactionThisMonth = TransactionService().GetTransactionWithTime(ParamPudget(
+                                    userId: 0,
+                                    fromDate: listDateTimeThisMonth.startOfMonth,
+                                    toDate: listDateTimeThisMonth.endOfMonth
+                                  ));
+                                  listTransactionLastMonth = TransactionService().GetTransactionWithTime(ParamPudget(
+                                    userId: 0,
+                                    fromDate: listDateTimeLastMonth.startOfMonth,
+                                    toDate: listDateTimeLastMonth.endOfMonth
+                                  ));
+                                });
+                                }
+
+                               },);
                             }
                           },
                         ),

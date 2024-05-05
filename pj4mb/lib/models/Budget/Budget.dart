@@ -49,22 +49,23 @@ class Budget{
 }
 
 class BudgetResponse {
+  late int budgetId;
   late String categoryName;
   late String categoryIcon;
   late double amount;
 	late double thresholdAmount;
   
-
   BudgetResponse({
+    required this.budgetId,
     required this.categoryName,
     required this.categoryIcon,
     required this.amount,
     required this.thresholdAmount
   });
 
-
   factory BudgetResponse.fromJson(Map<String, dynamic> json) {
     return BudgetResponse(
+      budgetId: json['budgetId'],
       categoryName: json['categoryName'],
       categoryIcon: json['categoryIcon'],
       amount: json['amount'],
@@ -72,9 +73,9 @@ class BudgetResponse {
     );
   }
 
-
   Map<String, dynamic> toJson() {
     return {
+      'budgetId': budgetId,
       'categoryName': categoryName,
       'categoryIcon': categoryIcon,
       'amount': amount,

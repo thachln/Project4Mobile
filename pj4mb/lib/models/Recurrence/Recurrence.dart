@@ -1,10 +1,11 @@
-import 'package:pj4mb/models/Recurrence/RecurrenceType.dart';
+
+import 'package:pj4mb/models/Bill/FrequencyType.dart';
 import 'package:pj4mb/models/User/User.dart';
 
 class Recurrence{
   final int recurrenceId;
   final User user;
-  final RecurrenceType recurrenceType;
+  final FrequencyType recurrenceType;
   final DateTime startDate;
   final DateTime endDate;
   final int intervalAmount;
@@ -17,7 +18,7 @@ class Recurrence{
     return Recurrence(
       recurrenceId: json['recurrenceId'],
       user: User.fromJson(json['user']),
-      recurrenceType: RecurrenceType.values.firstWhere((e) => e.toString() == 'RecurrenceType.'+json['recurrenceType']),
+      recurrenceType: FrequencyType.values.firstWhere((e) => e.toString() == 'RecurrenceType.'+json['recurrenceType']),
       startDate: DateTime.parse(json['startDate']),
       endDate: DateTime.parse(json['endDate']),
       intervalAmount: json['intervalAmount'],

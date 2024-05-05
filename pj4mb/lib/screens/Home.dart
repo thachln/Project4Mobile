@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:pj4mb/screens/AddTransaction.dart';
+import 'package:pj4mb/screens/Account/AccountsPage.dart';
+import 'package:pj4mb/screens/Budget/BudgetPage.dart';
+
 import 'package:pj4mb/screens/Overview.dart';
-import 'package:pj4mb/screens/TransactionsScreen.dart';
-import 'package:pj4mb/screens/BudgetPage.dart';
-import 'package:pj4mb/screens/page/AccountsPage.dart';
+import 'package:pj4mb/screens/Transaction/AddTransaction.dart';
+import 'package:pj4mb/screens/Transaction/TransactionsScreen.dart';
+
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});

@@ -25,31 +25,38 @@ class TransactionView{
 
 
 class TransactionData{
+  final int transactionID;
   final String categoryName;
 	final String cateIcon;
 	final double amount;
 	final String Type;
 	final double totalAmount;
+  final int categoryId;
 
-  TransactionData({required this.categoryName, required this.cateIcon, required this.amount, required this.Type, required this.totalAmount});
+  TransactionData({required this.transactionID, required this.categoryName, required this.cateIcon, required this.amount, required this.Type, required this.totalAmount, required this.categoryId});
 
   factory TransactionData.fromJson(Map<String, dynamic> json){
     return TransactionData(
+      transactionID: json['transactionID'],
       categoryName: json['categoryName'],
       cateIcon: json['cateIcon'],
       amount: json['amount'],
       Type: json['type'],
-      totalAmount: json['totalAmount']
+      totalAmount: json['totalAmount'],
+      categoryId: json['categoryId']
     );
   }
 
   Map<String, dynamic> toJson() => {
+    'transactionID': transactionID,
     'categoryName': categoryName,
     'cateIcon': cateIcon,
     'amount': amount,
     'type': Type,
-    'totalAmount': totalAmount
+    'totalAmount': totalAmount,
+    'categoryId': categoryId
   };
+  
 }
 
 class TransactionReport{

@@ -6,11 +6,12 @@ import 'package:flutter/widgets.dart';
 import 'package:pj4mb/models/Budget/Budget.dart';
 import 'package:pj4mb/models/Budget/ListDateTime.dart';
 import 'package:pj4mb/models/Budget/ParamBudget.dart';
-import 'package:pj4mb/screens/page/AddBudgetPage.dart';
-import 'package:pj4mb/screens/page/BudgetList.dart';
+import 'package:pj4mb/screens/Budget/AddBudgetPage.dart';
 import 'package:pj4mb/services/Budget_service.dart';
+import 'package:pj4mb/widgets/Budget/BudgetList.dart';
+
 import 'package:pj4mb/widgets/Overview/ListOverview.dart';
-import '../aset/custom_arc_180_painter.dart';
+import '../../aset/custom_arc_180_painter.dart';
 
 class BudgetPage extends StatefulWidget {
   const BudgetPage({Key? key}) : super(key: key);
@@ -42,38 +43,7 @@ class _BudgetPageState extends State<BudgetPage>
     super.dispose();
   }
 
-  List<Widget> budgetCharts = [
-    CustomPaint(
-      painter: CustomArc180Painter(
-        drwArcs: [
-          ArcValueModel(color: Colors.green, value: 20),
-          ArcValueModel(color: Colors.orange, value: 30),
-          ArcValueModel(color: Colors.red, value: 25),
-        ],
-        end: 50,
-        width: 12,
-        bgWidth: 8,
-      ),
-    ),
-  ];
-
-  List<Widget> budgetInfo = [
-    Column(
-      children: [
-        Text(
-          "\$100,00",
-          style: TextStyle(
-              color: Colors.black, fontSize: 24, fontWeight: FontWeight.bold),
-        ),
-        Text(
-          "of \$1,0000 budget",
-          style: TextStyle(
-              color: Colors.black, fontSize: 12, fontWeight: FontWeight.bold),
-        ),
-      ],
-    ),
-  ];
-
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -108,7 +78,18 @@ class _BudgetPageState extends State<BudgetPage>
                           return Center(
                               child: Text('Error: ${snapshot.error}'));
                         } else {
-                          return BudgetList(listBudget: snapshot.data ?? []);
+                          return BudgetList(listBudget: snapshot.data ?? [], onSave: (value) { 
+                            if(value)
+                            {
+                              setState(() {
+                                listBudget = Budget_Service().GetBudgetWithTime(ParamPudget(
+                                  userId: 0,
+                                  fromDate: listDateTime.startOfMonth,
+                                  toDate: listDateTime.endOfMonth
+                                ));
+                              });
+                            }
+                           },);
                         }
                       },
                     ),
@@ -119,13 +100,24 @@ class _BudgetPageState extends State<BudgetPage>
           ),
         ),
         floatingActionButton: FloatingActionButton(
-            onPressed: () {
-              Navigator.push(
+            onPressed: () async{
+              var reuslt = await Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => AddBudgetPage()),
               );
+              if(reuslt)
+              {
+                setState(() {
+                  listBudget = Budget_Service().GetBudgetWithTime(ParamPudget(
+                    userId: 0,
+                    fromDate: listDateTime.startOfMonth,
+                    toDate: listDateTime.endOfMonth
+                  ));
+                });
+              }
             },
             child: Icon(Icons.add, color: Colors.white),
+            mini: true,
             backgroundColor: Colors.pink[200],
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(20.0),

@@ -1,13 +1,12 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
-import 'package:pj4mb/models/Transaction/Transaction.dart';
-import 'package:pj4mb/models/Transaction/TransactionView.dart';
+import 'dart:math' as math;
+import '../../models/Transaction/TransactionView.dart';
 
-class ListWithTime extends StatelessWidget {
-  const ListWithTime(
+class ListOverviewMonth extends StatelessWidget {
+  const ListOverviewMonth(
       {super.key,
       required this.listTransactionTop5,
       required this.listTransactionReport});
@@ -16,18 +15,27 @@ class ListWithTime extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if(listTransactionReport.length == 0){
+    if (listTransactionReport.length == 0) {
       return Center(
         child: Text('Không có dữ liệu'),
       );
     }
-    if(listTransactionTop5.length == 0){
+    if (listTransactionTop5.length == 0) {
       return Center(
         child: Text('Không có dữ liệu'),
       );
     }
-    var maxAmount = listTransactionReport.map((transaction) => transaction.amount).reduce((value, element) => value > element ? value : element);
-    print(maxAmount);
+    
+    final groupedTransactions = <String, double>{};
+
+  for (var transaction in listTransactionReport) {
+    String monthYear = DateFormat('MM-yyyy').format(transaction.transactionDate);
+    groupedTransactions.update(monthYear, (value) => value + transaction.amount, ifAbsent: () => transaction.amount);
+  }
+  double maxAmount = groupedTransactions.values.reduce(math.max);
+  List<String> month = groupedTransactions.keys.toList();
+  List<double> monthValue = groupedTransactions.values.toList();
+  
     return Column(
       children: [
         SizedBox(height: 10.0),
@@ -39,31 +47,28 @@ class ListWithTime extends StatelessWidget {
                 sideTitles: SideTitles(
                   showTitles: true,
                   getTitlesWidget: (value, meta) {
-                    TransactionReport transactionReport =
-                        listTransactionReport[value.toInt()];
-                    final String date = DateFormat('dd/MM')
-                        .format(transactionReport.transactionDate);
+                    String monthYear = month[value.toInt()];
                     return SideTitleWidget(
-                      child: Text(date),
+                      child: Text(monthYear),
                       axisSide: meta.axisSide,
                     );
                   },
                 ),
               ),
             ),
-            
+
             gridData: FlGridData(
               show: false,
             ),
             minY: 0, // Điều chỉnh giới hạn dưới nếu cần
-            maxY: maxAmount + 100000,
-            barGroups: List.generate(listTransactionReport.length, (index) {
-              final dayData = listTransactionReport[index];            
+            maxY: maxAmount + 10000,
+            barGroups: List.generate(monthValue.length, (index) {
+              double amount = monthValue[index];
               return BarChartGroupData(
                 x: index,
                 barRods: [
                   BarChartRodData(
-                    toY: dayData.amount.toDouble(),
+                    toY: amount,
                     color: Colors.blueAccent,
                   ),
                 ],
@@ -89,4 +94,6 @@ class ListWithTime extends StatelessWidget {
       ],
     );
   }
+  
 }
+

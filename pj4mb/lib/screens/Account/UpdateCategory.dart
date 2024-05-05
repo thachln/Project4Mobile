@@ -173,7 +173,7 @@ class _UpdateCategoryPageState extends State<UpdateCategoryPage> {
                     CategoryType: typeCategory,
                     icon: element,
                     user: 0);            
-                var result = await CategoryService().InsertCategory(category);
+                var result = await CategoryService().updateCategory(category);
                 if (result) {
                   showDialog(
                     context: context,
@@ -199,7 +199,7 @@ class _UpdateCategoryPageState extends State<UpdateCategoryPage> {
                     builder: (BuildContext context) {
                       return AlertDialog(
                         title: Text('Thông báo'),
-                        content: Text('Error: Insert fail!'),
+                        content: Text('Error: Update fail!'),
                         actions: [
                           TextButton(
                             onPressed: () {

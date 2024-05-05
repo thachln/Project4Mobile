@@ -332,7 +332,7 @@ class _AddBudgetPageState extends State<AddBudgetPage> {
                     //   selectedDateStart = localCustomStartDate;
                     //   selectedDateEnd = localCustomEndDate;
                     // });
-                    Navigator.of(context).pop();
+                    Navigator.of(context).pop(true);
                   },
                 ),
               ],

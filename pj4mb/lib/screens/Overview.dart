@@ -10,10 +10,11 @@ import 'package:pj4mb/models/Transaction/TransactionView.dart';
 import 'package:pj4mb/models/Wallet/Wallet.dart';
 import 'package:pj4mb/screens/Account/Debt.dart';
 import 'package:pj4mb/screens/Account/MyWallet.dart';
-import 'package:pj4mb/screens/TransactionsScreen.dart';
+import 'package:pj4mb/screens/Transaction/TransactionsScreen.dart';
 import 'package:pj4mb/services/Transacsion_service.dart';
 import 'package:pj4mb/services/Wallet_service.dart';
 import 'package:pj4mb/widgets/Account/ListWallet.dart';
+import 'package:pj4mb/widgets/Overview/ListOverviewMonth.dart';
 import 'package:pj4mb/widgets/Overview/ListTop5NewTransaction.dart';
 import 'package:pj4mb/widgets/Overview/ListWalletOverview.dart';
 import 'package:pj4mb/widgets/Overview/ListOverview.dart';
@@ -30,6 +31,7 @@ class _OverviewState extends State<Overview> with TickerProviderStateMixin {
   bool _isObscure = true;
   late Future<List<Wallet>> walletList;
   late Future<List<TransactionView>> transactionListTop5;
+  late Future<List<TransactionView>> transactionListTop5Month;
   late Future<List<TransactionView>> transactionListTop5NewTransaction;
   late Future<List<TransactionReport>> getTransactionReportThisWeek;
   late Future<List<TransactionReport>> getTransactionReportThisMonth;
@@ -39,7 +41,7 @@ class _OverviewState extends State<Overview> with TickerProviderStateMixin {
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
     walletList = WalletService().GetWallet();
-    transactionListTop5 = TransactionService().getTop5TransactionHightestMoney();
+    
     transactionListTop5NewTransaction = TransactionService().getTop5NewTransaction();
     listDateTime = getFullDays(DateTime.now());
     ParamPudget paramThisWeek = new ParamPudget(
@@ -50,8 +52,10 @@ class _OverviewState extends State<Overview> with TickerProviderStateMixin {
         userId: 0,
         fromDate: listDateTime.startOfMonth,
         toDate: listDateTime.endOfMonth);
+    transactionListTop5 = TransactionService().getTop5TransactionHightestMoney(paramThisWeek);
+    transactionListTop5Month = TransactionService().getTop5TransactionHightestMoney(paramThisMonth);
     getTransactionReportThisWeek = TransactionService().GetTransactionReport(paramThisWeek);
-    getTransactionReportThisMonth = TransactionService().GetTransactionReport(paramThisMonth);
+    getTransactionReportThisMonth = TransactionService().GetTransactionReportMonth(paramThisMonth);
   }
 
   @override
@@ -143,14 +147,7 @@ class _OverviewState extends State<Overview> with TickerProviderStateMixin {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text('Báo cáo chi tiêu',
-                      style: TextStyle(fontWeight: FontWeight.bold)),
-                  InkWell(
-                    onTap: () {
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => DebtPage()));
-                    },
-                    child: Text('Xem báo cáo'),
-                  )
+                      style: TextStyle(fontWeight: FontWeight.bold)),                
                 ],
               ),
               Container(
@@ -202,7 +199,7 @@ class _OverviewState extends State<Overview> with TickerProviderStateMixin {
                                   },
                                 ),
                                 FutureBuilder<List<dynamic>>(
-                                  future: Future.wait([transactionListTop5, getTransactionReportThisMonth]) ,
+                                  future: Future.wait([transactionListTop5Month, getTransactionReportThisMonth]) ,
                                   builder: (BuildContext context,
                                       AsyncSnapshot<List<dynamic>> snapshot) {
                                     if (snapshot.connectionState ==
@@ -217,7 +214,7 @@ class _OverviewState extends State<Overview> with TickerProviderStateMixin {
 
                                         List<TransactionView> listTransactionTop5 = snapshot.data![0];
                                         List<TransactionReport> listTransactionReport = snapshot.data![1];                                       
-                                      return ListWithTime(
+                                      return ListOverviewMonth(
                                         listTransactionTop5: listTransactionTop5, 
                                         listTransactionReport: listTransactionReport,
                                       );

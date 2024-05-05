@@ -33,7 +33,6 @@ class _AddTransactionPageState extends State<AddTransactionPage> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
 
     valueWallet = WalletService().GetWallet();
@@ -87,7 +86,7 @@ class _AddTransactionPageState extends State<AddTransactionPage> {
               ),
               Row(
                 children: [
-                  Icon(Icons.question_mark_rounded),
+                  Icon(Icons.category),
                   SizedBox(
                     width: 10,
                   ),
