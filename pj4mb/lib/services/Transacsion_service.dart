@@ -108,10 +108,10 @@ class TransactionService {
       'Content-Type': 'application/json',
       'Authorization': 'Bearer $token'
     };
-    print(param.toJson());
+  
     var bodyValue = jsonEncode(param.toJson());
     var url = Uri.parse(EndPoint.GetTransactionReport);
-    print(url);
+
     var response = await http.post(url,body: bodyValue, headers: headersValue);
     if (response.statusCode == 200) {
       final List<dynamic> parsed = jsonDecode(response.body);
@@ -142,10 +142,10 @@ class TransactionService {
       'Content-Type': 'application/json',
       'Authorization': 'Bearer $token'
     };
-    print(param.toJson());
+
     var bodyValue = jsonEncode(param.toJson());
     var url = Uri.parse(EndPoint.GetTransactionReportMonth);
-    print(url);
+
     var response = await http.post(url,body: bodyValue, headers: headersValue);
     if (response.statusCode == 200) {
       final List<dynamic> parsed = jsonDecode(response.body);
@@ -180,7 +180,7 @@ class TransactionService {
     var url = Uri.parse(EndPoint.GetTransactionById.replaceAll('{id}',id.toString()));
     var response = await http.get(url, headers: headersValue);
     if (response.statusCode == 200) {
-      print(response.body);
+  
       final Map<String, dynamic> parsed = jsonDecode(response.body);
       //return parsed.map((e) => Category.fromJson(e)).toList();
       Transaction transaction = Transaction.fromJson(parsed);
@@ -203,7 +203,7 @@ class TransactionService {
     };
     trans.userId = int.parse(userid!);
     final response = await http.post(Uri.parse(EndPoint.InsertTransaction),body: jsonEncode(trans.toJson()),headers: headersValue);
-    print(response.statusCode);
+
     if (response.statusCode == 200) {     
       return true;
     } else {
@@ -223,7 +223,7 @@ class TransactionService {
     var bodyValue = jsonEncode(trans.toJson());
     trans.userId = int.parse(userid!);
     final response = await http.put(Uri.parse(EndPoint.UpdateTransaction.replaceAll('{id}',trans.transactionId.toString())),body: bodyValue,headers: headersValue);
-    print(response.statusCode);
+  
     if (response.statusCode == 200) {     
       ResponseApi responseApi = new ResponseApi(message: response.body, status: response.statusCode, data: '');
       return responseApi;
@@ -243,7 +243,7 @@ class TransactionService {
       'Authorization': 'Bearer $token',
     };
     final response = await http.delete(Uri.parse(EndPoint.DeleteTransaction.replaceAll("{id}", transId.toString())),headers: headersValue);
-    print(response.statusCode);
+
     if (response.statusCode == 204) {     
       ResponseApi responseApi = new ResponseApi(message: response.body, status: response.statusCode, data: '');
       return responseApi;

@@ -67,9 +67,9 @@ class WalletService {
       'Authorization': 'Bearer $token',
     };
     wallet.userId = int.parse(userid!);
-    print(wallet.toJson());
+
     final response = await http.post(Uri.parse(EndPoint.InsertWallet),body: jsonEncode(wallet.toJson()),headers: headersValue);
-    print(response.statusCode);
+
     if (response.statusCode == 201) {     
       return true;
     } else {
@@ -85,7 +85,7 @@ class WalletService {
       'Authorization': 'Bearer $token',
     };
     wallet.userId = int.parse(userid!);
-    print(wallet.toJson());
+
     final response = await http.put(Uri.parse(EndPoint.UpdateWallet.replaceAll("{walletID}", wallet.walletID.toString())),body: jsonEncode(wallet.toJson()),headers: headersValue);
     if (response.statusCode == 200) {     
       return true;

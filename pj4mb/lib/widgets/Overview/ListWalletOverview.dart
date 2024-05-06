@@ -11,8 +11,9 @@ class ListWalletOverview extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
     return ListView.builder(
-        itemCount: 2,
+        itemCount: listWallet.length > 2 ? 2 : listWallet.length,
         shrinkWrap: true,
         physics: NeverScrollableScrollPhysics(),
         itemBuilder: (context, index) {

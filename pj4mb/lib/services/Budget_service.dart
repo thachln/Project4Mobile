@@ -22,7 +22,7 @@ class Budget_Service{
     print(budget.toJson());
     final response = await http
         .post(Uri.parse(EndPoint.InsertBudget), body: jsonEncode(budget.toJson()),headers: headersValue);
-        print(response.statusCode);
+     
     if (response.statusCode == 200) {
       return true;
     }    
@@ -44,7 +44,7 @@ class Budget_Service{
     var url = Uri.parse(EndPoint.GetBudgetWithID.replaceAll('{id}',id.toString()));
     var response = await http.get(url, headers: headersValue);
     if (response.statusCode == 200) {
-      print(response.body);
+   
       final Map<String, dynamic> parsed = jsonDecode(response.body);
       //return parsed.map((e) => Category.fromJson(e)).toList();
       Budget transaction = Budget.fromJson(parsed);
@@ -65,14 +65,14 @@ class Budget_Service{
       'Authorization': 'Bearer $token',
     };
     paramPudget.userId = int.parse(userid!);
-    print(paramPudget.toJson());
+ 
     final response = await http
         .post(Uri.parse(EndPoint.GetBudgetWithTime),body: jsonEncode(paramPudget.toJson()),headers: headersValue);
-    print(response.body);
+
     if (response.statusCode == 200) {
       final List<dynamic> parsed = jsonDecode(response.body);
       //return parsed.map((e) => Category.fromJson(e)).toList();
-       print(response.body);
+   
       List<BudgetResponse> BudgetList = [];
       for (var item in parsed) {
         if (item is Map<String, dynamic>) {
@@ -98,7 +98,7 @@ class Budget_Service{
      bud.userId = int.parse(userid!);
     var bodyValue = jsonEncode(bud.toJson());
     final response = await http.put(Uri.parse(EndPoint.UpdateBudget.replaceAll('{id}',bud.budgetId.toString())),body: bodyValue,headers: headersValue);
-    print(response.statusCode);
+ 
     if (response.statusCode == 200) {     
       ResponseApi responseApi = new ResponseApi(message: response.body, status: response.statusCode, data: '');
       return responseApi;
@@ -118,7 +118,7 @@ class Budget_Service{
       'Authorization': 'Bearer $token',
     };
     final response = await http.delete(Uri.parse(EndPoint.DeleteBudget.replaceAll("{id}", budgetId.toString())),headers: headersValue);
-    print(response.statusCode);
+
     if (response.statusCode == 204) {     
       ResponseApi responseApi = new ResponseApi(message: response.body, status: response.statusCode, data: '');
       return responseApi;

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:pj4mb/models/Bill/Bill.dart';
+import 'package:pj4mb/models/Bill/BillResponse.dart';
 import 'package:pj4mb/screens/Bill/AddBill.dart';
 import 'package:pj4mb/services/Bill_service.dart';
+import 'package:pj4mb/widgets/Bill/BillList.dart';
 
 class BillPage extends StatefulWidget {
   const BillPage({super.key});
@@ -12,11 +14,14 @@ class BillPage extends StatefulWidget {
 
 class _BillPageState extends State<BillPage> with TickerProviderStateMixin {
   TabController? _tabController;
-  late Future<List<Bill>> bill; //= BillService().GetBill();
+  late Future<List<BillResponse>> billActive; 
+  late Future<List<BillResponse>> billExpired; 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
+    billActive = BillService().findBillActive();
+    billExpired = BillService().findBillExpired();
   }
 
   @override
@@ -55,44 +60,52 @@ class _BillPageState extends State<BillPage> with TickerProviderStateMixin {
               child: TabBarView(
                 controller: _tabController,
                 children: [
-                  Center(child: Text('Không có dữ liệu')),
-                  Center(child: Text('Không có dữ liệu'))
-                  // FutureBuilder<List<Bill>>(
-                  //   future: bill,
-                  //   builder: (BuildContext context,
-                  //       AsyncSnapshot<List<Bill>> snapshot) {
-                  //     if (snapshot.connectionState ==
-                  //         ConnectionState.waiting) {
-                  //       return Center(child: CircularProgressIndicator());
-                  //     } else if (snapshot.hasError) {
-                  //       return Center(
-                  //           child: Text('Error: ${snapshot.error}'));
-                  //     } else {
-                  //       if(snapshot.data!.isEmpty){
-                  //         return Center(child: Text('Không có dữ liệu'));
-                  //       }
-                  //       return Center(child: Text('Không có dữ liệu'));
-                  //     }
-                  //   },
-                  // ),
-                  // FutureBuilder<List<Bill>>(
-                  //   future: bill,
-                  //   builder: (BuildContext context,
-                  //       AsyncSnapshot<List<Bill>> snapshot) {
-                  //     if (snapshot.connectionState ==
-                  //         ConnectionState.waiting) {
-                  //       return Center(child: CircularProgressIndicator());
-                  //     } else if (snapshot.hasError) {
-                  //       return Center(
-                  //           child: Text('Error: ${snapshot.error}'));
-                  //     } else {
-                  //       if(snapshot.data!.isEmpty){
-                  //         return Center(child: Text('Không có dữ liệu'));
-                  //       }
-                  //       return Center(child: Text('Không có dữ liệu'));
-                  //     }
-                  //   },
-                  // ),
+                  FutureBuilder<List<BillResponse>>(
+                    future: billActive,
+                    builder: (BuildContext context,
+                        AsyncSnapshot<List<BillResponse>> snapshot) {
+                      if (snapshot.connectionState ==
+                          ConnectionState.waiting) {
+                        return Center(child: CircularProgressIndicator());
+                      } else if (snapshot.hasError) {
+                        return Center(
+                            child: Text('Error: ${snapshot.error}'));
+                      } else {
+                        if(snapshot.data!.isEmpty){
+                          return Center(child: Text('Không có dữ liệu'));
+                        }
+                        return BillList(listBill: snapshot.data!, onSave: (value) { 
+                          setState(() {
+                            billActive = BillService().findBillActive();
+                            billExpired = BillService().findBillExpired();
+                          });
+                         },);
+                      }
+                    },
+                  ),
+                  FutureBuilder<List<BillResponse>>(
+                    future: billExpired,
+                    builder: (BuildContext context,
+                        AsyncSnapshot<List<BillResponse>> snapshot) {
+                      if (snapshot.connectionState ==
+                          ConnectionState.waiting) {
+                        return Center(child: CircularProgressIndicator());
+                      } else if (snapshot.hasError) {
+                        return Center(
+                            child: Text('Error: ${snapshot.error}'));
+                      } else {
+                        if(snapshot.data!.isEmpty){
+                          return Center(child: Text('Không có dữ liệu'));
+                        }
+                         return BillList(listBill: snapshot.data!, onSave: (value) { 
+                           setState(() {
+                            billActive = BillService().findBillActive();
+                            billExpired = BillService().findBillExpired();
+                          });
+                          },);
+                      }
+                    },
+                  ),
                 ],
               ),
             ),
@@ -102,8 +115,15 @@ class _BillPageState extends State<BillPage> with TickerProviderStateMixin {
       floatingActionButton: FloatingActionButton(
           child: Icon(Icons.add, color: Colors.white),
           onPressed: () async {
-            Navigator.push(context,
+            var result = await Navigator.push(context,
                 MaterialPageRoute(builder: (context) => AddBillPage()));
+            if(result){
+              setState(() {
+                billActive = BillService().findBillActive();
+                billExpired = BillService().findBillExpired();
+              });
+            
+            }
           },
           backgroundColor: Colors.pink[200],
           mini: true,

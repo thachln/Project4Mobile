@@ -27,7 +27,6 @@ class ListWithTime extends StatelessWidget {
       );
     }
     var maxAmount = listTransactionReport.map((transaction) => transaction.amount).reduce((value, element) => value > element ? value : element);
-    print(maxAmount);
     return Column(
       children: [
         SizedBox(height: 10.0),

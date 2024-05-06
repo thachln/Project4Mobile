@@ -51,7 +51,7 @@ class _HomePageState extends State<HomePage> {
           ),
           BottomNavigationBarItem(
             icon: new Icon(Icons.list),
-            label: 'Số giao dịch',
+            label: 'Giao dịch',
           ),
           BottomNavigationBarItem(
               icon: FloatingActionButton(

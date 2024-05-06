@@ -37,8 +37,9 @@ class ListWallet extends StatelessWidget {
                 },
                 child: Container(
                   margin: EdgeInsets.only(top: 10),
-                  color: Colors.blueGrey[200],
+                  
                   child: ListTile(
+                      leading: Icon(Icons.account_balance_wallet_outlined),
                       title: Text(wallet.walletName),
                       subtitle: Text(wallet.balance.toString()),
                       trailing: InkWell(

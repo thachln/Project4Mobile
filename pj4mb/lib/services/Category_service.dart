@@ -19,7 +19,7 @@ class CategoryService {
     
     final response = await http
         .get(Uri.parse(EndPoint.GetCategory.replaceAll("{userId}", userid!)),headers: headersValue);
-    print(response.body);
+
     if (response.statusCode == 200) {
       final List<dynamic> parsed = jsonDecode(response.body);
       //return parsed.map((e) => Category.fromJson(e)).toList();
@@ -48,7 +48,7 @@ class CategoryService {
     
     final response = await http
         .get(Uri.parse(EndPoint.GetCategoryWithId.replaceAll("{categoryId}", categoryID.toString())),headers: headersValue);
-    print(response.body);
+
     if (response.statusCode == 200) {
 
       final Map<String, dynamic> parsed = jsonDecode(response.body);

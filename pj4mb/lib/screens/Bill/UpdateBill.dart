@@ -11,16 +11,18 @@ import 'package:pj4mb/models/Recurrence/Recurrence.dart';
 import 'package:pj4mb/models/Wallet/Wallet.dart';
 import 'package:pj4mb/screens/Account/Category.dart';
 import 'package:pj4mb/services/Bill_service.dart';
+import 'package:pj4mb/services/Category_service.dart';
 import 'package:pj4mb/services/Wallet_service.dart';
 
-class AddBillPage extends StatefulWidget {
-  const AddBillPage({super.key});
+class UpdateBillPage extends StatefulWidget {
+  const UpdateBillPage({super.key, required this.bill});
+  final Bill bill;
 
   @override
-  State<AddBillPage> createState() => _AddBillPageState();
+  State<UpdateBillPage> createState() => _UpdateBillPageState();
 }
 
-class _AddBillPageState extends State<AddBillPage> {
+class _UpdateBillPageState extends State<UpdateBillPage> {
   //EditController
   TextEditingController moneyNumber = new TextEditingController();
   TextEditingController everyDailyNumber = new TextEditingController();
@@ -29,10 +31,12 @@ class _AddBillPageState extends State<AddBillPage> {
 
   //Model
   Category? valueCate;
+  late List<Category> valueCateResponse;
+  late Future<List<Wallet>> valueWallet;
+  late Wallet? wallet;
   //
 
   //variable
-  late Future<List<Wallet>> valueWallet;
   late int walletID = 0;
   late String walletName = '';
   int categoryID = 0;
@@ -52,10 +56,10 @@ class _AddBillPageState extends State<AddBillPage> {
   //
 
   //Enum
-  FrequencyType frequencyType = FrequencyType.DAILY;
-  EndType endType = EndType.FOREVER;
-  MonthOption monthOption = MonthOption.SAMEDAY;
-  DayOfWeek dayOfWeek = DayOfWeek.MONDAY;
+  late FrequencyType frequencyType = FrequencyType.DAILY;
+  late EndType endType = EndType.FOREVER;
+  late MonthOption monthOption = MonthOption.SAMEDAY;
+  late DayOfWeek dayOfWeek = DayOfWeek.MONDAY;
   //
 
   //Function
@@ -91,7 +95,34 @@ class _AddBillPageState extends State<AddBillPage> {
   @override
   void initState() {
     super.initState();
+   
     valueWallet = WalletService().GetWallet();
+    loadDefaultData();
+    moneyNumber.text = widget.bill.amount.toString();
+    categoryID = widget.bill.categoryId;
+    everyDailyNumber.text = widget.bill.recurrence.every.toString();
+    frequencyType = FrequencyType.values.firstWhere((e) =>
+        e.toString() == 'FrequencyType.${widget.bill.recurrence.frequency}');
+    endType = EndType.values.firstWhere((e) =>
+        e.toString() == 'EndType.${widget.bill.recurrence.endType.name}');
+    monthOption = MonthOption.values.firstWhere((e) =>
+        e.toString() ==
+        'MonthOption.${widget.bill.recurrence.monthOption.name}');
+    dayOfWeek = DayOfWeek.values.firstWhere(
+        (e) => e.toString() == 'DayOfWeek.${widget.bill.recurrence.dayOfWeek}');
+    timeNumber.text = widget.bill.recurrence.times.toString();
+    selectedToDate = widget.bill.recurrence.endDate;
+    selectedFromDate = widget.bill.recurrence.startDate;
+  }
+
+  void loadDefaultData() async {
+    valueCateResponse = await CategoryService().GetCategory();
+    valueCate = valueCateResponse
+        .firstWhere((element) => element.categoryID == widget.bill.categoryId);
+    setState(() {
+      categoryID = valueCate!.categoryID;
+      categoryName = valueCate!.name;
+    });
   }
 
   @override
@@ -127,9 +158,82 @@ class _AddBillPageState extends State<AddBillPage> {
     return Scaffold(
       //backgroundColor: Colors.black87,
       appBar: AppBar(
-          title: Text(
-        "Add new bill",
-      )),
+        title: Text(
+          "Update bill",
+        ),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.delete),
+            onPressed: () async {
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: Text('Confirm?'),
+                    content: Text('Are you sure to delete this bill ?'),
+                    actions: [
+                      TextButton(
+                        onPressed: () async {
+                          var result = await BillService()
+                              .DeleteBill(widget.bill.billId);
+                          if (result.status == 204) {
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  title: Text('Information'),
+                                  content: Text('Delete success!'),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.pop(context, true);
+                                        Navigator.pop(context, true);
+                                        Navigator.pop(context, true);
+                                      },
+                                      child: Text('OK'),
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
+                          } else {
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  title: Text('Information'),
+                                  content: Text(
+                                      'Delete fail! ${result.message.toString()}'),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.pop(context, true);
+                                        Navigator.pop(context, true);
+                                      },
+                                      child: Text('OK'),
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
+                          }
+                        },
+                        child: Text('OK'),
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                        child: Text('Cancle'),
+                      ),
+                    ],
+                  );
+                },
+              );
+            }
+          )
+        ],
+      ),
       body: Container(
         child: SingleChildScrollView(
           child: Column(
@@ -182,7 +286,7 @@ class _AddBillPageState extends State<AddBillPage> {
               ),
               SizedBox(
                 height: 20,
-              ),             
+              ),
               Row(
                 children: [
                   Icon(Icons.exposure),
@@ -201,11 +305,15 @@ class _AddBillPageState extends State<AddBillPage> {
                           return Center(
                               child: Text('Error: ${snapshot.error}'));
                         } else {
+                          wallet = snapshot.data!.firstWhere((element) =>
+                              element.walletID == widget.bill.walletId);
+                          walletID = wallet!.walletID;
+                          walletName = wallet!.walletName;
                           return DropdownButtonFormField<Wallet>(
                             decoration: InputDecoration(
                               hintText: 'Wallet',
                             ),
-                            value: null,
+                            value: wallet,
                             onChanged: (Wallet? value) {
                               setState(() {
                                 walletID = value!.walletID;
@@ -632,25 +740,25 @@ class _AddBillPageState extends State<AddBillPage> {
                           : 0,
                       monthOption: monthOption,
                       dayOfWeek: selectedDay!.toUpperCase(),
-                      recurrenceId: 0,
+                      recurrenceId: widget.bill.recurrence.recurrenceId,
                       userId: 0,
-                      timesCompleted: 0,
+                      timesCompleted: widget.bill.recurrence.timesCompleted,
                       dueDate: selectedFromDate);
                   Bill bill = new Bill(
-                      billId: 0,
+                      billId: widget.bill.billId,
                       userId: 0,
                       amount: double.parse(moneyNumber.text),
                       recurrence: recurrence,
                       categoryId: categoryID,
                       walletId: walletID);
-                  var result = await BillService().InsertBill(bill);
-                  if (result.status == 201) {
+                  var result = await BillService().UpdateBill(bill);
+                  if (result.status == 200) {
                     showDialog(
                       context: context,
                       builder: (BuildContext context) {
                         return AlertDialog(
                           title: Text('Thông báo'),
-                          content: Text('Insert success!'),
+                          content: Text('Update success!'),
                           actions: [
                             TextButton(
                               onPressed: () {
@@ -683,7 +791,7 @@ class _AddBillPageState extends State<AddBillPage> {
                     );
                   }
                 },
-                child: Text('Save'),
+                child: Text('Update'),
               )
             ],
           ),

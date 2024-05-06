@@ -118,7 +118,7 @@ class _TransactionsScreenState extends State<TransactionsScreen>
                                   child: Text('Error: ${snapshot.error}'));
                             } else {
                               return HistoryWidgets(listTransaction: snapshot.data!, onSave: (value) {  
-                                if(value)
+                                if(value != null && value)
                                 {
                                   setState(() {
                                   listTransactionThisMonth = TransactionService().GetTransactionWithTime(ParamPudget(
@@ -151,7 +151,7 @@ class _TransactionsScreenState extends State<TransactionsScreen>
                                   child: Text('Error: ${snapshot.error}'));
                             } else {
                               return HistoryWidgets(listTransaction: snapshot.data!, onSave: (value) { 
-                                if(value)
+                                if(value != null && value)
                                 {
                                   setState(() {
                                   listTransactionThisMonth = TransactionService().GetTransactionWithTime(ParamPudget(

@@ -79,7 +79,7 @@ class _BudgetPageState extends State<BudgetPage>
                               child: Text('Error: ${snapshot.error}'));
                         } else {
                           return BudgetList(listBudget: snapshot.data ?? [], onSave: (value) { 
-                            if(value)
+                            if(value != null && value)
                             {
                               setState(() {
                                 listBudget = Budget_Service().GetBudgetWithTime(ParamPudget(
@@ -101,11 +101,11 @@ class _BudgetPageState extends State<BudgetPage>
         ),
         floatingActionButton: FloatingActionButton(
             onPressed: () async{
-              var reuslt = await Navigator.push(
+              var result = await Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => AddBudgetPage()),
               );
-              if(reuslt)
+              if(result != null && result)
               {
                 setState(() {
                   listBudget = Budget_Service().GetBudgetWithTime(ParamPudget(

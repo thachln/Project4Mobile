@@ -1,7 +1,7 @@
 class EndPoint{
 
-  static const String baseUrl = 'http://192.168.1.3:8080/api'; // Sửa lại ip máy
-  //static const String baseUrl = 'http://172.16.39.60:8080/api'; // Sửa lại ip máy
+  //static const String baseUrl = 'http://192.168.1.3:8080/api'; // Sửa lại ip máy
+  static const String baseUrl = 'http://172.16.39.60:8080/api'; // Sửa lại ip máy
 
   //Login
   static const String SignIn = '$baseUrl/auth/signin';
@@ -22,11 +22,12 @@ class EndPoint{
 
 
   //Bill
-  static const String GetBillExpired = '$baseUrl/bills/getBillExpired';
-  static const String GetBillActive = '$baseUrl/bills/getBillActive';
   static const String InsertBill = '$baseUrl/bills/create';
   static const String UpdateBill = '$baseUrl/bills/update/{id}';
   static const String DeleteBill = '$baseUrl/bills/delete/{id}';
+  static const String findBillExpired = '$baseUrl/bills/findBillExpired/users/{id}';
+  static const String findBillActive = '$baseUrl/bills/findBillActive/users/{id}';
+  static const String findBillWithId = '$baseUrl/bills/{id}';
   //
 
   //Wallet
