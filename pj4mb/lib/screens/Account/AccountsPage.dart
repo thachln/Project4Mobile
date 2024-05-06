@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:pj4mb/screens/Account/Category.dart';
+import 'package:pj4mb/screens/Account/ChangeInfor.dart';
 import 'package:pj4mb/screens/Account/ChangePassword.dart';
+
 import 'package:pj4mb/screens/Account/MyWallet.dart';
 import 'package:pj4mb/screens/Bill/BillPage.dart';
+import 'package:pj4mb/screens/Debt/Debt.dart';
 import 'package:pj4mb/screens/Login.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -98,12 +101,20 @@ class _AccountsPageState extends State<AccountsPage> {
                 Navigator.push(context, MaterialPageRoute(builder: (context) => BillPage()));        
               },
             ),
-            ListTile(
-              leading: Icon(Icons.info),
-              title: Text("Information"),
+             ListTile(
+              leading: Icon(Icons.credit_card),
+              title: Text("Debt"),
               trailing: Icon(Icons.arrow_forward_ios),
               onTap: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => CategoryPage(flag: 0,)));        
+                Navigator.push(context, MaterialPageRoute(builder: (context) => DebtPage()));        
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.info),
+              title: Text("Change Information"),
+              trailing: Icon(Icons.arrow_forward_ios),
+              onTap: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => ChangeInforPage()));        
               },
             ),
              ListTile(

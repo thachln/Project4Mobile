@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:pj4mb/screens/Debt/AddDebt.dart';
 import 'package:pj4mb/widgets/Account/ListDebt.dart';
 
 class DebtPage extends StatefulWidget {
@@ -68,8 +69,21 @@ class _DebtPageState extends State<DebtPage> with TickerProviderStateMixin {
           ),
         ),
         floatingActionButton: FloatingActionButton(
+          mini: true,
           child: Icon(Icons.add),
-          onPressed: () {},
-        ));
+          onPressed: () async {
+            var result = await Navigator.push(context,
+                MaterialPageRoute(builder: (context) => AddDebtPage()));
+            if (result) {
+              setState(() {
+               
+              });
+            }
+          },
+          backgroundColor: Colors.pink[200],
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20.0),
+          )),
+          );
   }
 }

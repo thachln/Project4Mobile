@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
+import 'package:pj4mb/screens/Account/ForgotPass.dart';
 import 'package:pj4mb/screens/Home.dart';
 import 'package:pj4mb/screens/SignUp.dart';
 import 'package:pj4mb/services/Login_service.dart';
@@ -17,6 +18,16 @@ class _LoginPageState extends State<LoginPage> {
   TextEditingController email = TextEditingController();
   TextEditingController password = TextEditingController();
   bool _isObscure = true;
+  buildShowDialog(BuildContext context) {
+      return showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (BuildContext context) {
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          });
+    }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -32,20 +43,18 @@ class _LoginPageState extends State<LoginPage> {
               keyboardType: TextInputType.emailAddress,
               inputFormatters: [
                 FilteringTextInputFormatter.deny(
-                    RegExp('[ ]')), // Không cho phép khoảng trắng
+                    RegExp('[ ]')), 
               ]),
           TextField(
             controller: password,
-            obscureText: _isObscure, // Sử dụng biến để ẩn/hiện mật khẩu
+            obscureText: _isObscure, 
             decoration: InputDecoration(
-              hintText: 'Password', // Placeholder là 'Password'
+              hintText: 'Password', 
               suffixIcon: IconButton(
-                icon: Icon(
-                  // Chọn icon tương ứng với trạng thái ẩn/hiện
+                icon: Icon(       
                   _isObscure ? Icons.visibility_off : Icons.visibility,
                 ),
                 onPressed: () {
-                  // Cập nhật trạng thái và gọi setState để cập nhật giao diện
                   setState(() {
                     _isObscure = !_isObscure;
                   });
@@ -76,8 +85,10 @@ class _LoginPageState extends State<LoginPage> {
                     },
                   );
                 } else {
+                  buildShowDialog(context);
                   var user =
                       await LoginService().login(email.text, password.text);
+                  Navigator.of(context).pop();
                   if (user.is_enabled == true) {
                     Navigator.pushAndRemoveUntil(context,
                         MaterialPageRoute(builder: (context) => HomePage()), (route) => false);
@@ -156,7 +167,10 @@ class _LoginPageState extends State<LoginPage> {
                 child: Text('Đăng ký'),
               ),
               InkWell(
-                onTap: () {},
+                onTap: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => ForgetPassPage()));
+                  
+                },
                 child: Text('Quên mật khẩu'),
               )
             ],

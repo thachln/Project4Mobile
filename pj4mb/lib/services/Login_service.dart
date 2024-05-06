@@ -4,6 +4,7 @@ import 'package:http/http.dart' as http;
 import 'package:pj4mb/api/endpoint.dart';
 import 'package:pj4mb/models/Response.dart';
 import 'package:pj4mb/models/User/ChangeInfor.dart';
+import 'package:pj4mb/models/User/ChangePasswordWithOTP.dart';
 import 'package:pj4mb/models/User/ResetPass.dart';
 import 'package:pj4mb/models/User/UpdatePass.dart';
 import 'package:pj4mb/models/User/User.dart';
@@ -62,10 +63,12 @@ class LoginService {
       'Content-Type': 'application/json',
       'Authorization': 'Bearer $token',
     };
-    
+    print(change.toJson());
+    print(token);
     final response = await http
         .put(Uri.parse(EndPoint.ChangeInformation.replaceAll('{id}', userid!)),body: jsonEncode(change.toJson()),headers: headersValue);
         print(response.statusCode);
+        print(response.body);
     if (response.statusCode == 200) {
       return new ResponseApi(status: response.statusCode, message: response.body,data: "parsed");
     }    
@@ -127,6 +130,26 @@ class LoginService {
     });
     final response = await http
         .post(Uri.parse(EndPoint.ForgotPass),body: bodyValue,headers: headersValue);
+        print(response.statusCode);
+    if (response.statusCode == 200) {
+      return new ResponseApi(status: response.statusCode, message: response.body,data: "parsed");
+    }    
+    else{
+      return new ResponseApi(status: response.statusCode, message: response.body,data: "parsed");
+    }
+  }
+
+  Future<ResponseApi> ChangePassWithOTP (ChangePasswordWithOTP change) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var userid = prefs.getString('userid');
+    var token = prefs.getString('token');
+     var headersValue = {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer $token',
+    };
+    
+    final response = await http
+        .post(Uri.parse(EndPoint.ChangePasswordWithOTP),body: jsonEncode(change.toJson()),headers: headersValue);
         print(response.statusCode);
     if (response.statusCode == 200) {
       return new ResponseApi(status: response.statusCode, message: response.body,data: "parsed");

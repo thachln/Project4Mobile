@@ -8,7 +8,7 @@ import 'package:pj4mb/models/Expense/Expense.dart';
 import 'package:pj4mb/models/Transaction/Transaction.dart';
 import 'package:pj4mb/models/Transaction/TransactionView.dart';
 import 'package:pj4mb/models/Wallet/Wallet.dart';
-import 'package:pj4mb/screens/Account/Debt.dart';
+import 'package:pj4mb/screens/Debt/Debt.dart';
 import 'package:pj4mb/screens/Account/MyWallet.dart';
 import 'package:pj4mb/screens/Transaction/TransactionsScreen.dart';
 import 'package:pj4mb/services/Transacsion_service.dart';

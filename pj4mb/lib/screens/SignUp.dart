@@ -51,20 +51,18 @@ class _LoginNextPageState extends State<SignUpPage> {
                 keyboardType: TextInputType.emailAddress,
                 inputFormatters: [
                   FilteringTextInputFormatter.deny(
-                      RegExp('[ ]')), // Không cho phép khoảng trắng
+                      RegExp('[ ]')), 
                 ]),
             TextField(
               controller: password,
-              obscureText: _isObscure, // Sử dụng biến để ẩn/hiện mật khẩu
+              obscureText: _isObscure, 
               decoration: InputDecoration(
-                hintText: 'Password', // Placeholder là 'Password'
+                hintText: 'Password', 
                 suffixIcon: IconButton(
                   icon: Icon(
-                    // Chọn icon tương ứng với trạng thái ẩn/hiện
                     _isObscure ? Icons.visibility_off : Icons.visibility,
                   ),
                   onPressed: () {
-                    // Cập nhật trạng thái và gọi setState để cập nhật giao diện
                     setState(() {
                       _isObscure = !_isObscure;
                     });
@@ -74,16 +72,14 @@ class _LoginNextPageState extends State<SignUpPage> {
             ),
             TextField(
               controller: confirmPassword,
-              obscureText: _isObscure, // Sử dụng biến để ẩn/hiện mật khẩu
+              obscureText: _isObscure, 
               decoration: InputDecoration(
-                hintText: 'Confirm Password', // Placeholder là 'Password'
+                hintText: 'Confirm Password', 
                 suffixIcon: IconButton(
-                  icon: Icon(
-                    // Chọn icon tương ứng với trạng thái ẩn/hiện
+                  icon: Icon(   
                     _isObscure ? Icons.visibility_off : Icons.visibility,
                   ),
-                  onPressed: () {
-                    // Cập nhật trạng thái và gọi setState để cập nhật giao diện
+                  onPressed: () {       
                     setState(() {
                       _isObscure = !_isObscure;
                     });
