@@ -3,7 +3,11 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:pj4mb/api/endpoint.dart';
 import 'package:pj4mb/models/Response.dart';
+import 'package:pj4mb/models/User/ChangeInfor.dart';
+import 'package:pj4mb/models/User/ResetPass.dart';
+import 'package:pj4mb/models/User/UpdatePass.dart';
 import 'package:pj4mb/models/User/User.dart';
+import 'package:pj4mb/screens/Account/ChangePassword.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginService {
@@ -46,6 +50,88 @@ class LoginService {
     if (response.statusCode == 200) {     
       return new ResponseApi(status: response.statusCode, message: response.body,data: "parsed");
     } else {
+      return new ResponseApi(status: response.statusCode, message: response.body,data: "parsed");
+    }
+  }
+
+  Future<ResponseApi> ChangeInformation(ChangeInfor change) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var userid = prefs.getString('userid');
+    var token = prefs.getString('token');
+     var headersValue = {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer $token',
+    };
+    
+    final response = await http
+        .put(Uri.parse(EndPoint.ChangeInformation.replaceAll('{id}', userid!)),body: jsonEncode(change.toJson()),headers: headersValue);
+        print(response.statusCode);
+    if (response.statusCode == 200) {
+      return new ResponseApi(status: response.statusCode, message: response.body,data: "parsed");
+    }    
+    else{
+      return new ResponseApi(status: response.statusCode, message: response.body,data: "parsed");
+    }
+  }
+
+  Future<ResponseApi> UpdatePassword(UpdatePass updatePass) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var userid = prefs.getString('userid');
+    var token = prefs.getString('token');
+     var headersValue = {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer $token',
+    };
+    updatePass.userId = int.parse(userid!);
+    final response = await http
+        .post(Uri.parse(EndPoint.ChangePass),body: jsonEncode(updatePass.toJson()),headers: headersValue);
+        print(response.statusCode);
+    if (response.statusCode == 200) {
+      return new ResponseApi(status: response.statusCode, message: response.body,data: "parsed");
+    }    
+    else{
+      return new ResponseApi(status: response.statusCode, message: response.body,data: "parsed");
+    }
+  }
+
+  Future<ResponseApi> ResetPassword(ResetPass resetPass) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var userid = prefs.getString('userid');
+    var token = prefs.getString('token');
+     var headersValue = {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer $token',
+    };
+    resetPass.token = token!;
+    final response = await http
+        .put(Uri.parse(EndPoint.ResetPass),body: jsonEncode(resetPass.toJson()),headers: headersValue);
+        print(response.statusCode);
+    if (response.statusCode == 200) {
+      return new ResponseApi(status: response.statusCode, message: response.body,data: "parsed");
+    }    
+    else{
+      return new ResponseApi(status: response.statusCode, message: response.body,data: "parsed");
+    }
+  }
+
+  Future<ResponseApi> ForgotPass(String email) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var userid = prefs.getString('userid');
+    var token = prefs.getString('token');
+     var headersValue = {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer $token',
+    };
+    var bodyValue = jsonEncode({
+      'email': email,
+    });
+    final response = await http
+        .post(Uri.parse(EndPoint.ForgotPass),body: bodyValue,headers: headersValue);
+        print(response.statusCode);
+    if (response.statusCode == 200) {
+      return new ResponseApi(status: response.statusCode, message: response.body,data: "parsed");
+    }    
+    else{
       return new ResponseApi(status: response.statusCode, message: response.body,data: "parsed");
     }
   }

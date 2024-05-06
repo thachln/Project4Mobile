@@ -3,9 +3,13 @@ class EndPoint{
   //static const String baseUrl = 'http://192.168.1.3:8080/api'; // Sửa lại ip máy
   static const String baseUrl = 'http://172.16.39.60:8080/api'; // Sửa lại ip máy
 
-  //Login
+  //Account
   static const String SignIn = '$baseUrl/auth/signin';
   static const String SignUp = '$baseUrl/auth/signup';
+  static const String ChangeInformation = '$baseUrl/auth/updateEmailUsernameProfile/{id}';
+  static const String ResetPass = '$baseUrl/auth/updateEmailUsernameProfile/{id}';
+  static const String ChangePass = '$baseUrl/auth/updateProfile/updatePassword';
+  static const String ForgotPass = '$baseUrl/auth/forgot-password';
   //
 
   //Transaction

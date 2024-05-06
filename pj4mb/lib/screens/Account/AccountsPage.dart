@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pj4mb/screens/Account/Category.dart';
+import 'package:pj4mb/screens/Account/ChangePassword.dart';
 import 'package:pj4mb/screens/Account/MyWallet.dart';
 import 'package:pj4mb/screens/Bill/BillPage.dart';
 import 'package:pj4mb/screens/Login.dart';
@@ -103,6 +104,14 @@ class _AccountsPageState extends State<AccountsPage> {
               trailing: Icon(Icons.arrow_forward_ios),
               onTap: () {
                 Navigator.push(context, MaterialPageRoute(builder: (context) => CategoryPage(flag: 0,)));        
+              },
+            ),
+             ListTile(
+              leading: Icon(Icons.info),
+              title: Text("Change Pasword"),
+              trailing: Icon(Icons.arrow_forward_ios),
+              onTap: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => ChangePasswordPage()));        
               },
             ),
              ListTile(
