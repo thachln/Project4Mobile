@@ -83,7 +83,7 @@ class _AddBudgetPageState extends State<AddBudgetPage> {
             ),
             Row(
               children: [
-                Icon(Icons.numbers),
+                Icon(Icons.monetization_on_rounded),
                 SizedBox(
                   width: 10,
                 ),

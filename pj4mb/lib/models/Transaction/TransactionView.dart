@@ -32,8 +32,9 @@ class TransactionData{
 	final String Type;
 	final double totalAmount;
   final int categoryId;
+  final DateTime transactionDate;
 
-  TransactionData({required this.transactionID, required this.categoryName, required this.cateIcon, required this.amount, required this.Type, required this.totalAmount, required this.categoryId});
+  TransactionData({required this.transactionID, required this.categoryName, required this.cateIcon, required this.amount, required this.Type, required this.totalAmount, required this.categoryId, required this.transactionDate});
 
   factory TransactionData.fromJson(Map<String, dynamic> json){
     return TransactionData(
@@ -43,7 +44,8 @@ class TransactionData{
       amount: json['amount'],
       Type: json['type'],
       totalAmount: json['totalAmount'],
-      categoryId: json['categoryId']
+      categoryId: json['categoryId'],
+      transactionDate: DateTime.parse(json['transactionDate'])
     );
   }
 
@@ -54,7 +56,8 @@ class TransactionData{
     'amount': amount,
     'type': Type,
     'totalAmount': totalAmount,
-    'categoryId': categoryId
+    'categoryId': categoryId,
+    'transactionDate': transactionDate
   };
   
 }
@@ -77,4 +80,31 @@ class TransactionReport{
     'amount': amount
   };
  
+}
+
+class FindTransactionParam{
+  late int userId;
+	final DateTime fromDate;
+	final DateTime toDate;
+	final String type;
+
+  FindTransactionParam({required this.userId, required this.fromDate, required this.toDate, required this.type});
+
+  factory FindTransactionParam.fromJson(Map<String, dynamic> json){
+    return FindTransactionParam(
+      userId: json['userId'],
+      fromDate: DateTime.parse(json['fromDate']),
+      toDate: DateTime.parse(json['toDate']),
+      type: json['type']
+    );
+  }
+
+  Map<String, dynamic> toJson() => {
+    'userId': userId,
+    'fromDate': fromDate.toIso8601String(),
+    'toDate': toDate.toIso8601String(),
+    'type': type
+  };
+
+
 }

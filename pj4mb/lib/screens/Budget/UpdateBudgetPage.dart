@@ -14,6 +14,7 @@ class UpdateBudgetPage extends StatefulWidget {
       : super(key: key);
   final Budget budget;
   final CategoryResponse cate;
+  
   @override
   _UpdateBudgetPageState createState() => _UpdateBudgetPageState();
 }

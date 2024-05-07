@@ -38,20 +38,7 @@ class _AddDebtPageState extends State<AddDebtPage> {
       });
     }
   }
-  Future<void> _selectpaidDate(BuildContext context) async {
-    final DateTime? picked = await showDatePicker(
-      context: context,
-      initialDate: paidDate,
-      firstDate: DateTime(2000),
-      lastDate: DateTime(2101),
-    );
-    if (picked != null && picked != paidDate) {
-      setState(() {
-        paidDate = picked;
-        
-      });
-    }
-  }
+ 
 
   @override
   Widget build(BuildContext context) {
@@ -116,14 +103,14 @@ class _AddDebtPageState extends State<AddDebtPage> {
             ),
             Row(
               children: [
-                Icon(Icons.question_mark_outlined),
+                Icon(Icons.attach_money_outlined),
                 SizedBox(
                   width: 10,
                 ),
                 Expanded(
                   child: TextField(
                     controller: creditor,
-                    keyboardType: TextInputType.text,
+                    keyboardType: TextInputType.number,
                     decoration: InputDecoration(hintText: 'Creditor'),
                   ),
                 )
@@ -134,7 +121,7 @@ class _AddDebtPageState extends State<AddDebtPage> {
             ),
             Row(
               children: [
-                Icon(Icons.question_mark_outlined),
+                Icon(Icons.monetization_on_rounded),
                 SizedBox(
                   width: 10,
                 ),
@@ -166,24 +153,7 @@ class _AddDebtPageState extends State<AddDebtPage> {
               SizedBox(
                 height: 25,
               ),
-              Row(
-                children: [
-                  Icon(Icons.calendar_month_sharp),
-                  SizedBox(
-                    width: 10,
-                  ),
-                  Expanded(
-                      child: InkWell(
-                    onTap: () async {
-                      await _selectpaidDate(context);
-                    },
-                    child: Text(DateFormat('dd-MM-yyyy').format(paidDate)),
-                  ))
-                ],
-              ),
-              SizedBox(
-                height: 25,
-              ),
+             
             ElevatedButton(
               onPressed: () async {
                 Debt debt = new Debt(
@@ -191,7 +161,7 @@ class _AddDebtPageState extends State<AddDebtPage> {
                     amount: double.parse(amount.text),
                     creditor: creditor.text,
                     notes: notes.text,
-                    categoryId: categoryId, id: 0, userId: 0, dueDate: dueDate, paidDate: paidDate, isPaid: false);
+                    categoryId: categoryId, id: 0, userId: 0, dueDate: dueDate, paidDate: null, isPaid: false);
                 var result = await DebthService().InsertDebt(debt);
                 if (result.status == 201) {
                   showDialog(

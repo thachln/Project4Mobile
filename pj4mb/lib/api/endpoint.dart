@@ -1,7 +1,7 @@
 class EndPoint{
 
-  static const String baseUrl = 'http://192.168.1.2:8080/api'; // Sửa lại ip máy
-  //static const String baseUrl = 'http://172.16.39.60:8080/api'; // Sửa lại ip máy
+  //static const String baseUrl = 'http://192.168.1.2:8080/api'; // Sửa lại ip máy
+  static const String baseUrl = 'http://172.16.39.60:8080/api'; // Sửa lại ip máy
 
   //Account
   static const String SignIn = '$baseUrl/auth/signin';
@@ -23,6 +23,7 @@ class EndPoint{
   static const String GetTransactionReport = '$baseUrl/transactions/GetTransactionReport';
   static const String GetTransactionReportMonth = '$baseUrl/transactions/GetTransactionReportMonth';
   static const String GetTransactionById = '$baseUrl/transactions/{id}';
+  static const String FindTransaction = '$baseUrl/transactions/FindTransaction';
   //
 
 
@@ -67,5 +68,15 @@ class EndPoint{
   static const String DeleteDebt = '$baseUrl/debts/delete/{id}';
   static const String getDebtByUserId = '$baseUrl/debts/{id}';
   static const String getDebtById = '$baseUrl/debts/user/{id}';
+  static const String findDebtActive = '$baseUrl/debts/findDebtActive/user/{id}';
+  static const String findDebtPaid = '$baseUrl/debts/findDebtPaid/user/{id}';
+  static const String UpdateIsPaid = '$baseUrl/debts/updateIsPaid/{id}';
+  //
+
+
+  //Notification
+  static const String GetNotification = '$baseUrl/notifications/user/{id}';
+  static const String UpdateNotification = '$baseUrl/notifications/update/{id}';
+  static const String UpdateAllNotificationRead = '$baseUrl/notifications/update/{id}';
   //
 }

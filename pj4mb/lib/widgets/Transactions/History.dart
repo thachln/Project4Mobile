@@ -25,7 +25,7 @@ class HistoryWidgets extends StatelessWidget {
             amount: 0,
             Type: 'INCOME',
             totalAmount: 0,
-            categoryId: 0));
+            categoryId: 0, transactionDate: DateTime.now()));
     TransactionData Expense = listTransaction.firstWhere(
         (element) => element.Type == "EXPENSE",
         orElse: () => new TransactionData(
@@ -35,7 +35,7 @@ class HistoryWidgets extends StatelessWidget {
             amount: 0,
             Type: 'EXPENSE',
             totalAmount: 0,
-            categoryId: 0));
+            categoryId: 0, transactionDate: DateTime.now()));
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Column(

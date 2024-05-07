@@ -252,6 +252,38 @@ class TransactionService {
       return responseApi;
     }
   }
+
+  Future<List<TransactionData>> FindTransction(FindTransactionParam param) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var token = prefs.getString('token');
+    var user = prefs.getString('userid');
+    param.userId = int.parse(user!);
+    var headersValue = {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer $token'
+    };
+    
+    var bodyValue = jsonEncode(param.toJson());
+    print(bodyValue);
+    var url = Uri.parse(EndPoint.FindTransaction);
+    var response = await http.post(url,body: bodyValue, headers: headersValue);
+    if (response.statusCode == 200) {
+      final List<dynamic> parsed = jsonDecode(response.body);
+      List<TransactionData> transaction = [];
+      for (var item in parsed) {
+        if (item is Map<String, dynamic>) {
+          transaction.add(TransactionData.fromJson(item));
+        } else {
+          throw Exception('Invalid item format');
+        }
+      }
+      return transaction;
+    }
+    else{
+      return [];
+    }
+      
+  }
   
   
 }

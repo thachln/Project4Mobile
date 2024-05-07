@@ -10,8 +10,8 @@ class Debt{
   final String creditor;
   final double amount;
   final DateTime dueDate;
-  final DateTime paidDate;
-  final bool isPaid;
+  late DateTime? paidDate;
+  late bool isPaid;
   final String notes;
 
 
@@ -40,7 +40,7 @@ class Debt{
     'creditor': creditor,
     'amount': amount,
     'dueDate': dueDate.toIso8601String(),
-    'paidDate': paidDate.toIso8601String(),
+    'paidDate': paidDate != null ? paidDate!.toIso8601String() : null,
     'isPaid': isPaid,
     'notes': notes,
   };

@@ -37,6 +37,8 @@ class DebthService {
       'Content-Type': 'application/json',
       'Authorization': 'Bearer $token',
     };
+    print(debt.toJson());
+    print(token);
     final response = await http
         .put(Uri.parse(EndPoint.UpdateDebt.replaceAll('{id}', debt.id.toString())), body: jsonEncode(debt.toJson()),headers: headersValue);
    
@@ -107,5 +109,77 @@ class DebthService {
     }
   }
 
-  
+  Future<List<Debt>> findDebtActive() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var userid = prefs.getString('userid');
+    var token = prefs.getString('token');
+   var headersValue = {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer $token',
+    };
+    final response = await http
+        .get(Uri.parse(EndPoint.findDebtActive.replaceAll('{id}', userid!)),headers: headersValue);
+   
+    if (response.statusCode == 200) {     
+      final List<dynamic> parsed = jsonDecode(response.body);    
+      List<Debt> debt = [];
+      for (var item in parsed) {
+        if (item is Map<String, dynamic>) {
+          debt.add(Debt.fromJson(item));
+        } else {
+          throw Exception('Invalid item format');
+        }
+      }
+      return debt;   
+    } else {
+      return [];
+    }
+  }
+
+  Future<List<Debt>> findDebtPaid() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var userid = prefs.getString('userid');
+    var token = prefs.getString('token');
+   var headersValue = {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer $token',
+    };
+    final response = await http
+        .get(Uri.parse(EndPoint.findDebtPaid.replaceAll('{id}', userid!)),headers: headersValue);
+   
+    if (response.statusCode == 200) {     
+      final List<dynamic> parsed = jsonDecode(response.body);    
+      List<Debt> debt = [];
+      for (var item in parsed) {
+        if (item is Map<String, dynamic>) {
+          debt.add(Debt.fromJson(item));
+        } else {
+          throw Exception('Invalid item format');
+        }
+      }
+      return debt;   
+    } else {
+      return [];
+    }
+  }
+
+  Future<ResponseApi> updateIsPaid(int id) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var userid = prefs.getString('userid');
+    var token = prefs.getString('token');
+   var headersValue = {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer $token',
+    };
+    final response = await http
+        .get(Uri.parse(EndPoint.UpdateIsPaid.replaceAll('{id}', id.toString())),headers: headersValue);
+   
+    if (response.statusCode == 200) {     
+      ResponseApi responseApi = new ResponseApi(message: response.body, status: response.statusCode, data: '');
+      return responseApi;
+    } else {
+      ResponseApi responseApi = new ResponseApi(message: response.body, status: response.statusCode, data: '');
+      return responseApi;
+    }
+  }
 }

@@ -144,6 +144,7 @@ class _AddBillPageState extends State<AddBillPage> {
                     child: TextField(
                       controller: moneyNumber,
                       keyboardType: TextInputType.number,
+                      decoration: InputDecoration(hintText: 'Money'),
                     ),
                   )
                 ],

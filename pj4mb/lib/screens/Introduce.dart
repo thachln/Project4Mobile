@@ -24,7 +24,7 @@ class _IntroducePageState extends State<IntroducePage> {
     return Scaffold(
         appBar: AppBar(
             title: Row(
-          children: [Icon(Icons.money), Text('Money Lover')],
+          children: [Icon(Icons.money), SizedBox(width: 8), Text('Finance Tracking')],
         )),
         body: Padding(
           padding: const EdgeInsets.all(46.0),

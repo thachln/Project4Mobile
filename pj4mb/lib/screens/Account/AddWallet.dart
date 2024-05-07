@@ -92,7 +92,7 @@ class _AddWalletPageState extends State<AddWalletPage> {
             ),
             Row(
               children: [
-                Icon(Icons.numbers),
+                Icon(Icons.monetization_on_rounded),
                 SizedBox(
                   width: 10,
                 ),
@@ -100,7 +100,7 @@ class _AddWalletPageState extends State<AddWalletPage> {
                   child: TextField(
                     controller: balance,
                     keyboardType: TextInputType.number,
-                    decoration: InputDecoration(hintText: 'Balace Name'),
+                    decoration: InputDecoration(hintText: 'Balace'),
                   ),
                 )
               ],
