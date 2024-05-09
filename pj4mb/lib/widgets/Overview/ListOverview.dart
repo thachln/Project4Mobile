@@ -55,7 +55,7 @@ class ListWithTime extends StatelessWidget {
               show: false,
             ),
             minY: 0, // Điều chỉnh giới hạn dưới nếu cần
-            maxY: maxAmount + 100000,
+            maxY: maxAmount,
             barGroups: List.generate(listTransactionReport.length, (index) {
               final dayData = listTransactionReport[index];            
               return BarChartGroupData(

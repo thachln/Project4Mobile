@@ -27,7 +27,7 @@ class _BudgetWithTransactionPageState extends State<BudgetWithTransactionPage> {
   void initState() {
     //loadData();
     super.initState();
-    ParamPudget param = new ParamPudget(
+    BugetParam param = new BugetParam(
         userId: 0,
         fromDate: widget.budget.period_start,
         toDate: widget.budget.period_end);

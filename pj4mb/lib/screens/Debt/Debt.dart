@@ -62,8 +62,8 @@ class _DebtPageState extends State<DebtPage> with TickerProviderStateMixin {
                 // Đặt index của tab hiện tại
                 onTap: (index) {},
                 tabs: [
-                  Tab(text: 'Chưa trả'),
-                  Tab(text: 'Đã trả'),
+                  Tab(text: 'Cần trả'),
+                  Tab(text: 'Cần thu'),
                 ],
               ),
               Container(

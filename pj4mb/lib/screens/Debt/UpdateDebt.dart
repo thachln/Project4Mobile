@@ -23,7 +23,7 @@ class _UpdateDebtPageState extends State<UpdateDebtPage> {
   int categoryId = 0;
   String categoryName = '';
   late DateTime dueDate = DateTime.now();
-  late DateTime paidDate = DateTime.now();
+  late DateTime? paidDate = DateTime.now();
   CategoryResponse? valueCate;
   bool isPaid = false;
   Future<void> _selectdueDate(BuildContext context) async {
@@ -62,7 +62,7 @@ class _UpdateDebtPageState extends State<UpdateDebtPage> {
     creditor.text = widget.debt.creditor;
     notes.text = widget.debt.notes;
     dueDate = widget.debt.dueDate;
-    paidDate = widget.debt.paidDate!;
+    paidDate = widget.debt.paidDate != null ? widget.debt.paidDate! : null;
     LoadCategory();
   }
 
@@ -452,7 +452,7 @@ class _UpdateDebtPageState extends State<UpdateDebtPage> {
             SizedBox(
               height: 25,
             ),
-            Text("Paid Date: " + DateFormat('dd-MM-yyyy').format(paidDate))          
+            Text(paidDate != null ? "Paid Date: " + DateFormat('dd-MM-yyyy').format(paidDate!) : "")          
           ],
         ),
       ),

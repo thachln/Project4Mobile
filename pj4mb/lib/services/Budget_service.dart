@@ -129,7 +129,7 @@ class Budget_Service{
     }
   }
 
-  Future<List<TransactionData>> GetTransactionWithBudget(ParamPudget paramPudget) async {
+  Future<List<TransactionData>> GetTransactionWithBudget(BugetParam paramPudget) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var userid = prefs.getString('userid');
     var token = prefs.getString('token');
@@ -138,14 +138,9 @@ class Budget_Service{
       'Authorization': 'Bearer $token',
     };
     paramPudget.userId = int.parse(userid!);
-    print(paramPudget.categoryId);
-    print(paramPudget.fromDate);
-    print(paramPudget.toDate);
-    print(paramPudget.userId);
+
     final response = await http
         .post(Uri.parse(EndPoint.GetTransactionWithBudget),body: jsonEncode(paramPudget.toJson()),headers: headersValue);
-    print(response.body);
-    print(response.statusCode);
     if (response.statusCode == 200) {
       final List<dynamic> parsed = jsonDecode(response.body);
       //return parsed.map((e) => Category.fromJson(e)).toList();
