@@ -21,12 +21,13 @@ class _CategoryPageState extends State<CategoryPage>
   @override
   void initState() {
     super.initState();
+    print(widget.flag);
     if(widget.flag == 0 || widget.flag == 2)
     {
-      _tabController = TabController(length: 3, vsync: this);
-    }
-    else if(widget.flag == 1){
       _tabController = TabController(length: 2, vsync: this);
+    }
+    else if(widget.flag == 3 || widget.flag == 1){
+      _tabController = TabController(length: 1, vsync: this);
     }
     
     
@@ -64,7 +65,6 @@ class _CategoryPageState extends State<CategoryPage>
                 tabs: [
                   Tab(text: 'Khoản chi'),
                   Tab(text: 'Khoản thu'),
-                  Tab(text: 'Vay/Nợ'),
                 ],
               ),
               Container(
@@ -91,7 +91,7 @@ class _CategoryPageState extends State<CategoryPage>
                                 cateList = CategoryService().GetCategory();
                               });
                             },
-                            listCategory: snapshot.data!.where((element) => element.CategoryType == CateTypeENum.EXPENSE).toList(),categoryType: 'Expense',
+                            listCategory: snapshot.data!.where((element) => element.CategoryType == CateTypeENum.EXPENSE).toList(),categoryType: CateTypeENum.EXPENSE,
                           );
                           }
                           else{
@@ -101,7 +101,7 @@ class _CategoryPageState extends State<CategoryPage>
                                 cateList = CategoryService().GetCategory();
                               });
                             },
-                            listCategory: snapshot.data!.where((element) => element.CategoryType == CateTypeENum.EXPENSE).toList(),categoryType: 'Expense',
+                            listCategory: snapshot.data!.where((element) => element.CategoryType == CateTypeENum.EXPENSE).toList(),categoryType:  CateTypeENum.EXPENSE,
                           );
                           }
                          
@@ -127,7 +127,7 @@ class _CategoryPageState extends State<CategoryPage>
                                 cateList = CategoryService().GetCategory();
                               });
                             },
-                            listCategory: snapshot.data!.where((element) => element.CategoryType == CateTypeENum.INCOME).toList(),categoryType: 'Expense',
+                            listCategory: snapshot.data!.where((element) => element.CategoryType == CateTypeENum.INCOME).toList(),categoryType:  CateTypeENum.INCOME,
                           );
                           }
                           else{
@@ -137,49 +137,13 @@ class _CategoryPageState extends State<CategoryPage>
                                 cateList = CategoryService().GetCategory();
                               });
                             },
-                            listCategory: snapshot.data!.where((element) => element.CategoryType == CateTypeENum.INCOME).toList(),categoryType: 'Expense',
+                            listCategory: snapshot.data!.where((element) => element.CategoryType == CateTypeENum.INCOME).toList(),categoryType:  CateTypeENum.INCOME,
                           );
                           }
                           
                         }
                       },
-                    ),
-                    FutureBuilder<List<Category>>(
-                      future: cateList,
-                      builder: (BuildContext context,
-                          AsyncSnapshot<List<Category>> snapshot) {
-                        if (snapshot.connectionState ==
-                            ConnectionState.waiting) {
-                          return Center(child: CircularProgressIndicator());
-                        } else if (snapshot.hasError) {
-                          return Center(
-                              child: Text('Error: ${snapshot.error}'));
-                        } else {
-                          if(widget.flag == 0)
-                          {
-                             return ListCategory(
-                            onSave: (value) {
-                              setState(() {
-                                cateList = CategoryService().GetCategory();
-                              });
-                            },
-                            listCategory: snapshot.data!.where((element) => element.CategoryType == CateTypeENum.DEBT).toList(),categoryType: 'Expense',
-                          );
-                          }
-                          else{
-                             return ListCategoryTransaction(
-                            onSave: (value) {
-                              setState(() {
-                                cateList = CategoryService().GetCategory();
-                              });
-                            },
-                            listCategory: snapshot.data!.where((element) => element.CategoryType == CateTypeENum.DEBT).toList(),categoryType: 'Expense',
-                          );
-                          }
-                        
-                        }
-                      },
-                    ),
+                    ),                  
                   ],
                 ),
               ),
@@ -190,7 +154,7 @@ class _CategoryPageState extends State<CategoryPage>
     );
     // #endregion
     }
-    else{
+    else if (widget.flag == 1){
       // #region add budget
       return Scaffold(
       appBar: AppBar(title: Text('Group')),
@@ -210,7 +174,6 @@ class _CategoryPageState extends State<CategoryPage>
                 controller: _tabController,         
                 tabs: [
                   Tab(text: 'Khoản chi'),
-                  Tab(text: 'Vay/Nợ'),
                 ],
               ),
               Container(
@@ -235,11 +198,48 @@ class _CategoryPageState extends State<CategoryPage>
                                 cateList = CategoryService().GetCategory();
                               });
                             },
-                            listCategory: snapshot.data!.where((element) => element.CategoryType == CateTypeENum.EXPENSE).toList(),categoryType: 'Expense',
+                            listCategory: snapshot.data!.where((element) => element.CategoryType == CateTypeENum.EXPENSE).toList(),categoryType:  CateTypeENum.EXPENSE,
                           );
                         }
                       },
-                    ),                  
+                    ),                                  
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+      // #endregion
+    }
+    else
+    {
+      return Scaffold(
+      appBar: AppBar(title: Text('Group')),
+      body: SingleChildScrollView(
+        child: Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            border: Border.all(
+              color: Colors.grey,
+            ),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              TabBar(
+                controller: _tabController,         
+                tabs: [
+                  Tab(text: 'Vay/Nợ'),
+                ],
+              ),
+              Container(
+                height: MediaQuery.of(context).size.height * 0.7,
+                child: TabBarView(
+                  controller: _tabController,
+                  children: [             
                     FutureBuilder<List<Category>>(
                       future: cateList,
                       builder: (BuildContext context,
@@ -257,7 +257,7 @@ class _CategoryPageState extends State<CategoryPage>
                                 cateList = CategoryService().GetCategory();
                               });
                             },
-                            listCategory: snapshot.data!.where((element) => element.CategoryType == CateTypeENum.DEBT).toList(), categoryType: 'Debt',
+                            listCategory: snapshot.data!.where((element) => element.CategoryType == CateTypeENum.DEBT).toList(), categoryType:  CateTypeENum.DEBT,
                           );
                         }
                       },
@@ -270,7 +270,6 @@ class _CategoryPageState extends State<CategoryPage>
         ),
       ),
     );
-      // #endregion
     }
     
     

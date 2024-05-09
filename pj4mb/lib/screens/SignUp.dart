@@ -131,7 +131,9 @@ class _LoginNextPageState extends State<SignUpPage> {
                           content: Text(result.message),
                           actions: [
                             TextButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
                               child: Text('OK'),
                             ),
                           ],
@@ -147,7 +149,9 @@ class _LoginNextPageState extends State<SignUpPage> {
                 child: Text('Đăng ký'),
               ),
             ),
-            ElevatedButton(onPressed: () {}, child: Text('Đăng nhập'))
+            ElevatedButton(onPressed: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context) => LoginPage()));
+            }, child: Text('Đăng nhập'))
           ]),
         ),
       ),

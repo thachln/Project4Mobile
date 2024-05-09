@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pj4mb/models/Debt/Debt.dart';
 import 'package:pj4mb/screens/Debt/AddDebt.dart';
+import 'package:pj4mb/screens/Debt/ReportDebt.dart';
 import 'package:pj4mb/services/Debt_service.dart';
 import 'package:pj4mb/widgets/Account/ListDebt.dart';
 
@@ -36,6 +37,12 @@ class _DebtPageState extends State<DebtPage> with TickerProviderStateMixin {
     return Scaffold(
       appBar: AppBar(
         title: Text('Debt'),
+        actions: [
+          ElevatedButton(onPressed: () {
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => ReportDebt()));
+          }, child: Text('Xem báo cáo'))
+        ],
       ),
       body: SingleChildScrollView(
         child: Container(

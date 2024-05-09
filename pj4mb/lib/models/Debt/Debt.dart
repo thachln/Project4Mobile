@@ -26,7 +26,7 @@ class Debt{
       creditor: json['creditor'],
       amount: json['amount'],
       dueDate: DateTime.parse(json['dueDate']),
-      paidDate: DateTime.parse(json['paidDate']),
+      paidDate: json['paidDate'] != null ? DateTime.parse(json['paidDate']) : null,
       isPaid: json['isPaid'],
       notes: json['notes'],
     );

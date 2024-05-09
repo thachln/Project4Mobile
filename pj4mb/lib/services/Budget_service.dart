@@ -4,6 +4,7 @@ import 'package:pj4mb/api/endpoint.dart';
 import 'package:pj4mb/models/Budget/Budget.dart';
 import 'package:pj4mb/models/Budget/ParamBudget.dart';
 import 'package:pj4mb/models/Response.dart';
+import 'package:pj4mb/models/Transaction/TransactionView.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 ///budgets/create
@@ -125,6 +126,41 @@ class Budget_Service{
     } else {
       ResponseApi responseApi = new ResponseApi(message: response.body, status: response.statusCode, data: '');
       return responseApi;
+    }
+  }
+
+  Future<List<TransactionData>> GetTransactionWithBudget(ParamPudget paramPudget) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var userid = prefs.getString('userid');
+    var token = prefs.getString('token');
+    var headersValue = {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer $token',
+    };
+    paramPudget.userId = int.parse(userid!);
+    print(paramPudget.categoryId);
+    print(paramPudget.fromDate);
+    print(paramPudget.toDate);
+    print(paramPudget.userId);
+    final response = await http
+        .post(Uri.parse(EndPoint.GetTransactionWithBudget),body: jsonEncode(paramPudget.toJson()),headers: headersValue);
+    print(response.body);
+    print(response.statusCode);
+    if (response.statusCode == 200) {
+      final List<dynamic> parsed = jsonDecode(response.body);
+      //return parsed.map((e) => Category.fromJson(e)).toList();
+   
+      List<TransactionData> transacionList = [];
+      for (var item in parsed) {
+        if (item is Map<String, dynamic>) {
+          transacionList.add(TransactionData.fromJson(item));
+        } else {
+          throw Exception('Invalid item format');
+        }
+      }
+      return transacionList;
+    } else {
+      return [];
     }
   }
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pj4mb/models/Budget/Budget.dart';
 import 'package:pj4mb/models/Category/Category.dart';
+import 'package:pj4mb/screens/Budget/BudgetWithTransaction.dart';
 import 'package:pj4mb/screens/Budget/UpdateBudgetPage.dart';
 import 'package:pj4mb/services/Budget_service.dart';
 import 'package:pj4mb/services/Category_service.dart';
@@ -24,11 +25,12 @@ class BudgetList extends StatelessWidget {
           onTap: () async {
             Budget budgetId = await Budget_Service().GetBudgetById(budget.budgetId);
             CategoryResponse category = await CategoryService().GetCategoryWithId(budgetId.categoryId);
-            var result = await Navigator.push(context, MaterialPageRoute(builder: (context) => UpdateBudgetPage(budget: budgetId, cate: category,)));
-            if(result)
-            {
-              onSave(result);
-            }
+            var result = await Navigator.push(context, MaterialPageRoute(builder: (context) => BudgetWithTransactionPage(budget: budgetId, category: category,)));
+            // var result = await Navigator.push(context, MaterialPageRoute(builder: (context) => UpdateBudgetPage(budget: budgetId, cate: category,)));
+            // if(result)
+            // {
+            //   onSave(result);
+            // }
           },
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,

@@ -194,6 +194,7 @@ class _AddTransactionPageState extends State<AddTransactionPage> {
             ),
             ElevatedButton(
               onPressed: () async {
+                print(moneyNumber.text);
                 Transaction trans = new Transaction(
                   transactionId: 0,
                   userId: 0,

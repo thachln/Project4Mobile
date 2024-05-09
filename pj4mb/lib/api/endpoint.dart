@@ -24,6 +24,7 @@ class EndPoint{
   static const String GetTransactionReportMonth = '$baseUrl/transactions/GetTransactionReportMonth';
   static const String GetTransactionById = '$baseUrl/transactions/{id}';
   static const String FindTransaction = '$baseUrl/transactions/FindTransaction';
+  static const String GetTransactionWithBudget = '$baseUrl/transactions/getTransactionWithBudget';
   //
 
 
@@ -60,6 +61,7 @@ class EndPoint{
   static const String GetBudgetWithID = '$baseUrl/budgets/{id}';
   static const String UpdateBudget = '$baseUrl/budgets/update/{id}';
   static const String DeleteBudget = '$baseUrl/budgets/delete/{id}';
+  
   //
 
   //Debt

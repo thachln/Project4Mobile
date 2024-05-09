@@ -297,14 +297,15 @@ class _UpdateDebtPageState extends State<UpdateDebtPage> {
                     creditor: creditor.text,
                     notes: notes.text,
                     categoryId: categoryId,
-                    id: 0,
+                    id: widget.debt.id,
                     userId: 0,
                     dueDate: dueDate,
                     paidDate: null,
                     isPaid: isPaid);
-                if (isPaid) paidDate = DateTime.now();
-                var result = await DebthService().InsertDebt(debt);
-                if (result.status == 201) {
+                if (isPaid) debt.paidDate = DateTime.now();
+
+                var result = await DebthService().UpdateDebt(debt);
+                if (result.status == 200) {
                   showDialog(
                     context: context,
                     builder: (BuildContext context) {

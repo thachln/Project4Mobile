@@ -2,6 +2,7 @@ class ParamPudget {
   late int userId;
   late DateTime fromDate;
   late DateTime toDate;
+  late int categoryId;
 
   ParamPudget({required this.userId, required this.fromDate, required this.toDate});
 

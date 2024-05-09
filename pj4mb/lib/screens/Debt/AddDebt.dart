@@ -1,8 +1,10 @@
-import 'package:flutter/cupertino.dart';
+
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:pj4mb/models/Category/CateTypeENum.dart';
 import 'package:pj4mb/models/Category/Category.dart';
 import 'package:pj4mb/models/Debt/Debt.dart';
+import 'package:pj4mb/models/Transaction/Transaction.dart';
 import 'package:pj4mb/screens/Account/Category.dart';
 import 'package:pj4mb/services/Debt_service.dart';
 
@@ -20,6 +22,7 @@ class _AddDebtPageState extends State<AddDebtPage> {
   TextEditingController notes = TextEditingController();
   int categoryId = 0;
   String categoryName = '';
+  CateTypeENum categoryType = CateTypeENum.DEBT;
   late DateTime dueDate =  DateTime.now();
   late DateTime paidDate =  DateTime.now();
   Category? valueCate;
@@ -82,7 +85,7 @@ class _AddDebtPageState extends State<AddDebtPage> {
                         context,
                         MaterialPageRoute(
                             builder: (context) => CategoryPage(
-                                  flag: 2,
+                                  flag: 3,
                                 )));
                     setState(() {
                       if (valueCate != null) {
@@ -156,6 +159,7 @@ class _AddDebtPageState extends State<AddDebtPage> {
              
             ElevatedButton(
               onPressed: () async {
+                
                 Debt debt = new Debt(
                     name: name.text,
                     amount: double.parse(amount.text),

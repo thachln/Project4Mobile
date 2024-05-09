@@ -8,7 +8,7 @@ import 'package:pj4mb/services/Category_service.dart';
 
 class AddCategoryPage extends StatefulWidget {
   const AddCategoryPage({super.key, required this.categoryType});
-  final String categoryType;
+  final CateTypeENum categoryType;
   @override
   State<AddCategoryPage> createState() => _AddCategoryPageState();
 }
@@ -47,7 +47,7 @@ class _AddCategoryPageState extends State<AddCategoryPage> {
     super.initState();
     categoryName = TextEditingController();
     categoryIcon = TextEditingController();
-    categoryTypeValue = TextEditingController(text: widget.categoryType);
+    categoryTypeValue = TextEditingController(text: widget.categoryType.name);
   }
 
   @override
