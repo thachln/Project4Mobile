@@ -59,13 +59,13 @@ class _AddCategoryPageState extends State<AddCategoryPage> {
         "Add new category",
       )),
       body: Container(
-        margin: EdgeInsets.only(top: 20),
+        margin: EdgeInsets.all(10),
         //color :Colors.grey[500],
         child: Column(
           children: [
             Row(
               children: [
-                Icon(Icons.question_mark_outlined),
+                Icon(Icons.abc),
                 SizedBox(
                   width: 10,
                 ),
@@ -83,7 +83,7 @@ class _AddCategoryPageState extends State<AddCategoryPage> {
             ),
             Row(
               children: [
-                Icon(Icons.exposure),
+                Icon(Icons.type_specimen),
                 SizedBox(
                   width: 10,
                 ),

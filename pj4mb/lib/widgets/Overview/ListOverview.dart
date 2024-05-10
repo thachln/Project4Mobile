@@ -16,6 +16,7 @@ class ListWithTime extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final formatter = NumberFormat("#,###");
     if(listTransactionReport.length == 0){
       return Center(
         child: Text('Không có dữ liệu'),
@@ -81,7 +82,7 @@ class ListWithTime extends StatelessWidget {
               return ListTile(
                 leading: Image.asset("assets/icon/${transaction.cateIcon}"),
                 title: Text(transaction.categoryName),
-                trailing: Text(transaction.amount.toString()),
+                trailing: Text(formatter.format(transaction.amount)),
                 contentPadding: EdgeInsets.only(top: 10),
               );
             })

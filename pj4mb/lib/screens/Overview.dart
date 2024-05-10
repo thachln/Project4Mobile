@@ -99,7 +99,7 @@ class _OverviewState extends State<Overview> with TickerProviderStateMixin {
               IconButton(
                 icon: Icon(Icons.notifications),
                 onPressed: () {
-                  // Thêm xử lý khi nút thông báo được bấm vào ở đây
+                  
                 },
               ),
               Positioned(
@@ -116,7 +116,7 @@ class _OverviewState extends State<Overview> with TickerProviderStateMixin {
                     minHeight: 12,
                   ),
                   child: Text(
-                    numberNotification.toString(), // Giá trị số thông báo
+                    numberNotification.toString(), 
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 8,

@@ -33,6 +33,32 @@ class WalletService {
       return [];
     }
   }
+  Future<List<Wallet>> GetWalletVND() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var userid = prefs.getString('userid');
+     var token = prefs.getString('token');
+     var headersValue = {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer $token',
+    };
+    final response = await http.get(Uri.parse(EndPoint.GetWallet.replaceAll("{userId}", userid!)),headers: headersValue );
+    //print(response.body);
+    if (response.statusCode == 200) {
+      final List<dynamic> parsed = jsonDecode(response.body);
+      //return parsed.map((e) => Category.fromJson(e)).toList();
+      List<Wallet> categories = [];
+      for (var item in parsed) {
+        if (item is Map<String, dynamic>) {
+          categories.add(Wallet.fromJson(item));
+        } else {
+          throw Exception('Invalid item format');
+        }
+      }
+      return categories.where((element) => element.currency == "VND").toList();
+    } else {
+      return [];
+    }
+  }
 
   Future<List<WalletType>> GetWalletType() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();

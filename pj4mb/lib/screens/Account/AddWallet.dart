@@ -70,173 +70,176 @@ class _AddWalletPageState extends State<AddWalletPage> {
       body: Container(
         margin: EdgeInsets.only(top: 20),
         //color :Colors.grey[500],
-        child: Column(
-          children: [
-            Row(
-              children: [
-                Icon(Icons.question_mark_outlined),
-                SizedBox(
-                  width: 10,
-                ),
-                Expanded(
-                  child: TextField(
-                    controller: walletName,
-                    keyboardType: TextInputType.text,
-                    decoration: InputDecoration(hintText: 'Wallet Name'),
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            children: [
+              Row(
+                children: [
+                  Icon(Icons.abc),
+                  SizedBox(
+                    width: 10,
                   ),
-                )
-              ],
-            ),
-            SizedBox(
-              height: 25,
-            ),
-            Row(
-              children: [
-                Icon(Icons.monetization_on_rounded),
-                SizedBox(
-                  width: 10,
-                ),
-                Expanded(
-                  child: TextField(
-                    controller: balance,
-                    keyboardType: TextInputType.number,
-                    decoration: InputDecoration(hintText: 'Balace'),
+                  Expanded(
+                    child: TextField(
+                      controller: walletName,
+                      keyboardType: TextInputType.text,
+                      decoration: InputDecoration(hintText: 'Wallet Name'),
+                    ),
+                  )
+                ],
+              ),
+              SizedBox(
+                height: 25,
+              ),
+              Row(
+                children: [
+                  Icon(Icons.monetization_on_rounded),
+                  SizedBox(
+                    width: 10,
                   ),
-                )
-              ],
-            ),
-            SizedBox(
-              height: 25,
-            ),
-            Row(
-              children: [
-                Icon(Icons.currency_exchange_rounded),
-                SizedBox(
-                  width: 10,
-                ),
-                DropdownButton<String>(
-                  value: dropdownValue,
-                  icon: Icon(Icons.arrow_downward),
-                  iconSize: 24,
-                  elevation: 16,
-                  style: TextStyle(color: Colors.deepPurple),
-                  underline: Container(
-                    height: 2,
-                    color: Colors.deepPurpleAccent,
+                  Expanded(
+                    child: TextField(
+                      controller: balance,
+                      keyboardType: TextInputType.number,
+                      decoration: InputDecoration(hintText: 'Balace'),
+                    ),
+                  )
+                ],
+              ),
+              SizedBox(
+                height: 25,
+              ),
+              Row(
+                children: [
+                  Icon(Icons.currency_exchange_rounded),
+                  SizedBox(
+                    width: 10,
                   ),
-                  onChanged: (String? newValue) {
-                    setState(() {
-                      dropdownValue = newValue!;
-                    });
-                  },
-                  items: <String>['VND', 'USD']
-                      .map<DropdownMenuItem<String>>((String value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Text(value),
-                    );
-                  }).toList(),
-                )
-              ],
-            ),
-            SizedBox(
-              height: 25,
-            ),
-            Row(
-              children: [
-                Icon(Icons.exposure),
-                SizedBox(
-                  width: 10,
-                ),
-                Expanded(
-                  child: FutureBuilder<List<WalletType>>(
-                    future: listWalletType,
-                    builder: (BuildContext context,
-                        AsyncSnapshot<List<WalletType>> snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return Center(child: CircularProgressIndicator());
-                      } else if (snapshot.hasError) {
-                        return Center(child: Text('Error: ${snapshot.error}'));
-                      } else {
-                        return DropdownButtonFormField<WalletType>(
-                          decoration: InputDecoration(
-                            hintText: 'Wallet Type',
-                          ),
-                          value: null,
-                          onChanged: (WalletType? value) {
-                            setState(() {
-                              walletType.text = value!.TypeName;
-                              walletTypeId.text = value!.TypeID.toString();
-                            });
-                          },
-                          items: snapshot.data!.map((WalletType value) {
-                            return DropdownMenuItem<WalletType>(
-                              value: value,
-                              child: Text(value.TypeName),
-                            );
-                          }).toList(),
+                  DropdownButton<String>(
+                    value: dropdownValue,
+                    icon: Icon(Icons.arrow_downward),
+                    iconSize: 24,
+                    elevation: 16,
+                    style: TextStyle(color: Colors.deepPurple),
+                    underline: Container(
+                      height: 2,
+                      color: Colors.deepPurpleAccent,
+                    ),
+                    onChanged: (String? newValue) {
+                      setState(() {
+                        dropdownValue = newValue!;
+                      });
+                    },
+                    items: <String>['VND', 'USD']
+                        .map<DropdownMenuItem<String>>((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value),
+                      );
+                    }).toList(),
+                  )
+                ],
+              ),
+              SizedBox(
+                height: 25,
+              ),
+              Row(
+                children: [
+                  Icon(Icons.exposure),
+                  SizedBox(
+                    width: 10,
+                  ),
+                  Expanded(
+                    child: FutureBuilder<List<WalletType>>(
+                      future: listWalletType,
+                      builder: (BuildContext context,
+                          AsyncSnapshot<List<WalletType>> snapshot) {
+                        if (snapshot.connectionState == ConnectionState.waiting) {
+                          return Center(child: CircularProgressIndicator());
+                        } else if (snapshot.hasError) {
+                          return Center(child: Text('Error: ${snapshot.error}'));
+                        } else {
+                          return DropdownButtonFormField<WalletType>(
+                            decoration: InputDecoration(
+                              hintText: 'Wallet Type',
+                            ),
+                            value: null,
+                            onChanged: (WalletType? value) {
+                              setState(() {
+                                walletType.text = value!.TypeName;
+                                walletTypeId.text = value!.TypeID.toString();
+                              });
+                            },
+                            items: snapshot.data!.map((WalletType value) {
+                              return DropdownMenuItem<WalletType>(
+                                value: value,
+                                child: Text(value.TypeName),
+                              );
+                            }).toList(),
+                          );
+                        }
+                      },
+                    ),
+                  )
+                ],
+              ),
+              ElevatedButton(
+                onPressed: () async {
+                  Wallet wallet = Wallet(
+                    walletID: 0,
+                    walletName: walletName.text,
+                    balance: double.parse(balance.text),
+                    walletTypeID: int.parse(walletTypeId.text),
+                    currency: dropdownValue,
+                    userId: 0,
+                    bankName: '',
+                    bankAccountNum: '',
+                  );
+                  var result = await WalletService().InsertWallet(wallet);
+                  if (result) {
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: Text('Thông báo'),
+                          content: Text('Insert success!'),
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                Navigator.pop(context, true);
+                                Navigator.pop(context, true);
+                              },
+                              child: Text('OK'),
+                            ),
+                          ],
                         );
-                      }
-                    },
-                  ),
-                )
-              ],
-            ),
-            ElevatedButton(
-              onPressed: () async {
-                Wallet wallet = Wallet(
-                  walletID: 0,
-                  walletName: walletName.text,
-                  balance: double.parse(balance.text),
-                  walletTypeID: int.parse(walletTypeId.text),
-                  currency: dropdownValue,
-                  userId: 0,
-                  bankName: '',
-                  bankAccountNum: '',
-                );
-                var result = await WalletService().InsertWallet(wallet);
-                if (result) {
-                  showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                        title: Text('Thông báo'),
-                        content: Text('Insert success!'),
-                        actions: [
-                          TextButton(
-                            onPressed: () {
-                              Navigator.pop(context, true);
-                              Navigator.pop(context, true);
-                            },
-                            child: Text('OK'),
-                          ),
-                        ],
-                      );
-                    },
-                  );
-                } else {
-                  showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                        title: Text('Thông báo'),
-                        content: Text('Error: Insert fail!'),
-                        actions: [
-                          TextButton(
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
-                            child: Text('OK'),
-                          ),
-                        ],
-                      );
-                    },
-                  );
-                }
-              },
-              child: Text('Save'),
-            )
-          ],
+                      },
+                    );
+                  } else {
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: Text('Thông báo'),
+                          content: Text('Error: Insert fail!'),
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                              child: Text('OK'),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  }
+                },
+                child: Text('Save'),
+              )
+            ],
+          ),
         ),
       ),
     );

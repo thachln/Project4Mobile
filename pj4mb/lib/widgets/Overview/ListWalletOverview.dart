@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:pj4mb/models/Wallet/Wallet.dart';
 import 'package:pj4mb/screens/Account/UpdateWallet.dart';
 import 'package:pj4mb/services/Wallet_service.dart';
@@ -11,7 +12,7 @@ class ListWalletOverview extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
+    final formatter = NumberFormat("#,###");
     return ListView.builder(
         itemCount: listWallet.length > 2 ? 2 : listWallet.length,
         shrinkWrap: true,
@@ -27,7 +28,7 @@ class ListWalletOverview extends StatelessWidget {
                   margin: EdgeInsets.only(top: 10),                 
                   child: ListTile(
                       title: Text(wallet.walletName,style: TextStyle(fontSize: 13),),
-                      trailing: Text(wallet.balance.toString() + " ${wallet.currency}",style: TextStyle(fontSize: 13),)
+                      trailing: Text(formatter.format(wallet.balance) + " ${wallet.currency}",style: TextStyle(fontSize: 13),)
                       ),
                 ),
               ),             

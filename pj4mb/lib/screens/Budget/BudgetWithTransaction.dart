@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:pj4mb/models/Budget/Budget.dart';
 import 'package:pj4mb/models/Budget/ParamBudget.dart';
 import 'package:pj4mb/models/Category/Category.dart';
@@ -42,6 +43,7 @@ class _BudgetWithTransactionPageState extends State<BudgetWithTransactionPage> {
 
   @override
   Widget build(BuildContext context) {
+    final formatter = NumberFormat("#,###");
     return Scaffold(
       appBar: AppBar(
         title: Text('Transaction With Budget'),
@@ -49,46 +51,54 @@ class _BudgetWithTransactionPageState extends State<BudgetWithTransactionPage> {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                widget.category.name,
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
-              Text('${widget.budget.threshold_amount}đ'),
-            ],
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  widget.category.name,
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                Text('${formatter.format(widget.budget.threshold_amount)}đ'),
+              ],
+
+            
+            ),
           ),
           Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8.0),
+            padding: const EdgeInsets.all(8.0),
             child: Stack(
-              children: [
-                Container(
-                  height: 20,
-                  decoration: BoxDecoration(
-                    color: Colors.grey[300],
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                ),
-                FractionallySizedBox(
-                  widthFactor: progress,
-                  child: Container(
+                children: [
+                  Container(
                     height: 20,
                     decoration: BoxDecoration(
-                      color: Colors.blue,
+                      color: Colors.grey[300],
                       borderRadius: BorderRadius.circular(10),
                     ),
                   ),
-                ),
+                  FractionallySizedBox(
+                    widthFactor: progress,
+                    child: Container(
+                      height: 20,
+                      decoration: BoxDecoration(
+                        color: Colors.blue,
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Text(
+                    'Còn lại: ${formatter.format(widget.budget.threshold_amount - widget.budget.amount)}đ'),
               ],
             ),
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              Text(
-                  'Còn lại: ${widget.budget.threshold_amount - widget.budget.amount}đ'),
-            ],
           ),
           Divider(),
           Expanded(

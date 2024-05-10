@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:intl/intl.dart';
 import 'package:pj4mb/models/Category/CateTypeENum.dart';
 import 'package:pj4mb/models/Category/Category.dart';
 import 'package:pj4mb/models/Transaction/Transaction.dart';
@@ -16,6 +17,7 @@ class HistoryWidgets extends StatelessWidget {
   final void Function(dynamic value) onSave;
   @override
   Widget build(BuildContext context) {
+    final formatter = NumberFormat("#,###");
     TransactionData Income = listTransaction.firstWhere(
         (element) => element.Type == "INCOME",
         orElse: () => new TransactionData(
@@ -45,7 +47,7 @@ class HistoryWidgets extends StatelessWidget {
               Text(('Tiền vào')),
               Expanded(
                   child: Text(
-                Income.totalAmount.toString(),
+                formatter.format(Income.totalAmount),
                 textAlign: TextAlign.right,
               ))
             ],
@@ -55,7 +57,7 @@ class HistoryWidgets extends StatelessWidget {
               Text(('Tiền ra')),
               Expanded(
                   child: Text(
-                Expense.totalAmount.toString(),
+                formatter.format(Expense.totalAmount),
                 textAlign: TextAlign.right,
               ))
             ],
@@ -65,7 +67,7 @@ class HistoryWidgets extends StatelessWidget {
             children: [
               Expanded(
                   child: Text(
-                (Income.totalAmount - Expense.totalAmount).toString(),
+                formatter.format(Income.totalAmount - Expense.totalAmount),
                 textAlign: TextAlign.right,
               ))
             ],
@@ -98,10 +100,10 @@ class HistoryWidgets extends StatelessWidget {
                           title: Text(trans.categoryName),
                           trailing: trans.Type == "INCOME"
                               ? Text(
-                                  trans.amount.toString(),
+                                  formatter.format(trans.amount),
                                   style: TextStyle(color: Colors.green[400]),
                                 )
-                              : Text(trans.amount.toString(),
+                              : Text(formatter.format(trans.amount),
                                   style: TextStyle(color: Colors.red[400])),
                         ),
                       ),

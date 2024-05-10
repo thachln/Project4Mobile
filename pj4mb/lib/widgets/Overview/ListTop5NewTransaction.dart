@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:pj4mb/models/Transaction/TransactionView.dart';
 
 class ListTop5NewTransaction extends StatelessWidget {
@@ -8,6 +9,7 @@ class ListTop5NewTransaction extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final formatter = NumberFormat("#,###");
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: ListView.builder(
@@ -18,7 +20,7 @@ class ListTop5NewTransaction extends StatelessWidget {
             return ListTile(
               leading: Image.asset("assets/icon/${transaction.cateIcon}"),
               title: Text(transaction.categoryName),
-              trailing: Text(transaction.amount.toString()),
+              trailing: Text(formatter.format(transaction.amount)),
               contentPadding: EdgeInsets.only(top: 10),
             );
           }),

@@ -73,6 +73,9 @@ class EndPoint{
   static const String findDebtActive = '$baseUrl/debts/findDebtActive/user/{id}';
   static const String findDebtPaid = '$baseUrl/debts/findDebtPaid/user/{id}';
   static const String UpdateIsPaid = '$baseUrl/debts/updateIsPaid/{id}';
+  static const String GetReportDebt = '$baseUrl/debts/reportDebt/user/{id}';
+  static const String FindDebt = '$baseUrl/debts/findDebt/user/{id}';
+  static const String FindLoan = '$baseUrl/debts/findLoan/user/{id}';
   //
 
 

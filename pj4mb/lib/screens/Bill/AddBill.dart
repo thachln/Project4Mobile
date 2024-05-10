@@ -91,7 +91,7 @@ class _AddBillPageState extends State<AddBillPage> {
   @override
   void initState() {
     super.initState();
-    valueWallet = WalletService().GetWallet();
+    valueWallet = WalletService().GetWalletVND();
   }
 
   @override

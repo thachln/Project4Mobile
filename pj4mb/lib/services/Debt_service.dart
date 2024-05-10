@@ -2,7 +2,9 @@ import 'dart:convert';
 
 import 'package:pj4mb/api/endpoint.dart';
 import 'package:pj4mb/models/Debt/Debt.dart';
+import 'package:pj4mb/models/Debt/ReportDebt.dart';
 import 'package:pj4mb/models/Response.dart';
+import 'package:pj4mb/screens/Debt/ReportDebt.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 
@@ -18,7 +20,7 @@ class DebthService {
     };
     final response = await http
         .post(Uri.parse(EndPoint.InsertDebt), body: jsonEncode(debt.toJson()),headers: headersValue);
-   print(response.statusCode);
+  
    if (response.statusCode == 201) {     
       ResponseApi responseApi = new ResponseApi(message: response.body, status: response.statusCode, data: '');
       return responseApi;
@@ -37,8 +39,7 @@ class DebthService {
       'Content-Type': 'application/json',
       'Authorization': 'Bearer $token',
     };
-    print(debt.toJson());
-    print(token);
+
     final response = await http
         .put(Uri.parse(EndPoint.UpdateDebt.replaceAll('{id}', debt.id.toString())), body: jsonEncode(debt.toJson()),headers: headersValue);
    
@@ -83,7 +84,9 @@ class DebthService {
         .get(Uri.parse(EndPoint.getDebtByUserId.replaceAll('{id}', userid!)),headers: headersValue);
    
     if (response.statusCode == 200) {     
-      Debt debt = Debt.fromJson(jsonDecode(response.body));
+      final String responseString = utf8.decode(response.bodyBytes); 
+      Map<String, dynamic> jsonData = jsonDecode(responseString);
+      Debt debt = Debt.fromJson(jsonData);
       return debt;
     } else {
       return Debt(id: 0, userId: 0, categoryId: 0, creditor: '', amount: 0, dueDate: DateTime.now(), paidDate: DateTime.now(), isPaid: false, notes: '', name: '');
@@ -102,7 +105,9 @@ class DebthService {
         .get(Uri.parse(EndPoint.getDebtById.replaceAll('{id}', id.toString())),headers: headersValue);
    
     if (response.statusCode == 200) {     
-      Debt debt = Debt.fromJson(jsonDecode(response.body));
+      final String responseString = utf8.decode(response.bodyBytes); 
+      Map<String, dynamic> jsonData = jsonDecode(responseString);
+      Debt debt = Debt.fromJson(jsonData);
       return debt;
     } else {
       return Debt(id: 0, userId: 0, categoryId: 0, creditor: '', amount: 0, dueDate: DateTime.now(), paidDate: DateTime.now(), isPaid: false, notes: '', name: '');
@@ -121,7 +126,8 @@ class DebthService {
         .get(Uri.parse(EndPoint.findDebtActive.replaceAll('{id}', userid!)),headers: headersValue);
    
     if (response.statusCode == 200) {     
-      final List<dynamic> parsed = jsonDecode(response.body);    
+      final String responseString = utf8.decode(response.bodyBytes); 
+      final List<dynamic> parsed = jsonDecode(responseString);    
       List<Debt> debt = [];
       for (var item in parsed) {
         if (item is Map<String, dynamic>) {
@@ -148,7 +154,8 @@ class DebthService {
         .get(Uri.parse(EndPoint.findDebtPaid.replaceAll('{id}', userid!)),headers: headersValue);
    
     if (response.statusCode == 200) {     
-      final List<dynamic> parsed = jsonDecode(response.body);    
+      final String responseString = utf8.decode(response.bodyBytes); 
+      final List<dynamic> parsed = jsonDecode(responseString); 
       List<Debt> debt = [];
       for (var item in parsed) {
         if (item is Map<String, dynamic>) {
@@ -180,6 +187,95 @@ class DebthService {
     } else {
       ResponseApi responseApi = new ResponseApi(message: response.body, status: response.statusCode, data: '');
       return responseApi;
+    }
+  }
+
+  Future<List<ReportDebtData>> getReportDebt() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var userid = prefs.getString('userid');
+    var token = prefs.getString('token');
+   var headersValue = {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer $token',
+    };
+    final response = await http
+        .get(Uri.parse(EndPoint.GetReportDebt.replaceAll('{id}', userid!)),headers: headersValue);
+   
+    if (response.statusCode == 200) {     
+      final String responseString = utf8.decode(response.bodyBytes); 
+      final List<dynamic> parsed = jsonDecode(responseString);
+   
+      
+      List<ReportDebtData> debt = [];
+      for (var item in parsed) {
+        if (item is Map<String, dynamic>) {
+          
+          debt.add(ReportDebtData.fromJson(item));
+        } else {
+          throw Exception('Invalid item format');
+        }
+      }
+      return debt;
+    } else {
+      return [];
+    }
+  }
+
+  Future<List<Debt>> findDebt() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var userid = prefs.getString('userid');
+    var token = prefs.getString('token');
+   var headersValue = {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer $token',
+    };
+    final response = await http
+        .get(Uri.parse(EndPoint.FindDebt.replaceAll('{id}', userid!)),headers: headersValue);
+   
+    if (response.statusCode == 200) {     
+      final String responseString = utf8.decode(response.bodyBytes); 
+      final List<dynamic> parsed = jsonDecode(responseString);   
+      List<Debt> debt = [];
+      for (var item in parsed) {
+        if (item is Map<String, dynamic>) {
+          debt.add(Debt.fromJson(item));
+        } else {
+          throw Exception('Invalid item format');
+        }
+      }
+      return debt;   
+    } else {
+      return [];
+    }
+  }
+
+
+  Future<List<Debt>> findLoan() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var userid = prefs.getString('userid');
+    var token = prefs.getString('token');
+   var headersValue = {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer $token',
+    };
+    final response = await http
+        .get(Uri.parse(EndPoint.FindLoan.replaceAll('{id}', userid!)),headers: headersValue);
+   
+    if (response.statusCode == 200) {     
+      final String responseString = utf8.decode(response.bodyBytes); 
+      final List<dynamic> parsed = jsonDecode(responseString);    
+
+      List<Debt> debt = [];
+      for (var item in parsed) {
+        if (item is Map<String, dynamic>) {
+          debt.add(Debt.fromJson(item));
+        } else {
+          throw Exception('Invalid item format');
+        }
+      }
+      return debt;   
+    } else {
+      return [];
     }
   }
 }

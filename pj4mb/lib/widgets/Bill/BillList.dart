@@ -12,6 +12,7 @@ class BillList extends StatelessWidget {
   final void Function(dynamic value) onSave;
   @override
   Widget build(BuildContext context) {
+    final formatter = NumberFormat("#,###");
     return Container(
             child: ListView.builder(
                 itemCount: listBill.length,
@@ -41,7 +42,7 @@ class BillList extends StatelessWidget {
                           leading: Image.asset("assets/icon/${bills.category.icon.path}"),
                           subtitle: Text(bills.recurrence.frequency + " - Repeat at " + DateFormat('dd-MM-yyyy').format(bills.recurrence.dueDate) ),
                           title: Text(bills.category.name),
-                          trailing: Text(bills.amount.toString()),
+                          trailing: Text(formatter.format(bills.amount) + " VND"),
                         ),
                       ),
                     ],

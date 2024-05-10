@@ -178,7 +178,7 @@ class _UpdateDebtPageState extends State<UpdateDebtPage> {
           children: [
             Row(
               children: [
-                Icon(Icons.question_mark_outlined),
+                Icon(Icons.abc_outlined),
                 SizedBox(
                   width: 10,
                 ),
@@ -228,7 +228,7 @@ class _UpdateDebtPageState extends State<UpdateDebtPage> {
             ),
             Row(
               children: [
-                Icon(Icons.question_mark_outlined),
+                Icon(Icons.abc_outlined),
                 SizedBox(
                   width: 10,
                 ),
@@ -246,7 +246,7 @@ class _UpdateDebtPageState extends State<UpdateDebtPage> {
             ),
             Row(
               children: [
-                Icon(Icons.question_mark_outlined),
+                Icon(Icons.monetization_on_rounded),
                 SizedBox(
                   width: 10,
                 ),

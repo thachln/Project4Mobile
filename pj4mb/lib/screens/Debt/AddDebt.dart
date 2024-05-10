@@ -56,7 +56,7 @@ class _AddDebtPageState extends State<AddDebtPage> {
           children: [
             Row(
               children: [
-                Icon(Icons.question_mark_outlined),
+                Icon(Icons.abc_outlined),
                 SizedBox(
                   width: 10,
                 ),
@@ -106,7 +106,7 @@ class _AddDebtPageState extends State<AddDebtPage> {
             ),
             Row(
               children: [
-                Icon(Icons.attach_money_outlined),
+                Icon(Icons.abc_outlined),
                 SizedBox(
                   width: 10,
                 ),
