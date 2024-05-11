@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:pj4mb/api/endpoint.dart';
+import 'package:pj4mb/models/Budget/ParamBudget.dart';
 import 'package:pj4mb/models/Debt/Debt.dart';
 import 'package:pj4mb/models/Debt/ReportDebt.dart';
 import 'package:pj4mb/models/Response.dart';
@@ -190,7 +191,7 @@ class DebthService {
     }
   }
 
-  Future<List<ReportDebtData>> getReportDebt() async {
+  Future<List<ReportDebtData>> getReportDebt(ParamPudget param) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var userid = prefs.getString('userid');
     var token = prefs.getString('token');
@@ -198,13 +199,13 @@ class DebthService {
       'Content-Type': 'application/json',
       'Authorization': 'Bearer $token',
     };
+    param.userId = int.parse(userid!);
+    var bodyValue = jsonEncode(param.toJson());
     final response = await http
-        .get(Uri.parse(EndPoint.GetReportDebt.replaceAll('{id}', userid!)),headers: headersValue);
-   
+        .post(Uri.parse(EndPoint.GetReportDebt),body: bodyValue,headers: headersValue);
     if (response.statusCode == 200) {     
       final String responseString = utf8.decode(response.bodyBytes); 
       final List<dynamic> parsed = jsonDecode(responseString);
-   
       
       List<ReportDebtData> debt = [];
       for (var item in parsed) {
@@ -221,7 +222,7 @@ class DebthService {
     }
   }
 
-  Future<List<Debt>> findDebt() async {
+  Future<List<DetailReportDebtData>> getDetailReport(GetDetailReportDebtParam param) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var userid = prefs.getString('userid');
     var token = prefs.getString('token');
@@ -229,8 +230,42 @@ class DebthService {
       'Content-Type': 'application/json',
       'Authorization': 'Bearer $token',
     };
+    param.userId = int.parse(userid!);
+    var bodyValue = jsonEncode(param.toJson());
     final response = await http
-        .get(Uri.parse(EndPoint.FindDebt.replaceAll('{id}', userid!)),headers: headersValue);
+        .post(Uri.parse(EndPoint.getDetailDebtReport),body: bodyValue,headers: headersValue);
+    if (response.statusCode == 200) {     
+      final String responseString = utf8.decode(response.bodyBytes); 
+      final List<dynamic> parsed = jsonDecode(responseString);
+      
+      List<DetailReportDebtData> debt = [];
+      for (var item in parsed) {
+        if (item is Map<String, dynamic>) {    
+          var result = DetailReportDebtData.fromJson(item);
+          result.index = param.index;
+          debt.add(result);
+        } else {
+          throw Exception('Invalid item format');
+        }
+      }
+      return debt;
+    } else {
+      return [];
+    }
+  }
+
+  Future<List<Debt>> findDebt(ParamPudget param) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var userid = prefs.getString('userid');
+    var token = prefs.getString('token');
+   var headersValue = {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer $token',
+    };
+    param.userId = int.parse(userid!);
+    var bodyValue = jsonEncode(param.toJson());
+    final response = await http
+        .post(Uri.parse(EndPoint.FindDebt),body: bodyValue,headers: headersValue);
    
     if (response.statusCode == 200) {     
       final String responseString = utf8.decode(response.bodyBytes); 
@@ -250,7 +285,7 @@ class DebthService {
   }
 
 
-  Future<List<Debt>> findLoan() async {
+  Future<List<Debt>> findLoan(ParamPudget param) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var userid = prefs.getString('userid');
     var token = prefs.getString('token');
@@ -258,8 +293,10 @@ class DebthService {
       'Content-Type': 'application/json',
       'Authorization': 'Bearer $token',
     };
+    param.userId = int.parse(userid!);
+    var bodyValue = jsonEncode(param.toJson());
     final response = await http
-        .get(Uri.parse(EndPoint.FindLoan.replaceAll('{id}', userid!)),headers: headersValue);
+        .post(Uri.parse(EndPoint.FindLoan),body: bodyValue,headers: headersValue);
    
     if (response.statusCode == 200) {     
       final String responseString = utf8.decode(response.bodyBytes); 

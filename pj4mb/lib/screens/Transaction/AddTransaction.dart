@@ -26,10 +26,10 @@ class _AddTransactionPageState extends State<AddTransactionPage> {
   late int walletID = 0;
   late String walletName = '';
   late Future<List<Wallet>> valueWallet;
-  TextEditingController moneyNumber = new TextEditingController();
-  TextEditingController noteText = new TextEditingController();
-  TextEditingController dateStart = new TextEditingController();
-  TextEditingController walletType = new TextEditingController();
+  TextEditingController moneyNumber =  TextEditingController();
+  TextEditingController noteText =  TextEditingController();
+  TextEditingController dateStart =  TextEditingController();
+  TextEditingController walletType =  TextEditingController();
 
   @override
   void initState() {

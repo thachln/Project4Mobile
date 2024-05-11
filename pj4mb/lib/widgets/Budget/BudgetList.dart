@@ -31,10 +31,10 @@ class BudgetList extends StatelessWidget {
               CategoryResponse category = await CategoryService().GetCategoryWithId(budgetId.categoryId);
               var result = await Navigator.push(context, MaterialPageRoute(builder: (context) => BudgetWithTransactionPage(budget: budgetId, category: category,)));
               // var result = await Navigator.push(context, MaterialPageRoute(builder: (context) => UpdateBudgetPage(budget: budgetId, cate: category,)));
-              // if(result)
-              // {
-              //   onSave(result);
-              // }
+              if(result)
+              {
+                onSave(result);
+              }
             },
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,

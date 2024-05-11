@@ -11,7 +11,7 @@ import 'package:http/http.dart' as http;
 
 class Budget_Service{
 
-  Future<bool> InsertBudget(Budget budget) async {
+  Future<ResponseApi> InsertBudget(Budget budget) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var userid = prefs.getString('userid');
     var token = prefs.getString('token');
@@ -25,10 +25,10 @@ class Budget_Service{
         .post(Uri.parse(EndPoint.InsertBudget), body: jsonEncode(budget.toJson()),headers: headersValue);
      
     if (response.statusCode == 200) {
-      return true;
+      return ResponseApi(status: response.statusCode, message: response.body, data: 'data');
     }    
     else{
-      return false;
+      return ResponseApi(status: response.statusCode, message: response.body, data: 'data');
     }
   }
 

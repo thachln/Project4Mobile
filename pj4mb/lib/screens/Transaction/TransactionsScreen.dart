@@ -9,6 +9,7 @@ import 'package:pj4mb/services/Transacsion_service.dart';
 import 'package:pj4mb/widgets/Transactions/History.dart';
 
 class TransactionsScreen extends StatefulWidget {
+  const TransactionsScreen({Key? key}) : super(key: key);
   @override
   State<TransactionsScreen> createState() => _TransactionsScreenState();
 }
@@ -40,6 +41,10 @@ class _TransactionsScreenState extends State<TransactionsScreen>
         TransactionService().GetTransactionWithTime(paramThisMonth);
     listTransactionLastMonth =
         TransactionService().GetTransactionWithTime(paramLastMonth);
+  }
+
+  void ReloadData() {
+    initState();
   }
 
   @override

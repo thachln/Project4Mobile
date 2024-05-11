@@ -128,7 +128,7 @@ class _AddBudgetPageState extends State<AddBudgetPage> {
                   amount: 0,
                 );
                 var result = await Budget_Service().InsertBudget(budget);
-                if (result) {
+                if (result.status == 200) {
                   showDialog(
                     context: context,
                     builder: (BuildContext context) {
@@ -153,7 +153,7 @@ class _AddBudgetPageState extends State<AddBudgetPage> {
                     builder: (BuildContext context) {
                       return AlertDialog(
                         title: Text('Thông báo'),
-                        content: Text('Error: Insert fail!'),
+                        content: Text('Error: Insert fail! ${result.message}'),
                         actions: [
                           TextButton(
                             onPressed: () {
@@ -327,11 +327,6 @@ class _AddBudgetPageState extends State<AddBudgetPage> {
                         selectedDateEnd = listDateTime.endOfWeek;
                       });
                     }
-                    // setState(() {
-                    //   _timeSelection = localSelection;
-                    //   selectedDateStart = localCustomStartDate;
-                    //   selectedDateEnd = localCustomEndDate;
-                    // });
                     Navigator.of(context).pop(true);
                   },
                 ),

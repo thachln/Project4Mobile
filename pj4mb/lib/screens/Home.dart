@@ -6,25 +6,29 @@ import 'package:pj4mb/screens/Overview.dart';
 import 'package:pj4mb/screens/Transaction/AddTransaction.dart';
 import 'package:pj4mb/screens/Transaction/TransactionsScreen.dart';
 
-
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
-
   @override
   State<HomePage> createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
   int _currentIndex = 0;
-
+  
   // Screens for each tab
-  final List<Widget> _children = [
-  Overview(), // Tổng quan
-  TransactionsScreen(), // Số giao dịch
-  Container(), // Placeholder for Button Thêm
-  BudgetPage(), // Ngân sách
-  AccountsPage(), // Tài khoản
-];
+  late List<Widget> _children;
+
+  @override
+  void initState() {
+    super.initState();
+    _children = [
+      Overview(), // Tổng quan
+      TransactionsScreen(), // Số giao dịch
+      Container(), // Placeholder for Button Thêm
+      BudgetPage(), // Ngân sách
+      AccountsPage(), // Tài khoản
+    ];
+  }
 
   void onTabTapped(int index) {
     setState(() {
@@ -47,29 +51,30 @@ class _HomePageState extends State<HomePage> {
             backgroundColor: Colors.white,
             icon: new Icon(Icons.home),
             label: 'Tổng quan',
-            
           ),
           BottomNavigationBarItem(
             icon: new Icon(Icons.list),
             label: 'Giao dịch',
           ),
           BottomNavigationBarItem(
-              icon: FloatingActionButton(
-                onPressed: () {
-                  Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => AddTransactionPage()));
-                },
-                child: Icon(Icons.add, color: Colors.white), 
-                backgroundColor: Colors.green, 
-                tooltip: 'Thêm giao dịch',
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20.0), 
-                ),
-              ), // Custom icon size for the action button
-              label: '',
+            icon: FloatingActionButton(
+              onPressed: () async {
+                onTabTapped(2);
+                var result = await Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => AddTransactionPage()));  
+                onTabTapped(1);            
+              },
+              child: Icon(Icons.add, color: Colors.white),
+              backgroundColor: Colors.green,
+              tooltip: 'Thêm giao dịch',
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20.0),
               ),
+            ), // Custom icon size for the action button
+            label: '',
+          ),
           BottomNavigationBarItem(
             icon: new Icon(Icons.pie_chart),
             label: 'Ngân sách',
@@ -84,10 +89,3 @@ class _HomePageState extends State<HomePage> {
     );
   }
 }
-
-// class AccountsScreen extends StatelessWidget {
-//   @override
-//   Widget build(BuildContext context) {
-//     return Center(child: Text("Tài khoản Screen"));
-//   }
-// }

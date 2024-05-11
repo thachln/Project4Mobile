@@ -28,8 +28,7 @@ class LoginService {
       await prefs.setString('token', parsed['accessToken'].toString());
       await prefs.setString('username', parsed['username'].toString());
       await prefs.setString('email', parsed['email'].toString());
-      print(parsed);
-      print('Token ne' + prefs.getString('token')!);
+
       return User.fromJson(parsed);
     } else {
       return new User(id: 0, username: "0", email: "0", password: "0", is_enabled: false, statusCode: response.statusCode.toString(), message: response.body);

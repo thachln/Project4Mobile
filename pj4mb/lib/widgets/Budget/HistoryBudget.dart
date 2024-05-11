@@ -43,36 +43,6 @@ class HistoryBudget extends StatelessWidget {
       padding: const EdgeInsets.all(16.0),
       child: Column(
         children: [
-          Row(
-            children: [
-              Text(('Tiền vào')),
-              Expanded(
-                  child: Text(
-                formatter.format(Income.totalAmount),
-                textAlign: TextAlign.right,
-              ))
-            ],
-          ),
-          Row(
-            children: [
-              Text(('Tiền ra')),
-              Expanded(
-                  child: Text(
-                formatter.format(Expense.totalAmount),
-                textAlign: TextAlign.right,
-              ))
-            ],
-          ),
-          Divider(),
-          Row(
-            children: [
-              Expanded(
-                  child: Text(
-                formatter.format((Income.totalAmount - Expense.totalAmount)),
-                textAlign: TextAlign.right,
-              ))
-            ],
-          ),
           Expanded(
               child: Container(
             child: ListView.builder(

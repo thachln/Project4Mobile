@@ -1,7 +1,13 @@
+import 'dart:ffi';
+
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:intl/intl.dart';
+import 'package:pj4mb/models/Budget/ListDateTime.dart';
+import 'package:pj4mb/models/Budget/ParamBudget.dart';
+import 'package:pj4mb/models/Debt/Debt.dart';
 import 'package:pj4mb/models/Debt/ReportDebt.dart';
 import 'package:pj4mb/services/Debt_service.dart';
 
@@ -14,11 +20,25 @@ class ReportDebt extends StatefulWidget {
 
 class _ReportDebtState extends State<ReportDebt> {
   late Future<List<ReportDebtData>> reportDebtData;
+
   late int totalNumber;
+  late ListDateTime listDateTime;
+  late DateTime fromDate;
+  late DateTime toDate;
+  List<DetailReportDebtData> dataDetail = [];
+
   @override
   void initState() {
     super.initState();
-    reportDebtData = DebthService().getReportDebt();
+    listDateTime = getFullDays(DateTime.now());
+    ParamPudget param = new ParamPudget(
+        userId: 0,
+        fromDate: listDateTime.startOfMonth,
+        toDate: listDateTime.endOfMonth);
+    reportDebtData = DebthService().getReportDebt(param);
+    fromDate = listDateTime.startOfMonth;
+    toDate = listDateTime.endOfMonth;
+    getDataDetail();
   }
 
   int getTotalNumber(List<ReportDebtData> data) {
@@ -28,18 +48,60 @@ class _ReportDebtState extends State<ReportDebt> {
     }
     return total;
   }
+
   List<Color> colors = [
-      Colors.blue,
-      Colors.orange,
-      Colors.green,
-      Colors.red,
-      Colors.purple,
-      Colors.indigo,
-      Colors.pink
-    ];
+    Colors.blue,
+    Colors.orange,
+    Colors.green,
+    Colors.red,
+    Colors.purple,
+    Colors.indigo,
+    Colors.pink
+  ];
+
+  void getDataDetail() async {
+    dataDetail ??= [];
+    for (int i = 0; i <= 7; i++) {
+      GetDetailReportDebtParam param = GetDetailReportDebtParam(
+          userId: 0, fromDate: fromDate, toDate: toDate, index: i);
+      var result = await DebthService().getDetailReport(param);
+      setState(() {
+        dataDetail += result;
+      });
+    }
+    print(dataDetail.length);
+  }
 
   @override
   Widget build(BuildContext context) {
+    Future<void> _selectFromDate(BuildContext context) async {
+      final DateTime? picked = await showDatePicker(
+        context: context,
+        initialDate: fromDate,
+        firstDate: DateTime(2000),
+        lastDate: DateTime(2101),
+      );
+      if (picked != null && picked != fromDate) {
+        setState(() {
+          fromDate = picked;
+        });
+      }
+    }
+
+    Future<void> _selectToDate(BuildContext context) async {
+      final DateTime? picked = await showDatePicker(
+        context: context,
+        initialDate: toDate,
+        firstDate: DateTime(2000),
+        lastDate: DateTime(2101),
+      );
+      if (picked != null && picked != toDate) {
+        setState(() {
+          toDate = picked;
+        });
+      }
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Report Debt'),
@@ -55,8 +117,72 @@ class _ReportDebtState extends State<ReportDebt> {
             List<ReportDebtData> data = snapshot.data!;
             totalNumber = getTotalNumber(data);
             return Column(
-                children: [
-                  AspectRatio(
+              children: [
+                Container(
+                  margin: EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: Colors.grey[300],
+                    borderRadius: BorderRadius.circular(10),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.5),
+                        spreadRadius: 1,
+                        blurRadius: 7,
+                        offset: Offset(0, 3), // changes position of shadow
+                      ),
+                    ],
+                  ),
+                  child: Row(
+                    children: [
+                      Container(
+                          padding: EdgeInsets.only(left: 10),
+                          width: 130,
+                          height: 50,
+                          child: Row(children: [
+                            Text('From: '),
+                            Expanded(
+                                child: InkWell(
+                              onTap: () async {
+                                await _selectFromDate(context);
+                              },
+                              child: Text(
+                                  DateFormat('dd-MM-yyyy').format(fromDate)),
+                            ))
+                          ])),
+                      Container(
+                          padding: EdgeInsets.only(left: 10),
+                          width: 130,
+                          height: 50,
+                          child: Row(children: [
+                            Text('To: '),
+                            Expanded(
+                                child: InkWell(
+                              onTap: () async {
+                                await _selectToDate(context);
+                              },
+                              child:
+                                  Text(DateFormat('dd-MM-yyyy').format(toDate)),
+                            ))
+                          ])),
+                      TextButton(
+                          onPressed: () async {
+                            var result = DebthService().getReportDebt(
+                                ParamPudget(
+                                    userId: 0,
+                                    fromDate: fromDate,
+                                    toDate: toDate));
+                            setState(() {
+                              reportDebtData = result;
+                            });
+                          },
+                          child: Text('Search'))
+                    ],
+                  ),
+                ),
+                Container(
+                  margin: EdgeInsets.all(50),
+                  height: 100,
+                  child: AspectRatio(
                     aspectRatio: 1.23,
                     child: Card(
                       color: Colors.white,
@@ -70,32 +196,77 @@ class _ReportDebtState extends State<ReportDebt> {
                       ),
                     ),
                   ),
-                  Expanded(
-                    child: ListView.builder(
-                          itemCount: snapshot.data!.length,                
-                          itemBuilder: (context, index) {
-                            ReportDebtData debtData = snapshot.data![index];
-                            return Column(
-                                children: [
-                                  GestureDetector(
-                                    onTap: () async {},
-                                    child: Container(
-                                      margin: EdgeInsets.only(top: 10),
-                                      child: ListTile(
-                                          leading: Icon(
-                                              Icons.account_balance_wallet_outlined),
-                                          title: Text(debtData.name,style: TextStyle(color: colors[index % colors.length],fontFamily: 'RobotoVietnamese'),),                   
-                                          trailing: Text(debtData.number.toString(),style: TextStyle(color: colors[index % colors.length]),)),
-                                    ),
-                                  ),
-                                  SizedBox(height: 6)
-                                ],
-                              );
-                          }),
-                  ),
-                ],
-              )
-            ;
+                ),
+                Expanded(
+                  child: ListView.builder(
+                      itemCount: snapshot.data!.length,
+                      itemBuilder: (context, index) {
+                        ReportDebtData debtData = snapshot.data![index];
+                        List<DetailReportDebtData> detailData = dataDetail
+                            .where((element) => element.index == index)
+                            .toList();
+                        return Column(
+                          children: [
+                            ExpansionTile(                             
+                              title: Text(
+                                  debtData.name +
+                                      " | " +
+                                      debtData.number.toString(),
+                                  style: TextStyle(
+                                      color: colors[index % colors.length],
+                                      fontFamily: 'RobotoVietnamese')),
+                              children: [
+                                ListView.builder(
+                                    shrinkWrap: true,
+                                    itemCount: detailData.length,
+                                    itemBuilder: (context, index) {
+                                      return ListTile(
+                                        leading: Icon(
+                                            Icons.account_balance_wallet_outlined),
+                                        title: Text(
+                                          detailData[index].name,
+                                          style: TextStyle(
+                                              color: colors[index % colors.length],
+                                              fontFamily: 'RobotoVietnamese'),
+                                        ),
+                                        trailing: Text(
+                                          detailData[index].amount.toString(),
+                                          style: TextStyle(
+                                              color: colors[index % colors.length]),
+                                        ),
+                                      );
+                                    })
+                              ],
+                            ),
+                            // GestureDetector(
+                            //   onTap: () async {
+
+                            //   },
+                            //   child: Container(
+                            //     margin: EdgeInsets.only(top: 10),
+                            //     child: ListTile(
+                            //         leading: Icon(
+                            //             Icons.account_balance_wallet_outlined),
+                            //         title: Text(
+                            //           debtData.name,
+                            //           style: TextStyle(
+                            //               color: colors[index % colors.length],
+                            //               fontFamily: 'RobotoVietnamese'),
+                            //         ),
+                            //         trailing: Text(
+                            //           debtData.number.toString(),
+                            //           style: TextStyle(
+                            //               color: colors[index % colors.length]),
+                            //         )),
+                            //   ),
+                            // ),
+                            // SizedBox(height: 6)
+                          ],
+                        );
+                      }),
+                ),
+              ],
+            );
           } else {
             return Text("Không có dữ liệu.");
           }
@@ -105,7 +276,6 @@ class _ReportDebtState extends State<ReportDebt> {
   }
 
   List<PieChartSectionData> getSectionsFromData(List<ReportDebtData> data) {
-
     return List.generate(data.length, (index) {
       final item = data[index];
       double percentage = item.number.toDouble() * 100 / totalNumber;
@@ -121,5 +291,22 @@ class _ReportDebtState extends State<ReportDebt> {
             color: const Color(0xffffffff)),
       );
     });
+  }
+
+  ListDateTime getFullDays(DateTime dateTime) {
+    //Month
+    DateTime startOfMonth = DateTime(dateTime.year, dateTime.month, 1);
+    DateTime endOfMonth = DateTime(dateTime.year, dateTime.month + 1, 0);
+
+    ListDateTime listDateTime = ListDateTime(
+        startOfWeek: DateTime.now(),
+        endOfWeek: DateTime.now(),
+        startOfMonth: startOfMonth,
+        endOfMonth: endOfMonth,
+        firstDayOfQuarter: DateTime.now(),
+        lastDayOfQuarter: DateTime.now(),
+        startOfYear: DateTime.now(),
+        endOfYear: DateTime.now());
+    return listDateTime;
   }
 }

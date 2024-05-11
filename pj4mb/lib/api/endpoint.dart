@@ -1,7 +1,7 @@
 class EndPoint{
 
-  //static const String baseUrl = 'http://192.168.1.2:8080/api'; // Sửa lại ip máy
-  static const String baseUrl = 'http://172.16.39.60:8080/api'; // Sửa lại ip máy
+  static const String baseUrl = 'http://192.168.1.3:8080/api'; // Sửa lại ip máy
+  //static const String baseUrl = 'http://172.16.3.226:8080/api'; // Sửa lại ip máy
 
   //Account
   static const String SignIn = '$baseUrl/auth/signin';
@@ -73,9 +73,10 @@ class EndPoint{
   static const String findDebtActive = '$baseUrl/debts/findDebtActive/user/{id}';
   static const String findDebtPaid = '$baseUrl/debts/findDebtPaid/user/{id}';
   static const String UpdateIsPaid = '$baseUrl/debts/updateIsPaid/{id}';
-  static const String GetReportDebt = '$baseUrl/debts/reportDebt/user/{id}';
-  static const String FindDebt = '$baseUrl/debts/findDebt/user/{id}';
-  static const String FindLoan = '$baseUrl/debts/findLoan/user/{id}';
+  static const String GetReportDebt = '$baseUrl/debts/reportDebt';
+  static const String FindDebt = '$baseUrl/debts/findDebt';
+  static const String FindLoan = '$baseUrl/debts/findLoan';
+  static const String getDetailDebtReport = '$baseUrl/debts/getDetailReportDebtParam';
   //
 
 
