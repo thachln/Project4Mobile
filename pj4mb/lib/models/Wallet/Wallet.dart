@@ -38,3 +38,35 @@ class Wallet{
     'currency': currency,
   };
 }
+
+class WalletExchange{
+  late int userId;
+  late int sourceWalletId;
+  late int destinationWalletId;
+  final double amount;
+  final double exchangeRate;
+  late int? savingGoalId;
+
+  WalletExchange({required this.userId,required this.sourceWalletId,required this.destinationWalletId,required this.amount,required this.exchangeRate,required this.savingGoalId});
+
+  factory WalletExchange.fromJson(Map<String, dynamic> json) {
+    return WalletExchange(
+      userId: json['userId'],
+      sourceWalletId: json['sourceWalletId'],
+      destinationWalletId: json['destinationWalletId'],
+      amount: json['amount'],
+      exchangeRate: json['exchangeRate'],
+      savingGoalId: json['savingGoalId'],
+    );
+  }
+
+  Map<String, dynamic> toJson() => {
+    'userId': userId,
+    'sourceWalletId': sourceWalletId,
+    'destinationWalletId': destinationWalletId,
+    'amount': amount,
+    'exchangeRate': exchangeRate,
+    'savingGoalId': savingGoalId,
+  };
+
+}

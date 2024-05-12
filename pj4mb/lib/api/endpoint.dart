@@ -44,6 +44,7 @@ class EndPoint{
   static const String GetWalletTypeWithID = '$baseUrl/wallet_types/{typeID}';
   static const String UpdateWallet = '$baseUrl/wallets/update/{walletID}';
   static const String DeleteWallet = '$baseUrl/wallets/delete/{walletID}';
+  static const String Transfer = '$baseUrl/wallets/transfer';
   //
 
   //Category
@@ -84,5 +85,12 @@ class EndPoint{
   static const String GetNotification = '$baseUrl/notifications/user/{id}';
   static const String UpdateNotification = '$baseUrl/notifications/update/{id}';
   static const String UpdateAllNotificationRead = '$baseUrl/notifications/update/{id}';
+  //
+
+  //Goal
+  static const String InsertGoal = '$baseUrl/savinggoals/create';
+  static const String UpdateGoal = '$baseUrl/savinggoals/update/{id}';
+  static const String DeleteGoal = '$baseUrl/savinggoals/delete/{id}';
+  static const String GetGoal = '$baseUrl/savinggoals/user/{id}';
   //
 }

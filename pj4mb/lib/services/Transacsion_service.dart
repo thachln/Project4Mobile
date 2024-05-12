@@ -220,8 +220,8 @@ class TransactionService {
       'Content-Type': 'application/json',
       'Authorization': 'Bearer $token',
     };
-    var bodyValue = jsonEncode(trans.toJson());
     trans.userId = int.parse(userid!);
+    var bodyValue = jsonEncode(trans.toJson());  
     final response = await http.put(Uri.parse(EndPoint.UpdateTransaction.replaceAll('{id}',trans.transactionId.toString())),body: bodyValue,headers: headersValue);
   
     if (response.statusCode == 200) {     

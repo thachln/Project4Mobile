@@ -35,4 +35,26 @@ class NotificationService{
       return [];
     }
   }
+
+  Future<bool> UpdateNotification(NotificationDTO param) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var userid = prefs.getString('userid');
+    var token = prefs.getString('token');
+    var headersValue = {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer $token',
+    };
+    param.userId = int.parse(userid!);
+    
+    var bodyValue = jsonEncode(param.toJson());
+    final response = await http
+        .put(Uri.parse(EndPoint.UpdateNotification.replaceAll("{id}", param.id.toString())),body: bodyValue,headers: headersValue);
+        print(response.body);
+        print(response.statusCode);
+    if (response.statusCode == 200) {
+      return true;
+    } else {
+      return false;
+    }
+  }
 }

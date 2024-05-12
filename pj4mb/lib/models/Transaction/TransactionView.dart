@@ -87,15 +87,17 @@ class FindTransactionParam{
 	final DateTime fromDate;
 	final DateTime toDate;
 	final String type;
+  final int walletId;
 
-  FindTransactionParam({required this.userId, required this.fromDate, required this.toDate, required this.type});
+  FindTransactionParam({required this.userId, required this.fromDate, required this.toDate, required this.type,required this.walletId});
 
   factory FindTransactionParam.fromJson(Map<String, dynamic> json){
     return FindTransactionParam(
       userId: json['userId'],
       fromDate: DateTime.parse(json['fromDate']),
       toDate: DateTime.parse(json['toDate']),
-      type: json['type']
+      type: json['type'],
+      walletId: json['walletId']
     );
   }
 
@@ -103,7 +105,8 @@ class FindTransactionParam{
     'userId': userId,
     'fromDate': fromDate.toIso8601String(),
     'toDate': toDate.toIso8601String(),
-    'type': type
+    'type': type,
+    'walletId': walletId
   };
 
 

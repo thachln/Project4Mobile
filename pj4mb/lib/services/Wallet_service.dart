@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:pj4mb/api/endpoint.dart';
+import 'package:pj4mb/models/Response.dart';
 import 'package:pj4mb/models/Wallet/Wallet.dart';
 import 'package:http/http.dart' as http;
 import 'package:pj4mb/models/Wallet/WalletType.dart';
@@ -54,7 +55,7 @@ class WalletService {
           throw Exception('Invalid item format');
         }
       }
-      return categories.where((element) => element.currency == "VND").toList();
+      return categories;
     } else {
       return [];
     }
@@ -152,5 +153,25 @@ class WalletService {
       return new WalletType(TypeID: 0, TypeName: "0");
     }
     
+  }
+
+  Future<ResponseApi> Transfer(WalletExchange param) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var userid = prefs.getString('userid');
+    var token = prefs.getString('token');
+     var headersValue = {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer $token',
+    };
+    param.userId = int.parse(userid!);
+    var bodyValue = jsonEncode(param.toJson());
+    final response = await http.post(Uri.parse(EndPoint.Transfer),body: bodyValue,headers: headersValue);
+    if (response.statusCode == 200) {     
+      ResponseApi responseApi = new ResponseApi(message: response.body, status: response.statusCode, data: '');
+      return responseApi;
+    } else {
+      ResponseApi responseApi = new ResponseApi(message: response.body, status: response.statusCode, data: '');
+      return responseApi;
+    }
   }
 }

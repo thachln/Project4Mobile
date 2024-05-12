@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
+import 'package:pj4mb/models/Category/CateTypeENum.dart';
 import 'package:pj4mb/models/Category/Category.dart';
 import 'package:pj4mb/models/Transaction/Transaction.dart';
 import 'package:pj4mb/models/Wallet/Wallet.dart';
@@ -23,21 +24,24 @@ class _AddTransactionPageState extends State<AddTransactionPage> {
   String categoryName = '';
   DateTime selectedDate = DateTime.now();
   Category? valueCate;
+  bool hasSelectedCategory = false;
   late int walletID = 0;
   late String walletName = '';
   late Future<List<Wallet>> valueWallet;
-  TextEditingController moneyNumber =  TextEditingController();
-  TextEditingController noteText =  TextEditingController();
-  TextEditingController dateStart =  TextEditingController();
-  TextEditingController walletType =  TextEditingController();
+  late Future<List<Wallet>> listWallet;
+  TextEditingController moneyNumber = TextEditingController();
+  TextEditingController noteText = TextEditingController();
+  TextEditingController dateStart = TextEditingController();
+  TextEditingController walletType = TextEditingController();
 
   @override
   void initState() {
     super.initState();
 
-    valueWallet = WalletService().GetWalletVND();
+    valueWallet = WalletService().GetWallet();
+    listWallet = valueWallet;
   }
-  
+
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
       context: context,
@@ -100,10 +104,21 @@ class _AddTransactionPageState extends State<AddTransactionPage> {
                                     flag: 2,
                                   )));
                       setState(() {
+                        print(valueCate!.CategoryType);
                         if (valueCate != null) {
                           // Update here using the selected category name
                           categoryName = valueCate!.name;
                           categoryID = valueCate!.categoryID;
+                          hasSelectedCategory = true;
+                        } else {
+                          hasSelectedCategory = false;
+                        }
+                        if (valueCate!.CategoryType == CateTypeENum.INCOME) {
+                          valueWallet = listWallet;
+                        } else {
+                          valueWallet = listWallet.then((value) => value
+                              .where((element) => element.currency == "VND")
+                              .toList());
                         }
                       });
                     },
@@ -153,98 +168,124 @@ class _AddTransactionPageState extends State<AddTransactionPage> {
                 height: 25,
               ),
               Row(
-              children: [
-                Icon(Icons.exposure),
-                SizedBox(
-                  width: 10,
-                ),
-                Expanded(
-                  child: FutureBuilder<List<Wallet>>(
-                    future: valueWallet,
-                    builder: (BuildContext context,
-                        AsyncSnapshot<List<Wallet>> snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return Center(child: CircularProgressIndicator());
-                      } else if (snapshot.hasError) {
-                        return Center(child: Text('Error: ${snapshot.error}'));
-                      } else {
-                        return DropdownButtonFormField<Wallet>(
-                          decoration: InputDecoration(
-                            hintText: 'Wallet',
-                          ),
-                          value: null,
-                          onChanged: (Wallet? value) {
-                            setState(() {
-                              walletID = value!.walletID;
-                              walletName = value!.walletName;
-                            });
-                          },
-                          items: snapshot.data!.map((Wallet value) {
-                            return DropdownMenuItem<Wallet>(
-                              value: value,
-                              child: Text(value.walletName),
-                            );
-                          }).toList(),
-                        );
-                      }
-                    },
+                children: [
+                  Icon(Icons.exposure),
+                  SizedBox(
+                    width: 10,
                   ),
-                )
-              ],
-            ),
-            ElevatedButton(
-              onPressed: () async {
-                Transaction trans = new Transaction(
-                  transactionId: 0,
-                  userId: 0,
-                  walletId: walletID,
-                  categoryId: categoryID,
-                  amount: double.parse(moneyNumber.text),
-                  notes: noteText.text,
-                  transactionDate: selectedDate
-                );
-                var result = await TransactionService().InsertTransaction(trans);
-                if (result) {
-                  showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                        title: Text('Thông báo'),
-                        content: Text('Insert success!'),
-                        actions: [
-                          TextButton(
-                            onPressed: () {
-                              Navigator.pop(context, true);
-                              Navigator.pop(context, true);
+                  Expanded(
+                    child: FutureBuilder<List<Wallet>>(
+                      future: valueWallet,
+                      builder: (BuildContext context,
+                          AsyncSnapshot<List<Wallet>> snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return Center(child: CircularProgressIndicator());
+                        } else if (snapshot.hasError) {
+                          return Center(
+                              child: Text('Error: ${snapshot.error}'));
+                        } else {
+                          return DropdownButtonFormField<Wallet>(
+                            onTap: () {
+                              if (!hasSelectedCategory || categoryID == 0) {
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return AlertDialog(
+                                      title: Text('Alert'),
+                                      content:
+                                          Text('Please select category first!'),
+                                      actions: [
+                                        TextButton(
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                            Navigator.of(context).pop();
+                                          },
+                                          child: Text('OK'),
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                );
+                                return;
+                              }
                             },
-                            child: Text('OK'),
-                          ),
-                        ],
-                      );
-                    },
-                  );
-                } else {
-                  showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                        title: Text('Thông báo'),
-                        content: Text('Error: Insert fail!'),
-                        actions: [
-                          TextButton(
-                            onPressed: () {
-                              Navigator.of(context).pop();
+                            decoration: InputDecoration(
+                              hintText: 'Wallet',
+                            ),
+                            value: null,
+                            onChanged: (Wallet? value) {
+                              setState(() {
+                                walletID = value!.walletID;
+                                walletName = value!.walletName;
+                              });
                             },
-                            child: Text('OK'),
-                          ),
-                        ],
-                      );
-                    },
-                  );
-                }
-              },
-              child: Text('Save'),
-            )
+                            items: snapshot.data!.map((Wallet value) {
+                              return DropdownMenuItem<Wallet>(
+                                value: value,
+                                child: Text(value.walletName),
+                              );
+                            }).toList(),
+                          );
+                        }
+                      },
+                    ),
+                  )
+                ],
+              ),
+              ElevatedButton(
+                onPressed: () async {
+                  Transaction trans = new Transaction(
+                      transactionId: 0,
+                      userId: 0,
+                      walletId: walletID,
+                      categoryId: categoryID,
+                      amount: double.parse(moneyNumber.text),
+                      notes: noteText.text,
+                      transactionDate: selectedDate);
+                  var result =
+                      await TransactionService().InsertTransaction(trans);
+                  if (result) {
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: Text('Alert'),
+                          content: Text('Insert success!'),
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                Navigator.pop(context, true);
+                                Navigator.pop(context, true);
+                              },
+                              child: Text('OK'),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  } else {
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: Text('Alert'),
+                          content: Text('Error: Insert fail!'),
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                              child: Text('OK'),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  }
+                },
+                child: Text('Save'),
+              )
             ],
           ),
         ),

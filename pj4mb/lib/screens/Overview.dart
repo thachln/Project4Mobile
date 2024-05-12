@@ -7,6 +7,7 @@ import 'package:pj4mb/models/Notification/Notification.dart';
 import 'package:pj4mb/models/Transaction/Transaction.dart';
 import 'package:pj4mb/models/Transaction/TransactionView.dart';
 import 'package:pj4mb/models/Wallet/Wallet.dart';
+import 'package:pj4mb/screens/Account/NotificationPage.dart';
 import 'package:pj4mb/screens/Debt/Debt.dart';
 import 'package:pj4mb/screens/Account/MyWallet.dart';
 import 'package:pj4mb/screens/Transaction/TransactionsScreen.dart';
@@ -98,8 +99,16 @@ class _OverviewState extends State<Overview> with TickerProviderStateMixin {
             children: [
               IconButton(
                 icon: Icon(Icons.notifications),
-                onPressed: () {
-                  
+                onPressed: () async {
+                  var result = await Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => NotificationPage(listNotification: getNotifaction,)));
+                  if(result){
+                    setState(() {
+                      loadNotification();
+                    });
+                  }
                 },
               ),
               Positioned(

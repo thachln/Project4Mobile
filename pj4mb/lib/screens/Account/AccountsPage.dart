@@ -110,6 +110,14 @@ class _AccountsPageState extends State<AccountsPage> {
               },
             ),
             ListTile(
+              leading: Icon(Icons.credit_card),
+              title: Text("Saving Goals"),
+              trailing: Icon(Icons.arrow_forward_ios),
+              onTap: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => DebtPage()));        
+              },
+            ),
+            ListTile(
               leading: Icon(Icons.info),
               title: Text("Change Information"),
               trailing: Icon(Icons.arrow_forward_ios),

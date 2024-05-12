@@ -52,8 +52,8 @@ class _BillPageState extends State<BillPage> with TickerProviderStateMixin {
               // Đặt index của tab hiện tại
               onTap: (index) {},
               tabs: [
-                Tab(text: 'Đang áp dụng'),
-                Tab(text: 'Đã kết thúc'),
+                Tab(text: 'Working'),
+                Tab(text: 'Finished'),
               ],
             ),
             Expanded(
@@ -72,7 +72,7 @@ class _BillPageState extends State<BillPage> with TickerProviderStateMixin {
                             child: Text('Error: ${snapshot.error}'));
                       } else {
                         if(snapshot.data!.isEmpty){
-                          return Center(child: Text('Không có dữ liệu'));
+                          return Center(child: Text('No data'));
                         }
                         return BillList(listBill: snapshot.data!, onSave: (value) { 
                           setState(() {
@@ -95,7 +95,7 @@ class _BillPageState extends State<BillPage> with TickerProviderStateMixin {
                             child: Text('Error: ${snapshot.error}'));
                       } else {
                         if(snapshot.data!.isEmpty){
-                          return Center(child: Text('Không có dữ liệu'));
+                          return Center(child: Text('No data'));
                         }
                          return BillList(listBill: snapshot.data!, onSave: (value) { 
                            setState(() {

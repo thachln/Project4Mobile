@@ -6,7 +6,7 @@ class NotificationDTO{
   final NotificationType notificationType;
   final int eventId;
   final String message;
-  final bool read;
+  late bool read;
   final DateTime timestamp;
 
   NotificationDTO({required this.id, required this.userId, required this.notificationType, required this.eventId, required this.message, required this.read, required this.timestamp});
@@ -24,13 +24,13 @@ class NotificationDTO{
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['userId'] = this.userId;
-    data['notificationType'] = this.notificationType.toString().split('.').last;
-    data['eventId'] = this.eventId;
-    data['message'] = this.message;
-    data['read'] = this.read;
-    data['timestamp'] = this.timestamp;
+    data['id'] = id;
+    data['userId'] = userId;
+    data['notificationType'] = notificationType.toString().split('.').last;
+    data['eventId'] = eventId;
+    data['message'] = message;
+    data['read'] = read;
+    data['timestamp'] = timestamp.toIso8601String();
     return data;
   }
 }

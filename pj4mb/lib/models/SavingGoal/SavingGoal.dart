@@ -1,39 +1,43 @@
+import 'package:pj4mb/models/Bill/EndType.dart';
 import 'package:pj4mb/models/User/User.dart';
 import 'package:pj4mb/models/Wallet/Wallet.dart';
 
 class SavingGoal{
-  final int savingGoalId;
+  final int id;
   final String name;
   final double targetAmount;
   final double currentAmount;
   final DateTime startDate;
   final DateTime endDate;
-  final User user;
-  final Wallet wallet;
+  final EndType endDateType;
+  late int userId;
+  final int walletId;
 
-  SavingGoal({required this.savingGoalId,required this.name,required this.targetAmount,required this.currentAmount,required this.startDate,required this.endDate,required this.user,required this.wallet});
+  SavingGoal({required this.id,required this.name,required this.targetAmount,required this.currentAmount,required this.startDate,required this.endDate,required this.endDateType,required this.userId,required this.walletId});
 
   factory SavingGoal.fromJson(Map<String, dynamic> json) {
     return SavingGoal(
-      savingGoalId: json['savingGoalId'],
+      id: json['id'],
       name: json['name'],
       targetAmount: json['targetAmount'],
       currentAmount: json['currentAmount'],
       startDate: DateTime.parse(json['startDate']),
       endDate: DateTime.parse(json['endDate']),
-      user: User.fromJson(json['user']),
-      wallet: Wallet.fromJson(json['wallet']),
+      endDateType: json['endDateType'],
+      userId: json['userId'],
+      walletId: json['walletId'],
     );
   }
 
   Map<String, dynamic> toJson() => {
-    'savingGoalId': savingGoalId,
+    'id': id,
     'name': name,
     'targetAmount': targetAmount,
     'currentAmount': currentAmount,
-    'startDate': startDate.toString(),
-    'endDate': endDate.toString(),
-    'user': user.toJson(),
-    'wallet': wallet.toJson(),
+    'startDate': startDate,
+    'endDate': endDate,
+    'endDateType': endDateType,
+    'userId': userId,
+    'walletId': walletId,
   };
 }

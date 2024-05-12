@@ -69,7 +69,6 @@ class _ReportDebtState extends State<ReportDebt> {
         dataDetail += result;
       });
     }
-    print(dataDetail.length);
   }
 
   @override
@@ -226,7 +225,7 @@ class _ReportDebtState extends State<ReportDebt> {
                                         title: Text(
                                           detailData[index].name,
                                           style: TextStyle(
-                                              color: colors[index % colors.length],
+                                              
                                               fontFamily: 'RobotoVietnamese'),
                                         ),
                                         trailing: Text(
@@ -238,29 +237,6 @@ class _ReportDebtState extends State<ReportDebt> {
                                     })
                               ],
                             ),
-                            // GestureDetector(
-                            //   onTap: () async {
-
-                            //   },
-                            //   child: Container(
-                            //     margin: EdgeInsets.only(top: 10),
-                            //     child: ListTile(
-                            //         leading: Icon(
-                            //             Icons.account_balance_wallet_outlined),
-                            //         title: Text(
-                            //           debtData.name,
-                            //           style: TextStyle(
-                            //               color: colors[index % colors.length],
-                            //               fontFamily: 'RobotoVietnamese'),
-                            //         ),
-                            //         trailing: Text(
-                            //           debtData.number.toString(),
-                            //           style: TextStyle(
-                            //               color: colors[index % colors.length]),
-                            //         )),
-                            //   ),
-                            // ),
-                            // SizedBox(height: 6)
                           ],
                         );
                       }),

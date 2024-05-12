@@ -83,7 +83,7 @@ class ListCategoryTransaction extends StatelessWidget {
               children: [
                 GestureDetector(
                   onTap: () async {
-                    Navigator.pop(context,new Category(categoryID: cate.categoryID,name: cate.name,icon: cate.icon, CategoryType: CateTypeENum.EXPENSE, user: 0));
+                    Navigator.pop(context,new Category(categoryID: cate.categoryID,name: cate.name,icon: cate.icon, CategoryType: cate.CategoryType, user: 0));
                   },
                   child: Container(
                     color: Colors.green[100],
