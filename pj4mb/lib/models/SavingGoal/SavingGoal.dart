@@ -1,6 +1,6 @@
-import 'package:pj4mb/models/Bill/EndType.dart';
-import 'package:pj4mb/models/User/User.dart';
-import 'package:pj4mb/models/Wallet/Wallet.dart';
+
+import 'package:pj4mb/models/SavingGoal/EndDateType.dart';
+
 
 class SavingGoal{
   final int id;
@@ -8,8 +8,8 @@ class SavingGoal{
   final double targetAmount;
   final double currentAmount;
   final DateTime startDate;
-  final DateTime endDate;
-  final EndType endDateType;
+  final DateTime? endDate;
+  final EndDateType endDateType;
   late int userId;
   final int walletId;
 
@@ -22,8 +22,8 @@ class SavingGoal{
       targetAmount: json['targetAmount'],
       currentAmount: json['currentAmount'],
       startDate: DateTime.parse(json['startDate']),
-      endDate: DateTime.parse(json['endDate']),
-      endDateType: json['endDateType'],
+      endDate: json['endDate'] != null ? DateTime.parse(json['endDate']) : null,
+      endDateType: EndDateType.values.firstWhere((e) => e.name == json['endDateType']),
       userId: json['userId'],
       walletId: json['walletId'],
     );
@@ -34,9 +34,9 @@ class SavingGoal{
     'name': name,
     'targetAmount': targetAmount,
     'currentAmount': currentAmount,
-    'startDate': startDate,
-    'endDate': endDate,
-    'endDateType': endDateType,
+    'startDate': startDate.toIso8601String(),
+    'endDate': endDate != null ? endDate!.toIso8601String() : null,
+    'endDateType': endDateType.name,
     'userId': userId,
     'walletId': walletId,
   };

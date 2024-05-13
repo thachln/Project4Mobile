@@ -26,7 +26,7 @@ class _CategoryPageState extends State<CategoryPage>
     {
       _tabController = TabController(length: 2, vsync: this);
     }
-    else if(widget.flag == 3 || widget.flag == 1){
+    else if(widget.flag == 3 || widget.flag == 1 || widget.flag == 4){
       _tabController = TabController(length: 1, vsync: this);
     }
     
@@ -212,6 +212,64 @@ class _CategoryPageState extends State<CategoryPage>
       ),
     );
       // #endregion
+    }
+    else if (widget.flag == 4){
+      // #region add budget
+      return Scaffold(
+      appBar: AppBar(title: Text('Group')),
+      body: SingleChildScrollView(
+        child: Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            border: Border.all(
+              color: Colors.grey,
+            ),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              TabBar(
+                controller: _tabController,         
+                tabs: [
+                  Tab(text: 'Khoản thu'),
+                ],
+              ),
+              Container(
+                height: MediaQuery.of(context).size.height * 0.7,
+                child: TabBarView(
+                  controller: _tabController,
+                  children: [
+                    FutureBuilder<List<Category>>(
+                      future: cateList,
+                      builder: (BuildContext context,
+                          AsyncSnapshot<List<Category>> snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return Center(child: CircularProgressIndicator());
+                        } else if (snapshot.hasError) {
+                          return Center(
+                              child: Text('Error: ${snapshot.error}'));
+                        } else {
+                          return ListCategoryBudget(
+                            onSave: (value) {
+                              setState(() {
+                                cateList = CategoryService().GetCategory();
+                              });
+                            },
+                            listCategory: snapshot.data!.where((element) => element.CategoryType == CateTypeENum.INCOME).toList(),categoryType:  CateTypeENum.INCOME,
+                          );
+                        }
+                      },
+                    ),                                  
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
     }
     else
     {

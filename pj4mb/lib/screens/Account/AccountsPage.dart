@@ -7,6 +7,7 @@ import 'package:pj4mb/screens/Account/MyWallet.dart';
 import 'package:pj4mb/screens/Bill/BillPage.dart';
 import 'package:pj4mb/screens/Debt/Debt.dart';
 import 'package:pj4mb/screens/Login.dart';
+import 'package:pj4mb/screens/SavingGoals/SavingGoalScreen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 
@@ -101,6 +102,14 @@ class _AccountsPageState extends State<AccountsPage> {
                 Navigator.push(context, MaterialPageRoute(builder: (context) => BillPage()));        
               },
             ),
+            ListTile(
+              leading: Icon(Icons.document_scanner),
+              title: Text("Transaction Recurrence"),
+              trailing: Icon(Icons.arrow_forward_ios),
+              onTap: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => BillPage()));        
+              },
+            ),
              ListTile(
               leading: Icon(Icons.credit_card),
               title: Text("Debt"),
@@ -114,7 +123,7 @@ class _AccountsPageState extends State<AccountsPage> {
               title: Text("Saving Goals"),
               trailing: Icon(Icons.arrow_forward_ios),
               onTap: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => DebtPage()));        
+                Navigator.push(context, MaterialPageRoute(builder: (context) => SavingGoalPage()));        
               },
             ),
             ListTile(

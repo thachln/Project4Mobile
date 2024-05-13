@@ -26,6 +26,7 @@ class _AddTransactionPageState extends State<AddTransactionPage> {
   Category? valueCate;
   bool hasSelectedCategory = false;
   late int walletID = 0;
+  late int walletTypeId = 0;
   late String walletName = '';
   late Future<List<Wallet>> valueWallet;
   late Future<List<Wallet>> listWallet;
@@ -73,14 +74,67 @@ class _AddTransactionPageState extends State<AddTransactionPage> {
             children: [
               Row(
                 children: [
-                  Icon(Icons.monetization_on_rounded),
+                  Icon(Icons.exposure),
                   SizedBox(
                     width: 10,
                   ),
                   Expanded(
-                    child: TextField(
-                      controller: moneyNumber,
-                      keyboardType: TextInputType.number,
+                    child: FutureBuilder<List<Wallet>>(
+                      future: valueWallet,
+                      builder: (BuildContext context,
+                          AsyncSnapshot<List<Wallet>> snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return Center(child: CircularProgressIndicator());
+                        } else if (snapshot.hasError) {
+                          return Center(
+                              child: Text('Error: ${snapshot.error}'));
+                        } else {
+                          return DropdownButtonFormField<Wallet>(
+                            onTap: () {
+                              // if (!hasSelectedCategory || categoryID == 0) {
+                              //   showDialog(
+                              //     context: context,
+                              //     builder: (BuildContext context) {
+                              //       return AlertDialog(
+                              //         title: Text('Alert'),
+                              //         content:
+                              //             Text('Please select category first!'),
+                              //         actions: [
+                              //           TextButton(
+                              //             onPressed: () {
+                              //               Navigator.of(context).pop();
+                              //               Navigator.of(context).pop();
+                              //             },
+                              //             child: Text('OK'),
+                              //           ),
+                              //         ],
+                              //       );
+                              //     },
+                              //   );
+                              //   return;
+                              // }
+                            },
+                            decoration: InputDecoration(
+                              hintText: 'Wallet',
+                            ),
+                            value: null,
+                            onChanged: (Wallet? value) {
+                              setState(() {
+                                walletID = value!.walletID;
+                                walletName = value!.walletName;
+                                walletTypeId = value!.walletTypeID;
+                              });
+                            },
+                            items: snapshot.data!.map((Wallet value) {
+                              return DropdownMenuItem<Wallet>(
+                                value: value,
+                                child: Text(value.walletName),
+                              );
+                            }).toList(),
+                          );
+                        }
+                      },
                     ),
                   )
                 ],
@@ -97,12 +151,53 @@ class _AddTransactionPageState extends State<AddTransactionPage> {
                   Expanded(
                       child: InkWell(
                     onTap: () async {
-                      valueCate = await Navigator.push(
+                      if(walletID == 0){
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: Text('Alert'),
+                              content: Text('Please select wallet first!'),
+                              actions: [
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: Text('OK'),
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                        return;
+                      }
+                      print(walletType);
+                      if(walletTypeId == 1)
+                      {
+                         valueCate = await Navigator.push(
                           context,
                           MaterialPageRoute(
                               builder: (context) => CategoryPage(
                                     flag: 2,
                                   )));
+                      }
+                      else if(walletTypeId == 2){
+                         valueCate = await Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => CategoryPage(
+                                    flag: 4,
+                                  )));
+                      }
+                      else{
+                        valueCate = await Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => CategoryPage(
+                                    flag: 2,
+                                  )));
+                      }
+                     
                       setState(() {
                         print(valueCate!.CategoryType);
                         if (valueCate != null) {
@@ -126,6 +221,23 @@ class _AddTransactionPageState extends State<AddTransactionPage> {
                         ? Text('Chọn nhóm')
                         : Text(categoryName),
                   ))
+                ],
+              ),
+              SizedBox(
+                height: 25,
+              ),
+              Row(
+                children: [
+                  Icon(Icons.monetization_on_rounded),
+                  SizedBox(
+                    width: 10,
+                  ),
+                  Expanded(
+                    child: TextField(
+                      controller: moneyNumber,
+                      keyboardType: TextInputType.number,
+                    ),
+                  )
                 ],
               ),
               SizedBox(
@@ -166,72 +278,6 @@ class _AddTransactionPageState extends State<AddTransactionPage> {
               ),
               SizedBox(
                 height: 25,
-              ),
-              Row(
-                children: [
-                  Icon(Icons.exposure),
-                  SizedBox(
-                    width: 10,
-                  ),
-                  Expanded(
-                    child: FutureBuilder<List<Wallet>>(
-                      future: valueWallet,
-                      builder: (BuildContext context,
-                          AsyncSnapshot<List<Wallet>> snapshot) {
-                        if (snapshot.connectionState ==
-                            ConnectionState.waiting) {
-                          return Center(child: CircularProgressIndicator());
-                        } else if (snapshot.hasError) {
-                          return Center(
-                              child: Text('Error: ${snapshot.error}'));
-                        } else {
-                          return DropdownButtonFormField<Wallet>(
-                            onTap: () {
-                              if (!hasSelectedCategory || categoryID == 0) {
-                                showDialog(
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    return AlertDialog(
-                                      title: Text('Alert'),
-                                      content:
-                                          Text('Please select category first!'),
-                                      actions: [
-                                        TextButton(
-                                          onPressed: () {
-                                            Navigator.of(context).pop();
-                                            Navigator.of(context).pop();
-                                          },
-                                          child: Text('OK'),
-                                        ),
-                                      ],
-                                    );
-                                  },
-                                );
-                                return;
-                              }
-                            },
-                            decoration: InputDecoration(
-                              hintText: 'Wallet',
-                            ),
-                            value: null,
-                            onChanged: (Wallet? value) {
-                              setState(() {
-                                walletID = value!.walletID;
-                                walletName = value!.walletName;
-                              });
-                            },
-                            items: snapshot.data!.map((Wallet value) {
-                              return DropdownMenuItem<Wallet>(
-                                value: value,
-                                child: Text(value.walletName),
-                              );
-                            }).toList(),
-                          );
-                        }
-                      },
-                    ),
-                  )
-                ],
               ),
               ElevatedButton(
                 onPressed: () async {

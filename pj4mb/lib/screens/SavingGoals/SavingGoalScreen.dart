@@ -1,5 +1,8 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:pj4mb/models/SavingGoal/SavingGoal.dart';
+import 'package:pj4mb/screens/SavingGoals/AddSaving.dart';
+import 'package:pj4mb/services/SavingGoal_service.dart';
+import 'package:pj4mb/widgets/SavingGoal/GoalList.dart';
 
 class SavingGoalPage extends StatefulWidget {
   const SavingGoalPage({super.key});
@@ -8,18 +11,20 @@ class SavingGoalPage extends StatefulWidget {
   State<SavingGoalPage> createState() => _SavingGoalPageState();
 }
 
-class _SavingGoalPageState extends State<SavingGoalPage> with TickerProviderStateMixin {
+class _SavingGoalPageState extends State<SavingGoalPage>
+    with TickerProviderStateMixin {
   TabController? _tabController;
-  // late Future<List<BillResponse>> billActive; 
-  // late Future<List<BillResponse>> billExpired; 
+  late Future<List<SavingGoal>> savingWorking;
+  late Future<List<SavingGoal>> savingFull;
 
   @override
   void initState() {
     super.initState();
-     _tabController = TabController(length: 2, vsync: this);
-    // billActive = BillService().findBillActive();
-    // billExpired = BillService().findBillExpired();
+    _tabController = TabController(length: 2, vsync: this);
+    savingWorking = SavingGoalService().findWorkingByUserId();
+    savingFull = SavingGoalService().findFinishedByUserId();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -43,59 +48,65 @@ class _SavingGoalPageState extends State<SavingGoalPage> with TickerProviderStat
               onTap: (index) {},
               tabs: [
                 Tab(text: 'Working'),
-                Tab(text: 'Finished'),
+                Tab(text: 'Full'),
               ],
             ),
             Expanded(
               child: TabBarView(
                 controller: _tabController,
                 children: [
-                  // FutureBuilder<List<BillResponse>>(
-                  //   future: billActive,
-                  //   builder: (BuildContext context,
-                  //       AsyncSnapshot<List<BillResponse>> snapshot) {
-                  //     if (snapshot.connectionState ==
-                  //         ConnectionState.waiting) {
-                  //       return Center(child: CircularProgressIndicator());
-                  //     } else if (snapshot.hasError) {
-                  //       return Center(
-                  //           child: Text('Error: ${snapshot.error}'));
-                  //     } else {
-                  //       if(snapshot.data!.isEmpty){
-                  //         return Center(child: Text('No data'));
-                  //       }
-                  //       return BillList(listBill: snapshot.data!, onSave: (value) { 
-                  //         setState(() {
-                  //           billActive = BillService().findBillActive();
-                  //           billExpired = BillService().findBillExpired();
-                  //         });
-                  //        },);
-                  //     }
-                  //   },
-                  // ),
-                  // FutureBuilder<List<BillResponse>>(
-                  //   future: billExpired,
-                  //   builder: (BuildContext context,
-                  //       AsyncSnapshot<List<BillResponse>> snapshot) {
-                  //     if (snapshot.connectionState ==
-                  //         ConnectionState.waiting) {
-                  //       return Center(child: CircularProgressIndicator());
-                  //     } else if (snapshot.hasError) {
-                  //       return Center(
-                  //           child: Text('Error: ${snapshot.error}'));
-                  //     } else {
-                  //       if(snapshot.data!.isEmpty){
-                  //         return Center(child: Text('No data'));
-                  //       }
-                  //        return BillList(listBill: snapshot.data!, onSave: (value) { 
-                  //          setState(() {
-                  //           billActive = BillService().findBillActive();
-                  //           billExpired = BillService().findBillExpired();
-                  //         });
-                  //         },);
-                  //     }
-                  //   },
-                  // ),
+                  FutureBuilder<List<SavingGoal>>(
+                    future: savingWorking,
+                    builder: (BuildContext context,
+                        AsyncSnapshot<List<SavingGoal>> snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return Center(child: CircularProgressIndicator());
+                      } else if (snapshot.hasError) {
+                        return Center(child: Text('Error: ${snapshot.error}'));
+                      } else {
+                        if (snapshot.data!.isEmpty) {
+                          return Center(child: Text('No data'));
+                        }
+                        return GoalList(
+                          onSave: (value) {
+                            setState(() {
+                              savingWorking =
+                                  SavingGoalService().findWorkingByUserId();
+                              savingFull =
+                                  SavingGoalService().findFinishedByUserId();
+                            });
+                          },
+                          listGoal: snapshot.data!,
+                        );
+                      }
+                    },
+                  ),
+                  FutureBuilder<List<SavingGoal>>(
+                    future: savingFull,
+                    builder: (BuildContext context,
+                        AsyncSnapshot<List<SavingGoal>> snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return Center(child: CircularProgressIndicator());
+                      } else if (snapshot.hasError) {
+                        return Center(child: Text('Error: ${snapshot.error}'));
+                      } else {
+                        if (snapshot.data!.isEmpty) {
+                          return Center(child: Text('No data'));
+                        }
+                        return GoalList(
+                          onSave: (value) {
+                            setState(() {
+                              savingWorking =
+                                  SavingGoalService().findWorkingByUserId();
+                              savingFull =
+                                  SavingGoalService().findFinishedByUserId();
+                            });
+                          },
+                          listGoal: snapshot.data!,
+                        );
+                      }
+                    },
+                  ),
                 ],
               ),
             ),
@@ -105,15 +116,14 @@ class _SavingGoalPageState extends State<SavingGoalPage> with TickerProviderStat
       floatingActionButton: FloatingActionButton(
           child: Icon(Icons.add, color: Colors.white),
           onPressed: () async {
-            // var result = await Navigator.push(context,
-            //     MaterialPageRoute(builder: (context) => AddBillPage()));
-            // if(result){
-            //   setState(() {
-            //     billActive = BillService().findBillActive();
-            //     billExpired = BillService().findBillExpired();
-            //   });
-            
-            // }
+            var result = await Navigator.push(context,
+                MaterialPageRoute(builder: (context) => AddSavingPage()));
+            if (result) {
+              setState(() {
+                savingWorking = SavingGoalService().findWorkingByUserId();
+                savingFull = SavingGoalService().findFinishedByUserId();
+              });
+            }
           },
           backgroundColor: Colors.pink[200],
           mini: true,

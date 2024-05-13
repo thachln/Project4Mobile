@@ -1,6 +1,6 @@
 class EndPoint{
 
-  static const String baseUrl = 'http://192.168.1.3:8080/api'; // Sửa lại ip máy
+  static const String baseUrl = 'http://192.168.1.2:8080/api'; // Sửa lại ip máy
   //static const String baseUrl = 'http://172.16.3.226:8080/api'; // Sửa lại ip máy
 
   //Account
@@ -25,6 +25,7 @@ class EndPoint{
   static const String GetTransactionById = '$baseUrl/transactions/{id}';
   static const String FindTransaction = '$baseUrl/transactions/FindTransaction';
   static const String GetTransactionWithBudget = '$baseUrl/transactions/getTransactionWithBudget';
+  static const String GetTransactionWithSaving = '$baseUrl/transactions/getTransactionWithSaving';
   //
 
 
@@ -92,5 +93,8 @@ class EndPoint{
   static const String UpdateGoal = '$baseUrl/savinggoals/update/{id}';
   static const String DeleteGoal = '$baseUrl/savinggoals/delete/{id}';
   static const String GetGoal = '$baseUrl/savinggoals/user/{id}';
+  static const String findWorkingByUserId = '$baseUrl/savinggoals/findWorkingByUserId/user/{id}';
+  static const String findFinishedByUserId = '$baseUrl/savinggoals/findFinishedByUserId/user/{id}';
+  static const String getSavingWithSavingID = '$baseUrl/savinggoals/getSavingWithSavingID';
   //
 }

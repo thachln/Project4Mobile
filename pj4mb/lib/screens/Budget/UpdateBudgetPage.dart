@@ -48,7 +48,7 @@ class _UpdateBudgetPageState extends State<UpdateBudgetPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Thêm Ngân Sách'),
+        title: Text('Edit Budget'),
         actions: [
           IconButton(
             onPressed: () {
