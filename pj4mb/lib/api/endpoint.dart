@@ -1,7 +1,7 @@
 class EndPoint{
 
-  static const String baseUrl = 'http://192.168.1.2:8080/api'; // Sửa lại ip máy
-  //static const String baseUrl = 'http://172.16.3.226:8080/api'; // Sửa lại ip máy
+  //static const String baseUrl = 'http://192.168.1.2:8080/api'; // Sửa lại ip máy
+  static const String baseUrl = 'http://172.16.39.60:8080/api'; // Sửa lại ip máy
 
   //Account
   static const String SignIn = '$baseUrl/auth/signin';
@@ -63,6 +63,8 @@ class EndPoint{
   static const String GetBudgetWithID = '$baseUrl/budgets/{id}';
   static const String UpdateBudget = '$baseUrl/budgets/update/{id}';
   static const String DeleteBudget = '$baseUrl/budgets/delete/{id}';
+  static const String getPast = '$baseUrl/budgets/getBudgetPast';
+  static const String getFuture = '$baseUrl/budgets/getBudgetFuture';
   
   //
 

@@ -21,8 +21,8 @@ class _AddBudgetPageState extends State<AddBudgetPage> {
   String dropdownValue = 'VND';
   late ListDateTime listDateTime;
 
-  late DateTime selectedDateStart = new DateTime(1, 1, 1);
-  late DateTime selectedDateEnd = new DateTime(1, 1, 1);
+  late DateTime selectedDateStart;
+  late DateTime selectedDateEnd;
   late TextEditingController amountController;
   String categoryName = '';
   int categoryId = 0;
@@ -33,6 +33,8 @@ class _AddBudgetPageState extends State<AddBudgetPage> {
     super.initState();
     amountController = TextEditingController();
     listDateTime = getFullDays(DateTime.now());
+    selectedDateStart = listDateTime.startOfWeek;
+    selectedDateEnd = listDateTime.endOfWeek;
   }
 
   @override
@@ -109,7 +111,7 @@ class _AddBudgetPageState extends State<AddBudgetPage> {
                     child: InkWell(
                   onTap: _showTimeSelectionDialog,
                   child: DateFormat('dd-MM-yyyy').format(selectedDateStart) ==
-                          '01-01-0001'
+                          '01-01-2000'
                       ? Text('Choose date')
                       : Text(
                           '${DateFormat('dd-MM-yyyy').format(selectedDateStart)} - ${DateFormat('dd-MM-yyyy').format(selectedDateEnd)}'),
@@ -319,9 +321,9 @@ class _AddBudgetPageState extends State<AddBudgetPage> {
                   child: Text('Xác nhận'),
                   onPressed: () {
                     if (DateFormat('dd-MM-yyyy').format(selectedDateStart) ==
-                            '01-01-0001' &&
+                            '01-01-2000' &&
                         DateFormat('dd-MM-yyyy').format(selectedDateEnd) ==
-                            '01-01-0001') {
+                            '01-01-2000') {
                       setState(() {
                         selectedDateStart = listDateTime.startOfWeek;
                         selectedDateEnd = listDateTime.endOfWeek;

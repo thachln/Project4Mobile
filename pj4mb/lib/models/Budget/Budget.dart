@@ -10,6 +10,7 @@ class Budget{
   final double threshold_amount;
   final DateTime period_start;
   final DateTime period_end;
+  late String categoryName;
 
   Budget({
     required this.budgetId,

@@ -24,17 +24,25 @@ class _BudgetPageState extends State<BudgetPage>
     with SingleTickerProviderStateMixin {
   TabController? _tabController;
   late Future<List<BudgetResponse>> listBudget;
+  late Future<List<BudgetResponse>> listBudgetPast;
+  late Future<List<BudgetResponse>> listBudgetFuture;
   late ListDateTime listDateTime;
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 1, vsync: this);
+    _tabController = TabController(length: 3, vsync: this,initialIndex: 1);
     listDateTime = getFullDays(DateTime.now());
     var param = ParamPudget(
         userId: 0,
         fromDate: listDateTime.startOfMonth,
         toDate: listDateTime.endOfMonth);
     listBudget = Budget_Service().GetBudgetWithTime(param);
+    listBudgetPast = Budget_Service().GetBudgetPast(param);
+    var param2 = ParamPudget(
+        userId: 0,
+        fromDate: listDateTime.endOfMonth,
+        toDate: listDateTime.endOfMonth);
+    listBudgetFuture = Budget_Service().GetBudgetFuture(param2);
   }
 
   @override
@@ -48,7 +56,7 @@ class _BudgetPageState extends State<BudgetPage>
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text('Ngân sách'),
+          title: Text('Budget'),
           centerTitle: true,
           backgroundColor: Colors.white,
           elevation: 0,
@@ -59,7 +67,9 @@ class _BudgetPageState extends State<BudgetPage>
               TabBar(
                 controller: _tabController,
                 tabs: [
-                  Tab(text: 'Tháng này'),
+                  Tab(text: 'Past',),
+                  Tab(text: 'This Month'),
+                  Tab(text: 'Future',)
                 ],
               ),
               Container(
@@ -68,7 +78,59 @@ class _BudgetPageState extends State<BudgetPage>
                   controller: _tabController,
                   children: [
                     FutureBuilder<List<BudgetResponse>>(
+                      future: listBudgetPast,
+                      builder: (BuildContext context,
+                          AsyncSnapshot<List<BudgetResponse>> snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return Center(child: CircularProgressIndicator());
+                        } else if (snapshot.hasError) {
+                          return Center(
+                              child: Text('Error: ${snapshot.error}'));
+                        } else {
+                          return BudgetList(listBudget: snapshot.data ?? [], onSave: (value) { 
+                            if(value != null && value)
+                            {
+                              setState(() {
+                                listBudget = Budget_Service().GetBudgetWithTime(ParamPudget(
+                                  userId: 0,
+                                  fromDate: listDateTime.startOfMonth,
+                                  toDate: listDateTime.endOfMonth
+                                ));
+                              });
+                            }
+                           },);
+                        }
+                      },
+                    ),
+                    FutureBuilder<List<BudgetResponse>>(
                       future: listBudget,
+                      builder: (BuildContext context,
+                          AsyncSnapshot<List<BudgetResponse>> snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return Center(child: CircularProgressIndicator());
+                        } else if (snapshot.hasError) {
+                          return Center(
+                              child: Text('Error: ${snapshot.error}'));
+                        } else {
+                          return BudgetList(listBudget: snapshot.data ?? [], onSave: (value) { 
+                            if(value != null && value)
+                            {
+                              setState(() {
+                                listBudget = Budget_Service().GetBudgetWithTime(ParamPudget(
+                                  userId: 0,
+                                  fromDate: listDateTime.startOfMonth,
+                                  toDate: listDateTime.endOfMonth
+                                ));
+                              });
+                            }
+                           },);
+                        }
+                      },
+                    ),
+                    FutureBuilder<List<BudgetResponse>>(
+                      future: listBudgetFuture,
                       builder: (BuildContext context,
                           AsyncSnapshot<List<BudgetResponse>> snapshot) {
                         if (snapshot.connectionState ==

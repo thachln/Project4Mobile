@@ -29,6 +29,7 @@ class WalletService {
           throw Exception('Invalid item format');
         }
       }
+      print(categories.first.walletTypeID);
       return categories;
     } else {
       return [];

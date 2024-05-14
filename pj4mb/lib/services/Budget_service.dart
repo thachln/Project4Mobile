@@ -57,6 +57,68 @@ class Budget_Service{
       
   }
 
+   Future<List<BudgetResponse>> GetBudgetPast(ParamPudget paramPudget) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var userid = prefs.getString('userid');
+    var token = prefs.getString('token');
+    var headersValue = {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer $token',
+    };
+    paramPudget.userId = int.parse(userid!);
+ 
+    final response = await http
+        .post(Uri.parse(EndPoint.getPast),body: jsonEncode(paramPudget.toJson()),headers: headersValue);
+
+    if (response.statusCode == 200) {
+      final List<dynamic> parsed = jsonDecode(response.body);
+      //return parsed.map((e) => Category.fromJson(e)).toList();
+   
+      List<BudgetResponse> BudgetList = [];
+      for (var item in parsed) {
+        if (item is Map<String, dynamic>) {
+          BudgetList.add(BudgetResponse.fromJson(item));
+        } else {
+          throw Exception('Invalid item format');
+        }
+      }
+      return BudgetList;
+    } else {
+      return [];
+    }
+  }
+
+  Future<List<BudgetResponse>> GetBudgetFuture(ParamPudget paramPudget) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var userid = prefs.getString('userid');
+    var token = prefs.getString('token');
+    var headersValue = {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer $token',
+    };
+    paramPudget.userId = int.parse(userid!);
+ 
+    final response = await http
+        .post(Uri.parse(EndPoint.getFuture),body: jsonEncode(paramPudget.toJson()),headers: headersValue);
+
+    if (response.statusCode == 200) {
+      final List<dynamic> parsed = jsonDecode(response.body);
+      //return parsed.map((e) => Category.fromJson(e)).toList();
+   
+      List<BudgetResponse> BudgetList = [];
+      for (var item in parsed) {
+        if (item is Map<String, dynamic>) {
+          BudgetList.add(BudgetResponse.fromJson(item));
+        } else {
+          throw Exception('Invalid item format');
+        }
+      }
+      return BudgetList;
+    } else {
+      return [];
+    }
+  }
+   
   Future<List<BudgetResponse>> GetBudgetWithTime(ParamPudget paramPudget) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var userid = prefs.getString('userid');

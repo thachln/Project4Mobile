@@ -123,10 +123,11 @@ class _SavingWithTransactionPageState extends State<SavingWithTransactionPage> {
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [Text('Money Start: ' + formatter.format(savingData.currentAmount) + 'đ'),
                 Text(
-                    'Còn lại: ${formatter.format(savingData.targetAmount - savingData.currentAmount)}đ'),
+                  
+                    'Remaining: ${formatter.format(savingData.targetAmount - savingData.currentAmount)}đ'),
               ],
             ),
           ),

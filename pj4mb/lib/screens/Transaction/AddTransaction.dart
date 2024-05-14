@@ -92,28 +92,7 @@ class _AddTransactionPageState extends State<AddTransactionPage> {
                         } else {
                           return DropdownButtonFormField<Wallet>(
                             onTap: () {
-                              // if (!hasSelectedCategory || categoryID == 0) {
-                              //   showDialog(
-                              //     context: context,
-                              //     builder: (BuildContext context) {
-                              //       return AlertDialog(
-                              //         title: Text('Alert'),
-                              //         content:
-                              //             Text('Please select category first!'),
-                              //         actions: [
-                              //           TextButton(
-                              //             onPressed: () {
-                              //               Navigator.of(context).pop();
-                              //               Navigator.of(context).pop();
-                              //             },
-                              //             child: Text('OK'),
-                              //           ),
-                              //         ],
-                              //       );
-                              //     },
-                              //   );
-                              //   return;
-                              // }
+                              
                             },
                             decoration: InputDecoration(
                               hintText: 'Wallet',
@@ -124,12 +103,20 @@ class _AddTransactionPageState extends State<AddTransactionPage> {
                                 walletID = value!.walletID;
                                 walletName = value!.walletName;
                                 walletTypeId = value!.walletTypeID;
+
+                                print(walletID);
+                                print(walletName);
+                                print(walletTypeId);
+
+                                print(value!.walletID);
+                                print(value!.walletName);
+                                print(value!.walletTypeID);
                               });
                             },
                             items: snapshot.data!.map((Wallet value) {
                               return DropdownMenuItem<Wallet>(
                                 value: value,
-                                child: Text(value.walletName),
+                                child: Text(value.walletName +  " - " + value.walletTypeID.toString()),
                               );
                             }).toList(),
                           );
@@ -171,7 +158,7 @@ class _AddTransactionPageState extends State<AddTransactionPage> {
                         );
                         return;
                       }
-                      print(walletType);
+                      print("123: " + walletTypeId.toString());
                       if(walletTypeId == 1)
                       {
                          valueCate = await Navigator.push(
@@ -181,7 +168,7 @@ class _AddTransactionPageState extends State<AddTransactionPage> {
                                     flag: 2,
                                   )));
                       }
-                      else if(walletTypeId == 2){
+                      else if(walletTypeId == 3){
                          valueCate = await Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -199,22 +186,24 @@ class _AddTransactionPageState extends State<AddTransactionPage> {
                       }
                      
                       setState(() {
-                        print(valueCate!.CategoryType);
-                        if (valueCate != null) {
-                          // Update here using the selected category name
-                          categoryName = valueCate!.name;
+                         categoryName = valueCate!.name;
                           categoryID = valueCate!.categoryID;
-                          hasSelectedCategory = true;
-                        } else {
-                          hasSelectedCategory = false;
-                        }
-                        if (valueCate!.CategoryType == CateTypeENum.INCOME) {
-                          valueWallet = listWallet;
-                        } else {
-                          valueWallet = listWallet.then((value) => value
-                              .where((element) => element.currency == "VND")
-                              .toList());
-                        }
+                        // print(valueCate!.CategoryType);
+                        // if (valueCate != null) {
+                        //   // Update here using the selected category name
+                        //   categoryName = valueCate!.name;
+                        //   categoryID = valueCate!.categoryID;
+                        //   hasSelectedCategory = true;
+                        // } else {
+                        //   hasSelectedCategory = false;
+                        // }
+                        // if (valueCate!.CategoryType == CateTypeENum.INCOME) {
+                        //   valueWallet = listWallet;
+                        // } else {
+                        //   valueWallet = listWallet.then((value) => value
+                        //       .where((element) => element.currency == "VND")
+                        //       .toList());
+                        // }
                       });
                     },
                     child: categoryName.trim().isEmpty

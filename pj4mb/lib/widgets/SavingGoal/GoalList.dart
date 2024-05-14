@@ -76,9 +76,10 @@ class _GoalListState extends State<GoalList> {
                   ),
                 ),
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text('Còn lại: ${formatter.format(goal.targetAmount - goal.currentAmount)}đ'),
+                    Text('Money Start: ' + formatter.format(goal.currentAmount) + 'đ'),
+                    Text('Remaining: ${formatter.format(goal.targetAmount - goal.currentAmount)}đ'),
                   ],
                 ),
                 SizedBox(
