@@ -18,7 +18,6 @@ class ListCategory extends StatelessWidget {
   final void Function(dynamic value) onSave;
   @override
   Widget build(BuildContext context) {
-    print(categoryType);
     if(categoryType == CateTypeENum.DEBT){
       return ListView(
       children: [

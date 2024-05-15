@@ -180,7 +180,7 @@ class _UpdateTransactionBudgetPageState extends State<UpdateTransactionBudgetPag
                           context,
                           MaterialPageRoute(
                               builder: (context) => CategoryPage(
-                                    flag: 2,
+                                    Type:"InEx",
                                   )));
                       setState(() {
                         if (valueCate != null) {
@@ -289,7 +289,7 @@ class _UpdateTransactionBudgetPageState extends State<UpdateTransactionBudgetPag
                       categoryId: categoryID,
                       amount: double.parse(moneyNumber.text),
                       notes: noteText.text,
-                      transactionDate: selectedDate);
+                      transactionDate: selectedDate, savingGoalId: 0);
                   var result =
                       await TransactionService().UpdateTransaction(trans);
                   if (result.status == 200) {

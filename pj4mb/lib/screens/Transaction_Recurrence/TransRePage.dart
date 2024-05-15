@@ -1,27 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:pj4mb/models/Bill/Bill.dart';
 import 'package:pj4mb/models/Bill/BillResponse.dart';
+import 'package:pj4mb/models/TransactionRecurrence/TransRecuResponce.dart';
 import 'package:pj4mb/screens/Bill/AddBill.dart';
+import 'package:pj4mb/screens/Transaction_Recurrence/AddTranRecu.dart';
 import 'package:pj4mb/services/Bill_service.dart';
+import 'package:pj4mb/services/TransactionRecurrence_service.dart';
 import 'package:pj4mb/widgets/Bill/BillList.dart';
+import 'package:pj4mb/widgets/TransactionRecurrence/TranRecuList.dart';
 
-class BillPage extends StatefulWidget {
-  const BillPage({super.key});
+class TransRePage extends StatefulWidget {
+  const TransRePage({super.key});
 
   @override
-  State<BillPage> createState() => _BillPageState();
+  State<TransRePage> createState() => _TransRePageState();
 }
 
-class _BillPageState extends State<BillPage> with TickerProviderStateMixin {
+class _TransRePageState extends State<TransRePage>
+    with TickerProviderStateMixin {
   TabController? _tabController;
-  late Future<List<BillResponse>> billActive; 
-  late Future<List<BillResponse>> billExpired; 
+  late Future<List<TransRecuResponce>> transRecuActive;
+  late Future<List<TransRecuResponce>> transRecuExpired;
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
-    billActive = BillService().findBillActive();
-    billExpired = BillService().findBillExpired();
+    transRecuActive = TransactionRecurrence_Service().findRecuActive();
+    transRecuExpired = TransactionRecurrence_Service().findRecuExpired();
   }
 
   @override
@@ -34,7 +39,7 @@ class _BillPageState extends State<BillPage> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Bill'),
+        title: Text('Transaction Recurrence'),
       ),
       body: Container(
         decoration: BoxDecoration(
@@ -60,49 +65,55 @@ class _BillPageState extends State<BillPage> with TickerProviderStateMixin {
               child: TabBarView(
                 controller: _tabController,
                 children: [
-                  FutureBuilder<List<BillResponse>>(
-                    future: billActive,
+                  FutureBuilder<List<TransRecuResponce>>(
+                    future: transRecuActive,
                     builder: (BuildContext context,
-                        AsyncSnapshot<List<BillResponse>> snapshot) {
-                      if (snapshot.connectionState ==
-                          ConnectionState.waiting) {
+                        AsyncSnapshot<List<TransRecuResponce>> snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
                         return Center(child: CircularProgressIndicator());
                       } else if (snapshot.hasError) {
-                        return Center(
-                            child: Text('Error: ${snapshot.error}'));
+                        return Center(child: Text('Error: ${snapshot.error}'));
                       } else {
-                        if(snapshot.data!.isEmpty){
+                        if (snapshot.data!.isEmpty) {
                           return Center(child: Text('No data'));
                         }
-                        return BillList(listBill: snapshot.data!, onSave: (value) { 
-                          setState(() {
-                            billActive = BillService().findBillActive();
-                            billExpired = BillService().findBillExpired();
-                          });
-                         },);
+                        return TranRecuList(
+                          listTranRecu: snapshot.data!,
+                          onSave: (value) {
+                            setState(() {
+                              transRecuActive = TransactionRecurrence_Service()
+                                  .findRecuActive();
+                              transRecuExpired = TransactionRecurrence_Service()
+                                  .findRecuExpired();
+                            });
+                          },
+                        );
                       }
                     },
                   ),
-                  FutureBuilder<List<BillResponse>>(
-                    future: billExpired,
+                  FutureBuilder<List<TransRecuResponce>>(
+                    future: transRecuExpired,
                     builder: (BuildContext context,
-                        AsyncSnapshot<List<BillResponse>> snapshot) {
-                      if (snapshot.connectionState ==
-                          ConnectionState.waiting) {
+                        AsyncSnapshot<List<TransRecuResponce>> snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
                         return Center(child: CircularProgressIndicator());
                       } else if (snapshot.hasError) {
-                        return Center(
-                            child: Text('Error: ${snapshot.error}'));
+                        return Center(child: Text('Error: ${snapshot.error}'));
                       } else {
-                        if(snapshot.data!.isEmpty){
+                        if (snapshot.data!.isEmpty) {
                           return Center(child: Text('No data'));
                         }
-                         return BillList(listBill: snapshot.data!, onSave: (value) { 
-                           setState(() {
-                            billActive = BillService().findBillActive();
-                            billExpired = BillService().findBillExpired();
-                          });
-                          },);
+                        return TranRecuList(
+                          listTranRecu: snapshot.data!,
+                          onSave: (value) {
+                            setState(() {
+                              transRecuActive = TransactionRecurrence_Service()
+                                  .findRecuActive();
+                              transRecuExpired = TransactionRecurrence_Service()
+                                  .findRecuExpired();
+                            });
+                          },
+                        );
                       }
                     },
                   ),
@@ -116,13 +127,14 @@ class _BillPageState extends State<BillPage> with TickerProviderStateMixin {
           child: Icon(Icons.add, color: Colors.white),
           onPressed: () async {
             var result = await Navigator.push(context,
-                MaterialPageRoute(builder: (context) => AddBillPage()));
-            if(result){
+                MaterialPageRoute(builder: (context) => AddTranRecuPage()));
+            if (result) {
               setState(() {
-                billActive = BillService().findBillActive();
-                billExpired = BillService().findBillExpired();
+                transRecuActive =
+                    TransactionRecurrence_Service().findRecuActive();
+                transRecuExpired =
+                    TransactionRecurrence_Service().findRecuExpired();
               });
-            
             }
           },
           backgroundColor: Colors.pink[200],

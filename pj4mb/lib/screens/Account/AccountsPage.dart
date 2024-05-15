@@ -8,6 +8,7 @@ import 'package:pj4mb/screens/Bill/BillPage.dart';
 import 'package:pj4mb/screens/Debt/Debt.dart';
 import 'package:pj4mb/screens/Login.dart';
 import 'package:pj4mb/screens/SavingGoals/SavingGoalScreen.dart';
+import 'package:pj4mb/screens/Transaction_Recurrence/TransRePage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 
@@ -91,7 +92,7 @@ class _AccountsPageState extends State<AccountsPage> {
               title: Text("Group"),
               trailing: Icon(Icons.arrow_forward_ios),
               onTap: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => CategoryPage(flag: 0,)));        
+                Navigator.push(context, MaterialPageRoute(builder: (context) => CategoryPage(Type: "InEx",)));        
               },
             ),
             ListTile(
@@ -107,7 +108,7 @@ class _AccountsPageState extends State<AccountsPage> {
               title: Text("Transaction Recurrence"),
               trailing: Icon(Icons.arrow_forward_ios),
               onTap: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => BillPage()));        
+                Navigator.push(context, MaterialPageRoute(builder: (context) => TransRePage()));        
               },
             ),
              ListTile(

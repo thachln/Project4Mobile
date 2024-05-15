@@ -144,7 +144,7 @@ class _UpdateCategoryPageState extends State<UpdateCategoryPage> {
                     );
                   },
                   child: categoryIcon.text.isEmpty
-                      ? Text('Chọn icon')
+                      ? Text('Chosse icon')
                       : Image.asset(
                           categoryIcon.text, // Hiển thị icon đã chọn
                           width: 50,
@@ -159,9 +159,29 @@ class _UpdateCategoryPageState extends State<UpdateCategoryPage> {
             ),
             ElevatedButton(
               onPressed: () async {
-                var typeCategory = widget.categoryType == 'Income'
+                if(categoryName.text.isEmpty || categoryIcon.text.isEmpty){
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: Text('Arlet'),
+                        content: Text('Please fill name and choose icon!'),
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: Text('OK'),
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                  return;
+                }
+                var typeCategory = widget.categoryType == CateTypeENum.INCOME
                     ? CateTypeENum.INCOME
-                    : widget.categoryType == 'Expense'
+                    : widget.categoryType == CateTypeENum.EXPENSE
                         ? CateTypeENum.EXPENSE
                         : CateTypeENum.DEBT;
                 var listIcons = await CategoryService().GetIcon();
@@ -179,7 +199,7 @@ class _UpdateCategoryPageState extends State<UpdateCategoryPage> {
                     context: context,
                     builder: (BuildContext context) {
                       return AlertDialog(
-                        title: Text('Thông báo'),
+                        title: Text('Arlet'),
                         content: Text('Update success!'),
                         actions: [
                           TextButton(
@@ -198,7 +218,7 @@ class _UpdateCategoryPageState extends State<UpdateCategoryPage> {
                     context: context,
                     builder: (BuildContext context) {
                       return AlertDialog(
-                        title: Text('Thông báo'),
+                        title: Text('Arlet'),
                         content: Text('Error: Update fail!'),
                         actions: [
                           TextButton(

@@ -10,18 +10,11 @@ import 'package:pj4mb/services/Category_service.dart';
 import 'package:pj4mb/services/Wallet_service.dart';
 
 class UpdateWalletPage extends StatefulWidget {
-  const UpdateWalletPage(
-      {super.key,
-      required this.walletName,
-      required this.balance,
-      required this.walletTypeIDParam,
-      required this.currency,
-      required this.walletID});
-  final int walletID;
-  final String walletName;
-  final double balance;
-  final int walletTypeIDParam;
-  final String currency;
+  const UpdateWalletPage({
+    super.key,
+    required this.wallet,
+  });
+  final Wallet wallet;
   @override
   State<UpdateWalletPage> createState() => _UpdateWalletPageState();
 }
@@ -32,6 +25,8 @@ class _UpdateWalletPageState extends State<UpdateWalletPage> {
   late TextEditingController walletType;
   late TextEditingController walletTypeId;
   late TextEditingController currency;
+  late TextEditingController bankName;
+  late TextEditingController bankNumber;
   late Future<List<WalletType>> listWalletType;
   String dropdownValue = 'VND';
   WalletType? selectedWalletType;
@@ -68,19 +63,23 @@ class _UpdateWalletPageState extends State<UpdateWalletPage> {
     walletType = TextEditingController();
     currency = TextEditingController();
     walletTypeId = TextEditingController();
+    bankName = TextEditingController();
+    bankNumber = TextEditingController();
     loadWalletTypeFirst();
   }
 
   void loadWalletTypeFirst() async {
-    listWalletType = WalletService().GetWalletType();   
+    listWalletType = WalletService().GetWalletType();
   }
 
   @override
   Widget build(BuildContext context) {
-    walletName.text = widget.walletName;
-    balance.text = widget.balance.toString();
-
-    currency.text = widget.currency;
+    walletName.text = widget.wallet.walletName;
+    balance.text = widget.wallet.balance.toString();
+    currency.text = widget.wallet.currency;
+    bankName.text = widget.wallet.bankName;
+    bankNumber.text = widget.wallet.bankAccountNum;
+    walletTypeId.text = widget.wallet.walletTypeID.toString();
 
     return Scaffold(
       //backgroundColor: Colors.black87,
@@ -95,12 +94,13 @@ class _UpdateWalletPageState extends State<UpdateWalletPage> {
           children: [
             Row(
               children: [
-                Icon(Icons.question_mark_outlined),
+                Icon(Icons.abc),
                 SizedBox(
                   width: 10,
                 ),
                 Expanded(
                   child: TextField(
+                    readOnly: widget.wallet.walletTypeID == 3 ? true : false,
                     controller: walletName,
                     keyboardType: TextInputType.text,
                     decoration: InputDecoration(hintText: 'Wallet Name'),
@@ -113,50 +113,17 @@ class _UpdateWalletPageState extends State<UpdateWalletPage> {
             ),
             Row(
               children: [
-                Icon(Icons.numbers),
+                Icon(Icons.monetization_on_rounded),
                 SizedBox(
                   width: 10,
                 ),
                 Expanded(
                   child: TextField(
+                    readOnly: widget.wallet.walletTypeID == 3 ? true : false,
                     controller: balance,
                     keyboardType: TextInputType.number,
                     decoration: InputDecoration(hintText: 'Balace Name'),
                   ),
-                )
-              ],
-            ),
-            SizedBox(
-              height: 25,
-            ),
-            Row(
-              children: [
-                Icon(Icons.currency_exchange_rounded),
-                SizedBox(
-                  width: 10,
-                ),
-                DropdownButton<String>(
-                  value: dropdownValue,
-                  icon: Icon(Icons.arrow_downward),
-                  iconSize: 24,
-                  elevation: 16,
-                  style: TextStyle(color: Colors.deepPurple),
-                  underline: Container(
-                    height: 2,
-                    color: Colors.deepPurpleAccent,
-                  ),
-                  onChanged: (String? newValue) {
-                    setState(() {
-                      dropdownValue = newValue!;
-                    });
-                  },
-                  items: <String>['VND', 'USD']
-                      .map<DropdownMenuItem<String>>((String value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Text(value),
-                    );
-                  }).toList(),
                 )
               ],
             ),
@@ -179,45 +146,110 @@ class _UpdateWalletPageState extends State<UpdateWalletPage> {
                       } else if (snapshot.hasError) {
                         return Center(child: Text('Error: ${snapshot.error}'));
                       } else {
-                        selectedWalletType = snapshot.data!.firstWhere((element) => element.TypeID == widget.walletTypeIDParam);
+                        selectedWalletType = snapshot.data!.firstWhere(
+                            (element) =>
+                                element.TypeID == widget.wallet.walletTypeID);
                         walletType.text = selectedWalletType!.TypeName;
-                        walletTypeId.text = selectedWalletType!.TypeID.toString();
-                        return DropdownButtonFormField<WalletType>(
-                          decoration: InputDecoration(
-                            hintText: 'Wallet Type',
-                          ),
-                          value: selectedWalletType,
-                          onChanged: (WalletType? value) {
-                            setState(() {
-                              walletType.text = value!.TypeName;
-                              walletTypeId.text = value!.TypeID.toString();
-                            });
-                          },
-                          items: snapshot.data!.map((WalletType value) {
-                            return DropdownMenuItem<WalletType>(
-                              value: value,
-                              child: Text(value.TypeName),
-                            );
-                          }).toList(),
-                        );
+                        walletTypeId.text =
+                            selectedWalletType!.TypeID.toString();
+                        // return DropdownButtonFormField<WalletType>(
+                        //   decoration: InputDecoration(
+                        //     hintText: 'Wallet Type',
+                        //   ),
+                        //   value: selectedWalletType,
+                        //   onChanged: (WalletType? value) {
+                        //     setState(() {
+                        //       walletType.text = value!.TypeName;
+                        //       walletTypeId.text = value!.TypeID.toString();
+                        //     });
+                        //   },
+                        //   items: snapshot.data!.map((WalletType value) {
+                        //     return DropdownMenuItem<WalletType>(
+                        //       value: value,
+                        //       child: Text(value.TypeName),
+                        //     );
+                        //   }).toList(),
+                        // );
+                        walletType.text = snapshot.data!.where((element) => element.TypeID == widget.wallet.walletTypeID).first.TypeName;
+                        return TextField(
+                            readOnly: true,
+                            controller: walletType,
+                            keyboardType: TextInputType.text,
+                          );
+                        
                       }
                     },
+                  ),
+                )            
+              ],
+            ),
+            SizedBox(
+              height: 25,
+            ),
+            Row(
+              children: [
+                Icon(Icons.currency_exchange_rounded),
+                SizedBox(
+                  width: 10,
+                ),
+                Expanded(
+                  child: TextField(
+                    readOnly: true,
+                    controller: currency,
+                    keyboardType: TextInputType.text,
                   ),
                 )
               ],
             ),
+            if (walletTypeId.text == "2") ...[
+              Row(
+                children: [
+                  Icon(Icons.abc),
+                  SizedBox(
+                    width: 10,
+                  ),
+                  Expanded(
+                    child: TextField(
+                      controller: bankName,
+                      keyboardType: TextInputType.text,
+                      decoration: InputDecoration(hintText: 'Bank Name'),
+                    ),
+                  )
+                ],
+              ),
+              SizedBox(
+                height: 25,
+              ),
+              Row(
+                children: [
+                  Icon(Icons.abc),
+                  SizedBox(
+                    width: 10,
+                  ),
+                  Expanded(
+                    child: TextField(
+                      controller: bankNumber,
+                      keyboardType: TextInputType.number,
+                      decoration: InputDecoration(hintText: 'Bank Number'),
+                    ),
+                  )
+                ],
+              ),
+            ],
             ElevatedButton(
               onPressed: () async {
                 Wallet wallet = Wallet(
-                  walletID: widget.walletID,
+                  walletID: widget.wallet.walletID,
                   walletName: walletName.text,
                   balance: double.parse(balance.text),
                   walletTypeID: int.parse(walletTypeId.text),
                   currency: dropdownValue,
                   userId: 0,
-                  bankName: '',
-                  bankAccountNum: '',
+                  bankName: bankName.text.isNotEmpty ? bankName.text : '',
+                  bankAccountNum:
+                      bankNumber.text.isNotEmpty ? bankNumber.text : '',
                 );
+                print(wallet.toJson());
                 var result = await WalletService().UpdateWallet(wallet);
                 if (result) {
                   showDialog(

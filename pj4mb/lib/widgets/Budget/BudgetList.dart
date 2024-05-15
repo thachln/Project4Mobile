@@ -74,9 +74,12 @@ class BudgetList extends StatelessWidget {
                   ),
                 ),
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text('Còn lại: ${formatter.format(budget.thresholdAmount - budget.amount)}đ'),
+                    Text(DateFormat('dd/MM/yyyy').format(budget.startDate) +
+                        ' - ' +
+                        DateFormat('dd/MM/yyyy').format(budget.toDate)),
+                    Text('Remaining: ${formatter.format(budget.thresholdAmount - budget.amount)}đ'),
                   ],
                 ),
                 SizedBox(

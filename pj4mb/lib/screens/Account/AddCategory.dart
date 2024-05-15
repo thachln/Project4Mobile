@@ -111,7 +111,7 @@ class _AddCategoryPageState extends State<AddCategoryPage> {
                       context: context,
                       builder: (BuildContext context) {
                         return AlertDialog(
-                          title: Text('Chọn icon'),
+                          title: Text('Chosse icon'),
                           content: Container(
                             width: double.maxFinite,
                             child: GridView.builder(
@@ -154,14 +154,33 @@ class _AddCategoryPageState extends State<AddCategoryPage> {
             ),
             ElevatedButton(
               onPressed: () async {
-                var typeCategory = widget.categoryType == 'Income'
+                if(categoryName.text.isEmpty || categoryIcon.text.isEmpty){
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: Text('Arlet'),
+                        content: Text('Please fill name and choose icon!'),
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: Text('OK'),
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                  return;
+                }
+                var typeCategory = widget.categoryType == CateTypeENum.INCOME
                     ? CateTypeENum.INCOME
-                    : widget.categoryType == 'Expense'
+                    : widget.categoryType == CateTypeENum.EXPENSE
                         ? CateTypeENum.EXPENSE
                         : CateTypeENum.DEBT;
                 var listIcons = await CategoryService().GetIcon();
                 var element = listIcons.firstWhere((element) => element.path == categoryIcon.text.replaceAll('assets/icon/',''));
-                print(element.toJson());
                 Category category = new Category(
                     categoryID: 0,
                     name: categoryName.text.toString(),
@@ -174,7 +193,7 @@ class _AddCategoryPageState extends State<AddCategoryPage> {
                     context: context,
                     builder: (BuildContext context) {
                       return AlertDialog(
-                        title: Text('Thông báo'),
+                        title: Text('Arlet'),
                         content: Text('Insert success!'),
                         actions: [
                           TextButton(
@@ -193,7 +212,7 @@ class _AddCategoryPageState extends State<AddCategoryPage> {
                     context: context,
                     builder: (BuildContext context) {
                       return AlertDialog(
-                        title: Text('Thông báo'),
+                        title: Text('Arlet'),
                         content: Text('Error: Insert fail!'),
                         actions: [
                           TextButton(

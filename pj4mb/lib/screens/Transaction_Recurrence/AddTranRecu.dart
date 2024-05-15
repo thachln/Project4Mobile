@@ -8,19 +8,21 @@ import 'package:pj4mb/models/Bill/FrequencyType.dart';
 import 'package:pj4mb/models/Bill/MonthOption.dart';
 import 'package:pj4mb/models/Category/Category.dart';
 import 'package:pj4mb/models/Recurrence/Recurrence.dart';
+import 'package:pj4mb/models/TransactionRecurrence/TransactionRecurrence.dart';
 import 'package:pj4mb/models/Wallet/Wallet.dart';
 import 'package:pj4mb/screens/Account/Category.dart';
 import 'package:pj4mb/services/Bill_service.dart';
+import 'package:pj4mb/services/TransactionRecurrence_service.dart';
 import 'package:pj4mb/services/Wallet_service.dart';
 
-class AddBillPage extends StatefulWidget {
-  const AddBillPage({super.key});
+class AddTranRecuPage extends StatefulWidget {
+  const AddTranRecuPage({super.key});
 
   @override
-  State<AddBillPage> createState() => _AddBillPageState();
+  State<AddTranRecuPage> createState() => _AddTranRecuPageState();
 }
 
-class _AddBillPageState extends State<AddBillPage> {
+class _AddTranRecuPageState extends State<AddTranRecuPage> {
   //EditController
   TextEditingController moneyNumber = new TextEditingController();
   TextEditingController everyDailyNumber = new TextEditingController();
@@ -39,6 +41,7 @@ class _AddBillPageState extends State<AddBillPage> {
   String categoryName = '';
   DateTime selectedFromDate = DateTime.now();
   DateTime? selectedToDate;
+  late String walletCurrency = '';
   final List<String> days = [
     'MONDAY',
     'Tuesday',
@@ -128,7 +131,7 @@ class _AddBillPageState extends State<AddBillPage> {
       //backgroundColor: Colors.black87,
       appBar: AppBar(
           title: Text(
-        "Add new bill",
+        "Add new transaction recurrence",
       )),
       body: Container(
         child: SingleChildScrollView(
@@ -152,38 +155,6 @@ class _AddBillPageState extends State<AddBillPage> {
               SizedBox(
                 height: 20,
               ),
-              Row(
-                children: [
-                  Icon(Icons.category),
-                  SizedBox(
-                    width: 10,
-                  ),
-                  Expanded(
-                      child: InkWell(
-                    onTap: () async {
-                      valueCate = await Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => CategoryPage(
-                                    Type: "Ex",
-                                  )));
-                      setState(() {
-                        if (valueCate != null) {
-                          // Update here using the selected category name
-                          categoryName = valueCate!.name;
-                          categoryID = valueCate!.categoryID;
-                        }
-                      });
-                    },
-                    child: categoryName.trim().isEmpty
-                        ? Text('Chọn nhóm')
-                        : Text(categoryName),
-                  ))
-                ],
-              ),
-              SizedBox(
-                height: 20,
-              ),             
               Row(
                 children: [
                   Icon(Icons.exposure),
@@ -211,9 +182,14 @@ class _AddBillPageState extends State<AddBillPage> {
                               setState(() {
                                 walletID = value!.walletID;
                                 walletName = value!.walletName;
+                                categoryID = 0;
+                                categoryName = '';
+                                walletCurrency = value!.currency;
                               });
                             },
-                            items: snapshot.data!.where((element) => element.walletTypeID != 3 && element.currency == 'VND').map((Wallet value) {
+                            items: snapshot.data!
+                                .where((element) => element.walletTypeID != 3)
+                                .map((Wallet value) {
                               return DropdownMenuItem<Wallet>(
                                 value: value,
                                 child: Text(value.walletName),
@@ -224,6 +200,69 @@ class _AddBillPageState extends State<AddBillPage> {
                       },
                     ),
                   ),
+                ],
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              Row(
+                children: [
+                  Icon(Icons.category),
+                  SizedBox(
+                    width: 10,
+                  ),
+                  Expanded(
+                      child: InkWell(
+                    onTap: () async {
+                      if (walletID == 0) {
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: Text('Alret'),
+                              content: Text('Please choose wallet first!'),
+                              actions: [
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: Text('OK'),
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                        return;
+                      }
+                      if (walletCurrency.isNotEmpty &&
+                          walletCurrency == 'VND') {
+                        valueCate = await Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => CategoryPage(
+                                      Type: "InExChoose",
+                                    )));
+                      } else {
+                        valueCate = await Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => CategoryPage(
+                                      Type: "In",
+                                    )));
+                      }
+
+                      setState(() {
+                        if (valueCate != null) {
+                          // Update here using the selected category name
+                          categoryName = valueCate!.name;
+                          categoryID = valueCate!.categoryID;
+                        }
+                      });
+                    },
+                    child: categoryName.trim().isEmpty
+                        ? Text('Chọn nhóm')
+                        : Text(categoryName),
+                  ))
                 ],
               ),
               Padding(
@@ -290,7 +329,7 @@ class _AddBillPageState extends State<AddBillPage> {
                             onChanged: (EndType? newValue) {
                               setState(() {
                                 setDateTime(newValue!,int.parse(everyDailyNumber.text));
-                                endType = newValue!;
+                                endType = newValue!;         
                               });
                             },
                             items: dropdownItemsEnd,
@@ -364,8 +403,9 @@ class _AddBillPageState extends State<AddBillPage> {
                             onTap: () async {
                               await _selectFromDate(context);
                             },
-                            child: Text(DateFormat('dd-MM-yyyy')
-                                .format(selectedFromDate)),
+                            child: selectedFromDate != null ? Text(DateFormat('dd-MM-yyyy')
+                                .format(selectedFromDate))
+                                : Text('Select date') ,
                           ))
                         ],
                       ),
@@ -390,8 +430,10 @@ class _AddBillPageState extends State<AddBillPage> {
                             value: endType,
                             onChanged: (EndType? newValue) {
                               setState(() {
+                                
                                 setDateTime(newValue!,(int.parse(everyDailyNumber.text) * 7) + 1);
                                 endType = newValue!;
+                                
                               });
                             },
                             items: dropdownItemsEnd,
@@ -410,7 +452,8 @@ class _AddBillPageState extends State<AddBillPage> {
                                 child: InkWell(
                               onTap: () async {
                                 await _selectToDate(context);
-                                selectedToDate!.add(Duration(days: 1));
+                               
+                                
                               },
                               child: Text(DateFormat('dd-MM-yyyy')
                                   .format(selectedToDate!)),
@@ -579,8 +622,9 @@ class _AddBillPageState extends State<AddBillPage> {
                             value: endType,
                             onChanged: (EndType? newValue) {
                               setState(() {
-                                setDateTime(newValue!,(365 * int.parse(everyDailyNumber.text)) + 1);
+                                setDateTime(newValue!,(365 * int.parse(everyDailyNumber.text))+1);
                                 endType = newValue!;
+                                
                               });
                             },
                             items: dropdownItemsEnd,
@@ -624,7 +668,7 @@ class _AddBillPageState extends State<AddBillPage> {
               ElevatedButton(
                 onPressed: () async {
                   //Validate
-                  if(moneyNumber.text.isEmpty){
+                  if (moneyNumber.text.isEmpty) {
                     showDialog(
                       context: context,
                       builder: (BuildContext context) {
@@ -644,28 +688,7 @@ class _AddBillPageState extends State<AddBillPage> {
                     );
                     return;
                   }
-                  if(double.parse(moneyNumber.text) <= 0)
-                  {
-                    showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return AlertDialog(
-                          title: Text('Alret'),
-                          content: Text('Money must greater than 0!'),
-                          actions: [
-                            TextButton(
-                              onPressed: () {
-                                Navigator.of(context).pop();
-                              },
-                              child: Text('OK'),
-                            ),
-                          ],
-                        );
-                      },
-                    );
-                    return;
-                  }
-                  if(categoryID == 0){
+                  if (categoryID == 0) {
                     showDialog(
                       context: context,
                       builder: (BuildContext context) {
@@ -685,7 +708,7 @@ class _AddBillPageState extends State<AddBillPage> {
                     );
                     return;
                   }
-                  if(walletID == 0){
+                  if (walletID == 0) {
                     showDialog(
                       context: context,
                       builder: (BuildContext context) {
@@ -725,13 +748,15 @@ class _AddBillPageState extends State<AddBillPage> {
                     );
                     return;
                   }
-                  if(selectedFromDate.isBefore(DateTime.now().subtract(Duration(days: 1)))){
+                  if (selectedFromDate
+                      .isBefore(DateTime.now().subtract(Duration(days: 1)))) {
                     showDialog(
                       context: context,
                       builder: (BuildContext context) {
                         return AlertDialog(
                           title: Text('Alret'),
-                          content: Text('From date must be greater than today!'),
+                          content:
+                              Text('From date must be greater than today!'),
                           actions: [
                             TextButton(
                               onPressed: () {
@@ -745,15 +770,19 @@ class _AddBillPageState extends State<AddBillPage> {
                     );
                     return;
                   }
-                  if(frequencyType == FrequencyType.DAILY || frequencyType == FrequencyType.MONTHLY || frequencyType == FrequencyType.WEEKLY || frequencyType == FrequencyType.YEARLY)
-                  {
-                    if(endType == EndType.UNTIL && selectedToDate!.isBefore(selectedFromDate)){
+                  if (frequencyType == FrequencyType.DAILY ||
+                      frequencyType == FrequencyType.MONTHLY ||
+                      frequencyType == FrequencyType.WEEKLY ||
+                      frequencyType == FrequencyType.YEARLY) {
+                    if (endType == EndType.UNTIL &&
+                        selectedToDate!.isBefore(selectedFromDate)) {
                       showDialog(
                         context: context,
                         builder: (BuildContext context) {
                           return AlertDialog(
                             title: Text('Alret'),
-                            content: Text('To date must greater than from date'),
+                            content:
+                                Text('To date must greater than from date'),
                             actions: [
                               TextButton(
                                 onPressed: () {
@@ -767,13 +796,13 @@ class _AddBillPageState extends State<AddBillPage> {
                       );
                       return;
                     }
-                    if(endType == EndType.TIMES && timeNumber.text.isEmpty){
+                    if (endType == EndType.TIMES && int.parse(timeNumber.text) <= 0) {
                       showDialog(
                         context: context,
                         builder: (BuildContext context) {
                           return AlertDialog(
                             title: Text('Alret'),
-                            content: Text('Times is required!'),
+                            content: Text('Times is required! and time times must greater than 0!'),
                             actions: [
                               TextButton(
                                 onPressed: () {
@@ -804,15 +833,17 @@ class _AddBillPageState extends State<AddBillPage> {
                       userId: 0,
                       timesCompleted: 0,
                       dueDate: selectedFromDate);
-                  Bill bill = new Bill(
-                      billId: 0,
+                  TransactionRecurrence transRecu = TransactionRecurrence(
+                      transactionRecurringId: 0,
                       userId: 0,
                       amount: double.parse(moneyNumber.text),
                       recurrence: recurrence,
                       categoryId: categoryID,
-                      walletId: walletID);
-                  var result = await BillService().InsertBill(bill);
-                  if (result.status == 201) {
+                      walletId: walletID,
+                      notes: '');
+                  var result = await TransactionRecurrence_Service()
+                      .InsertTransRe(transRecu);
+                  if (result.status == 200) {
                     showDialog(
                       context: context,
                       builder: (BuildContext context) {

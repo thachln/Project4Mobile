@@ -85,7 +85,7 @@ class _AddDebtPageState extends State<AddDebtPage> {
                         context,
                         MaterialPageRoute(
                             builder: (context) => CategoryPage(
-                                  flag: 3,
+                                  Type:"Debt",
                                 )));
                     setState(() {
                       if (valueCate != null) {

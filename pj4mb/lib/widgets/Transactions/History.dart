@@ -6,9 +6,11 @@ import 'package:pj4mb/models/Category/CateTypeENum.dart';
 import 'package:pj4mb/models/Category/Category.dart';
 import 'package:pj4mb/models/Transaction/Transaction.dart';
 import 'package:pj4mb/models/Transaction/TransactionView.dart';
+import 'package:pj4mb/models/Wallet/Wallet.dart';
 import 'package:pj4mb/screens/Transaction/UpdateTransaction.dart';
 import 'package:pj4mb/services/Category_service.dart';
 import 'package:pj4mb/services/Transacsion_service.dart';
+import 'package:pj4mb/services/Wallet_service.dart';
 
 class HistoryWidgets extends StatelessWidget {
   const HistoryWidgets(
@@ -84,11 +86,13 @@ class HistoryWidgets extends StatelessWidget {
                       GestureDetector(
                         onTap: () async {       
                           Transaction newTrans  = await TransactionService().GetTransactionById(trans.transactionID);   
-                          CategoryResponse category = await CategoryService().GetCategoryWithId(trans.categoryId);       
+                          CategoryResponse category = await CategoryService().GetCategoryWithId(trans.categoryId);  
+                          Wallet wallet = await WalletService().GetWalletById(newTrans.walletId);     
+                          print(wallet.walletTypeID);
                           var result = await Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => UpdateTransactionPage( trans: newTrans, cate: category,          
+                                  builder: (context) => UpdateTransactionPage( trans: newTrans, cate: category, walletTypeCurrent: wallet.walletTypeID,          
                                       )));
                           if (result) {
                             onSave(result);
@@ -98,6 +102,7 @@ class HistoryWidgets extends StatelessWidget {
                           contentPadding: EdgeInsets.all(0),
                           leading: Image.asset("assets/icon/${trans.cateIcon}"),
                           title: Text(trans.categoryName),
+                          subtitle: Text(DateFormat("dd/MM/yyyy").format(trans.transactionDate)),
                           trailing: trans.Type == "INCOME"
                               ? Text(
                                   formatter.format(trans.amount),

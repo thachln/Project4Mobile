@@ -187,7 +187,7 @@ class TransactionService {
       return transaction;
     } 
     else{
-      return Transaction(transactionId: 0, amount: 0, categoryId: 0, notes: '', transactionDate: DateTime.now(), userId: 0, walletId: 0);
+      return Transaction(transactionId: 0, amount: 0, categoryId: 0, notes: '', transactionDate: DateTime.now(), userId: 0, walletId: 0, savingGoalId: null);
     }
       
   }
@@ -201,10 +201,12 @@ class TransactionService {
       'Content-Type': 'application/json',
       'Authorization': 'Bearer $token',
     };
+    print(trans.toJson());
     trans.userId = int.parse(userid!);
     final response = await http.post(Uri.parse(EndPoint.InsertTransaction),body: jsonEncode(trans.toJson()),headers: headersValue);
-
-    if (response.statusCode == 200) {     
+    print(response.statusCode);
+    print(response.body);
+    if (response.statusCode == 201) {     
       return true;
     } else {
       return false;

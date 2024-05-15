@@ -6,9 +6,11 @@ import 'package:pj4mb/models/Category/CateTypeENum.dart';
 import 'package:pj4mb/models/Category/Category.dart';
 import 'package:pj4mb/models/Transaction/Transaction.dart';
 import 'package:pj4mb/models/Transaction/TransactionView.dart';
+import 'package:pj4mb/models/Wallet/Wallet.dart';
 import 'package:pj4mb/screens/Transaction/UpdateTransaction.dart';
 import 'package:pj4mb/services/Category_service.dart';
 import 'package:pj4mb/services/Transacsion_service.dart';
+import 'package:pj4mb/services/Wallet_service.dart';
 
 class HistoryBudget extends StatelessWidget {
   const HistoryBudget(
@@ -55,11 +57,12 @@ class HistoryBudget extends StatelessWidget {
                       GestureDetector(
                         onTap: () async {       
                           Transaction newTrans  = await TransactionService().GetTransactionById(trans.transactionID);   
-                          CategoryResponse category = await CategoryService().GetCategoryWithId(trans.categoryId);       
+                          CategoryResponse category = await CategoryService().GetCategoryWithId(trans.categoryId);     
+                          Wallet wallet = await WalletService().GetWalletById(newTrans.walletId);    
                           var result = await Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => UpdateTransactionPage( trans: newTrans, cate: category,          
+                                  builder: (context) => UpdateTransactionPage( trans: newTrans, cate: category, walletTypeCurrent: wallet.walletTypeID,          
                                       )));
                           if (result) {
                             onSave(result);

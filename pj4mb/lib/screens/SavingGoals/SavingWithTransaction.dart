@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
 import 'package:pj4mb/models/Budget/Budget.dart';
 import 'package:pj4mb/models/Budget/ParamBudget.dart';
@@ -38,9 +39,17 @@ class _SavingWithTransactionPageState extends State<SavingWithTransactionPage> {
     param = TransactionWithSaving(userId: 0, goalId: widget.saving.id);
 
     transactions = SavingGoalService().GetTransactionWithSaving(param);
-    progress =
-        ((widget.saving.currentAmount * 100) / widget.saving.targetAmount) /
-            100;
+    if(widget.saving.currentAmount < 0){
+          progress =
+            ((widget.saving.targetAmount * 100) / (-1 * widget.saving.currentAmount)) / 100;
+        }
+        else if (widget.saving.currentAmount >= widget.saving.targetAmount){
+          progress = 100;
+        }
+        else{
+          progress =
+            ((widget.saving.currentAmount * 100) / widget.saving.targetAmount) / 100;
+        }
     savingData = widget.saving;
   }
 
@@ -96,8 +105,8 @@ class _SavingWithTransactionPageState extends State<SavingWithTransactionPage> {
               ],
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
+          Container(
+            padding: EdgeInsets.all(8),
             child: Stack(
               children: [
                 Container(
@@ -125,9 +134,9 @@ class _SavingWithTransactionPageState extends State<SavingWithTransactionPage> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [Text('Money Start: ' + formatter.format(savingData.currentAmount) + 'đ'),
-                Text(
-                  
-                    'Remaining: ${formatter.format(savingData.targetAmount - savingData.currentAmount)}đ'),
+                widget.saving.targetAmount - widget.saving.currentAmount < 0 
+                    ? Text('Remaining: 0 đ') 
+                    : Text('Remaining: ${formatter.format(widget.saving.targetAmount - widget.saving.currentAmount)}đ'),
               ],
             ),
           ),

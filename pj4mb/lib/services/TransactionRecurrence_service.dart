@@ -1,30 +1,31 @@
 import 'dart:convert';
 
 import 'package:pj4mb/api/endpoint.dart';
-import 'package:pj4mb/models/Bill/Bill.dart';
-import 'package:pj4mb/models/Bill/BillResponse.dart';
 import 'package:pj4mb/models/Bill/EndType.dart';
 import 'package:pj4mb/models/Bill/MonthOption.dart';
 import 'package:pj4mb/models/Recurrence/Recurrence.dart';
 import 'package:pj4mb/models/Response.dart';
+import 'package:pj4mb/models/TransactionRecurrence/TransRecuResponce.dart';
+import 'package:pj4mb/models/TransactionRecurrence/TransactionRecurrence.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 
-class BillService {
-  Future<ResponseApi> InsertBill(Bill bill) async {
+class TransactionRecurrence_Service {
+  Future<ResponseApi> InsertTransRe(TransactionRecurrence transRe) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var userid = prefs.getString('userid');
     var token = prefs.getString('token');
-    bill.userId = int.parse(userid!);
-    bill.recurrence.userId = int.parse(userid!);
+    transRe.userId = int.parse(userid!);
+    transRe.recurrence.userId = int.parse(userid!);
     var headersValue = {
       'Content-Type': 'application/json',
       'Authorization': 'Bearer $token',
     };
 
-    final response = await http.post(Uri.parse(EndPoint.InsertBill),
-        body: jsonEncode(bill.toJson()), headers: headersValue);
-    if (response.statusCode == 201) {
+    final response = await http.post(Uri.parse(EndPoint.InsertTransactionRecurrence),
+        body: jsonEncode(transRe.toJson()), headers: headersValue);
+        print(response.statusCode);
+    if (response.statusCode == 200) {
       ResponseApi res = new ResponseApi(
           status: response.statusCode, message: 'Success', data: '');
       return res;
@@ -35,7 +36,7 @@ class BillService {
     }
   }
 
-  Future<ResponseApi> DeleteBill(int id) async {
+  Future<ResponseApi> DeleteTransRe(int id) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var userid = prefs.getString('userid');
     var token = prefs.getString('token');
@@ -45,9 +46,8 @@ class BillService {
       'Authorization': 'Bearer $token',
     };
     final response = await http.delete(
-        Uri.parse(EndPoint.DeleteBill.replaceAll('{id}', id.toString())),
+        Uri.parse(EndPoint.DeleteTransactionRecurrence.replaceAll('{id}', id.toString())),
         headers: headersValue);
-        print(response.statusCode);
     if (response.statusCode == 204) {
       ResponseApi res = new ResponseApi(
           status: response.statusCode, message: 'Success', data: '');
@@ -59,24 +59,24 @@ class BillService {
     }
   }
 
-  Future<ResponseApi> UpdateBill(Bill bill) async {
+  Future<ResponseApi> UpdateTransRe(TransactionRecurrence transRe) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var userid = prefs.getString('userid');
     var token = prefs.getString('token');
 
-    bill.userId = int.parse(userid!);
-    bill.recurrence.userId = int.parse(userid!);
+    transRe.userId = int.parse(userid!);
+    transRe.recurrence.userId = int.parse(userid!);
     var headersValue = {
       'Content-Type': 'application/json',
       'Authorization': 'Bearer $token',
     };
     final response = await http.put(
         Uri.parse(
-            EndPoint.UpdateBill.replaceAll('{id}', bill.billId.toString())),
-            body: jsonEncode(bill.toJson()),
+            EndPoint.UpdateTransactionRecurrence.replaceAll('{id}', transRe.transactionRecurringId.toString())),
+            body: jsonEncode(transRe.toJson()),
         headers: headersValue);
     print(response.statusCode);
-    if (response.statusCode == 201) {
+    if (response.statusCode == 200) {
       ResponseApi res = new ResponseApi(
           status: response.statusCode, message: 'Success', data: '');
       return res;
@@ -87,7 +87,7 @@ class BillService {
     }
   }
 
-  Future<List<BillResponse>> findBillActive() async {
+  Future<List<TransRecuResponce>> findRecuActive() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var userid = prefs.getString('userid');
     var token = prefs.getString('token');
@@ -97,16 +97,15 @@ class BillService {
       'Authorization': 'Bearer $token',
     };
     final response = await http.get(
-        Uri.parse(EndPoint.findBillActive.replaceAll('{id}', userid!)),
+        Uri.parse(EndPoint.findRecuActive.replaceAll('{id}', userid!)),
         headers: headersValue);
-
     if (response.statusCode == 200) {
       final List<dynamic> parsed = jsonDecode(response.body);
-
-      List<BillResponse> billList = [];
+      
+      List<TransRecuResponce> billList = [];
       for (var item in parsed) {
         if (item is Map<String, dynamic>) {
-          billList.add(BillResponse.fromJson(item));
+          billList.add(TransRecuResponce.fromJson(item));
         } else {
           throw Exception('Invalid item format');
         }
@@ -117,7 +116,7 @@ class BillService {
     }
   }
 
-  Future<Bill> findBillById(int id) async {
+  Future<List<TransRecuResponce>> findRecuExpired() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var userid = prefs.getString('userid');
     var token = prefs.getString('token');
@@ -127,18 +126,47 @@ class BillService {
       'Authorization': 'Bearer $token',
     };
     final response = await http.get(
-        Uri.parse(EndPoint.findBillWithId.replaceAll('{id}', id.toString())),
+        Uri.parse(EndPoint.findRecuExpired.replaceAll('{id}', userid!)),
         headers: headersValue);
-        print(response.body);
-        print((response.statusCode));
-      if (response.statusCode == 200) {
-      final Map<String, dynamic> parsed = jsonDecode(response.body);
 
-      Bill bills = Bill.fromJson(parsed);
+    if (response.statusCode == 200) {
+      final List<dynamic> parsed = jsonDecode(response.body);
+      //return parsed.map((e) => Category.fromJson(e)).toList();
+
+      List<TransRecuResponce> billList = [];
+      for (var item in parsed) {
+        if (item is Map<String, dynamic>) {
+          billList.add(TransRecuResponce.fromJson(item));
+        } else {
+          throw Exception('Invalid item format');
+        }
+      }
+      return billList;
+    } else {
+      return [];
+    }
+  }
+
+  Future<TransactionRecurrence> findTransById(int id) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var userid = prefs.getString('userid');
+    var token = prefs.getString('token');
+
+    var headersValue = {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer $token',
+    };
+    final response = await http.get(
+        Uri.parse(EndPoint.getTransactionsRecurringById.replaceAll('{id}', id.toString())),
+        headers: headersValue);
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> parsed = jsonDecode(response.body);
+      TransactionRecurrence bills = TransactionRecurrence.fromJson(parsed);
+
       return bills;
     } else {
-      return Bill(
-          billId: 0,
+      return TransactionRecurrence(
+          transactionRecurringId: 0,
           userId: 0,
           amount: 0,
           recurrence: new Recurrence(
@@ -154,38 +182,7 @@ class BillService {
               startDate: DateTime.now(),
               dueDate: DateTime.now()),
           categoryId: 0,
-          walletId: 0);
-    }
-  }
-
-  Future<List<BillResponse>> findBillExpired() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    var userid = prefs.getString('userid');
-    var token = prefs.getString('token');
-
-    var headersValue = {
-      'Content-Type': 'application/json',
-      'Authorization': 'Bearer $token',
-    };
-    final response = await http.get(
-        Uri.parse(EndPoint.findBillExpired.replaceAll('{id}', userid!)),
-        headers: headersValue);
-
-    if (response.statusCode == 200) {
-      final List<dynamic> parsed = jsonDecode(response.body);
-      //return parsed.map((e) => Category.fromJson(e)).toList();
-
-      List<BillResponse> billList = [];
-      for (var item in parsed) {
-        if (item is Map<String, dynamic>) {
-          billList.add(BillResponse.fromJson(item));
-        } else {
-          throw Exception('Invalid item format');
-        }
-      }
-      return billList;
-    } else {
-      return [];
+          walletId: 0, notes: '');
     }
   }
 }

@@ -5,10 +5,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
 import 'package:pj4mb/models/Category/Category.dart';
+import 'package:pj4mb/models/SavingGoal/SavingGoal.dart';
+import 'package:pj4mb/models/SavingGoal/TransactionWithSaving.dart';
 import 'package:pj4mb/models/Transaction/Transaction.dart';
 import 'package:pj4mb/models/Wallet/Wallet.dart';
 import 'package:pj4mb/screens/Account/Category.dart';
 import 'package:pj4mb/services/Category_service.dart';
+import 'package:pj4mb/services/SavingGoal_service.dart';
 import 'package:pj4mb/services/Transacsion_service.dart';
 import 'package:pj4mb/services/Wallet_service.dart';
 
@@ -16,10 +19,11 @@ class UpdateTransactionPage extends StatefulWidget {
   const UpdateTransactionPage({
     super.key,
     required this.trans,
-    required this.cate,
+    required this.cate, required this.walletTypeCurrent
   });
   final Transaction trans;
   final CategoryResponse cate;
+  final int walletTypeCurrent;
   @override
   State<UpdateTransactionPage> createState() => _UpdateTransactionPageState();
 }
@@ -33,12 +37,19 @@ class _UpdateTransactionPageState extends State<UpdateTransactionPage> {
   late String walletName = '';
   late Future<List<Wallet>> valueWallet;
   late Future<Category> cate;
+  late Future<List<SavingGoal>> listSaving;
+  late List<SavingGoal> saving = [];
+  late SavingGoal? selectedSaving = null;
+  late int walletTypeId;
+  late int goalId = 0;
   TextEditingController moneyNumber = new TextEditingController();
   TextEditingController noteText = new TextEditingController();
   TextEditingController dateStart = new TextEditingController();
+  late List<Wallet> listWallet;
   late Wallet wallet;
   late Future<Transaction> trans;
-
+  late int? savingGoalId;
+  late SavingGoal goal;
   @override
   void initState() {
     super.initState();
@@ -49,6 +60,10 @@ class _UpdateTransactionPageState extends State<UpdateTransactionPage> {
     categoryName = widget.cate.name;
     selectedDate = widget.trans.transactionDate;
     walletID = widget.trans.walletId;
+    savingGoalId = widget.trans.savingGoalId;
+    listSaving = SavingGoalService().GetSavingWithWallet(widget.trans.walletId);
+    walletTypeId = widget.walletTypeCurrent;
+
   }
 
   Future<void> _selectDate(BuildContext context) async {
@@ -66,6 +81,18 @@ class _UpdateTransactionPageState extends State<UpdateTransactionPage> {
     }
   }
 
+  void setWalletType(int walletTypeId) {
+    setState(() {
+      this.walletTypeId = walletTypeId;
+    });
+  }
+
+  void loadSaving(int walletId) async {
+    var result = await SavingGoalService().GetSavingWithWallet(walletId);
+    setState(() {
+      saving = result;
+    });
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -147,11 +174,106 @@ class _UpdateTransactionPageState extends State<UpdateTransactionPage> {
         ],
       ),
       body: Container(
-        margin: EdgeInsets.only(top: 20),
+        margin: EdgeInsets.all(12),
         //color :Colors.grey[500],
         child: SingleChildScrollView(
           child: Column(
             children: [
+              Row(
+                children: [
+                  Icon(Icons.exposure),
+                  SizedBox(
+                    width: 10,
+                  ),
+                  Expanded(
+                    child: FutureBuilder<List<Wallet>>(
+                      future: valueWallet,
+                      builder: (BuildContext context,
+                          AsyncSnapshot<List<Wallet>> snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return Center(child: CircularProgressIndicator());
+                        } else if (snapshot.hasError) {
+                          return Center(
+                              child: Text('Error: ${snapshot.error}'));
+                        } else {
+                        
+                          listWallet = snapshot.data!;
+                          wallet = listWallet.firstWhere((element) => element.walletID == widget.trans.walletId,orElse: null);
+                          return TextField(
+                            readOnly: true,
+                            controller: TextEditingController(text: wallet.walletName),
+                          );
+                          // return DropdownButtonFormField<Wallet>(
+                          //   decoration: InputDecoration(
+                          //     hintText: 'Wallet',
+                          //   ),
+                          //   value: wallet,
+                          //   onChanged: (Wallet? value) {
+                          //     if(value!.walletTypeID == 3){
+                          //       loadSaving(value.walletID);
+                          //     }
+                          //     setState(() {
+                          //       walletID = value!.walletID;
+                          //       walletName = value!.walletName;
+                                
+                          //     });
+                          //   },
+                          //   items: listWallet.map((Wallet value) {
+                          //     return DropdownMenuItem<Wallet>(
+                          //       value: value,
+                          //       child: Text(value.walletName),
+                          //     );
+                          //   }).toList(),
+                          // );
+                        }
+                      },
+                    ),
+                  )
+                ],
+              ),
+              if(walletTypeId == 3)...[
+                  SizedBox(height: 25,),
+                  FutureBuilder<List<SavingGoal>>(
+                      future: listSaving,
+                      builder: (BuildContext context,
+                          AsyncSnapshot<List<SavingGoal>> snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return Center(child: CircularProgressIndicator());
+                        } else if (snapshot.hasError) {
+                          return Center(
+                              child: Text('Error: ${snapshot.error}'));
+                        } else {
+                          selectedSaving = snapshot.data!.firstWhere((element) => element.id == widget.trans.savingGoalId);
+                          goalId = selectedSaving!.id;
+                          return TextField(
+                            readOnly: true,
+                            controller: TextEditingController(text: selectedSaving!.name),
+                          );
+                          // return DropdownButtonFormField<SavingGoal>(
+                          //     decoration: InputDecoration(
+                          //       hintText: 'Select goal',
+                          //     ),
+                          //     value: selectedSaving,
+                          //     onChanged: (SavingGoal? value) {
+                          //       setState(() {
+                          //         goalId = value!.id;
+                          //       });
+                          //     },
+                          //     items: snapshot.data!.map((SavingGoal value) {
+                          //       return DropdownMenuItem<SavingGoal>(
+                          //         value: value,
+                          //         child: Text(value.name),
+                          //       );
+                          //     }).toList(),
+                          //   );
+                        }
+                      },
+                    ),
+                  
+                ],
+              SizedBox(height: 25,),
               Row(
                 children: [
                   Icon(Icons.monetization_on_rounded),
@@ -182,7 +304,7 @@ class _UpdateTransactionPageState extends State<UpdateTransactionPage> {
                           context,
                           MaterialPageRoute(
                               builder: (context) => CategoryPage(
-                                    flag: 2,
+                                    Type:"InExChoose",
                                   )));
                       setState(() {
                         if (valueCate != null) {
@@ -237,51 +359,7 @@ class _UpdateTransactionPageState extends State<UpdateTransactionPage> {
               SizedBox(
                 height: 25,
               ),
-              Row(
-                children: [
-                  Icon(Icons.exposure),
-                  SizedBox(
-                    width: 10,
-                  ),
-                  Expanded(
-                    child: FutureBuilder<List<Wallet>>(
-                      future: valueWallet,
-                      builder: (BuildContext context,
-                          AsyncSnapshot<List<Wallet>> snapshot) {
-                        if (snapshot.connectionState ==
-                            ConnectionState.waiting) {
-                          return Center(child: CircularProgressIndicator());
-                        } else if (snapshot.hasError) {
-                          return Center(
-                              child: Text('Error: ${snapshot.error}'));
-                        } else {
-                          print((widget.trans.walletId.toString()));
-                          wallet = snapshot.data!.firstWhere((element) =>
-                              element.walletID == widget.trans.walletId);
-                          return DropdownButtonFormField<Wallet>(
-                            decoration: InputDecoration(
-                              hintText: 'Wallet',
-                            ),
-                            value: wallet,
-                            onChanged: (Wallet? value) {
-                              setState(() {
-                                walletID = value!.walletID;
-                                walletName = value!.walletName;
-                              });
-                            },
-                            items: snapshot.data!.map((Wallet value) {
-                              return DropdownMenuItem<Wallet>(
-                                value: value,
-                                child: Text(value.walletName),
-                              );
-                            }).toList(),
-                          );
-                        }
-                      },
-                    ),
-                  )
-                ],
-              ),
+              
               ElevatedButton(
                 onPressed: () async {
                   Transaction trans = new Transaction(
@@ -291,7 +369,7 @@ class _UpdateTransactionPageState extends State<UpdateTransactionPage> {
                       categoryId: categoryID,
                       amount: double.parse(moneyNumber.text),
                       notes: noteText.text,
-                      transactionDate: selectedDate);
+                      transactionDate: selectedDate, savingGoalId: goalId);
                   var result =
                       await TransactionService().UpdateTransaction(trans);
                   if (result.status == 200) {

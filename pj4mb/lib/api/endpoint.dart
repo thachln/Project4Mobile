@@ -1,7 +1,7 @@
 class EndPoint{
 
-  //static const String baseUrl = 'http://192.168.1.2:8080/api'; // Sửa lại ip máy
-  static const String baseUrl = 'http://172.16.39.60:8080/api'; // Sửa lại ip máy
+  static const String baseUrl = 'http://192.168.1.2:8080/api'; // Sửa lại ip máy
+  //static const String baseUrl = 'http://172.16.39.60:8080/api'; // Sửa lại ip máy
 
   //Account
   static const String SignIn = '$baseUrl/auth/signin';
@@ -46,6 +46,7 @@ class EndPoint{
   static const String UpdateWallet = '$baseUrl/wallets/update/{walletID}';
   static const String DeleteWallet = '$baseUrl/wallets/delete/{walletID}';
   static const String Transfer = '$baseUrl/wallets/transfer';
+  static const String GetWalletWithId = '$baseUrl/wallets/{id}';
   //
 
   //Category
@@ -54,7 +55,7 @@ class EndPoint{
   static const String InsertCategory = '$baseUrl/categories/create';
   static const String UpdateCategory = '$baseUrl/categories/update';
   static const String GetIcon = '$baseUrl/categories/icons';
-  static const String DeleteCategory = '$baseUrl/categories/delete{categoryID}';
+  static const String DeleteCategory = '$baseUrl/categories/delete/{categoryID}';
   //
 
   //Budget
@@ -98,5 +99,16 @@ class EndPoint{
   static const String findWorkingByUserId = '$baseUrl/savinggoals/findWorkingByUserId/user/{id}';
   static const String findFinishedByUserId = '$baseUrl/savinggoals/findFinishedByUserId/user/{id}';
   static const String getSavingWithSavingID = '$baseUrl/savinggoals/getSavingWithSavingID';
+  static const String getSavingWithWallet = '$baseUrl/savinggoals/wallets/{walletid}/users/{userid}';
+  //
+
+  //TransactionRecurrence
+  static const String InsertTransactionRecurrence = '$baseUrl/transactionsRecurring/create';
+  static const String UpdateTransactionRecurrence = '$baseUrl/transactionsRecurring/update/{id}';
+  static const String DeleteTransactionRecurrence = '$baseUrl/transactionsRecurring/delete/{id}';
+  static const String findRecuExpired = '$baseUrl/transactionsRecurring/findRecuExpired/users/{id}';
+  static const String findRecuActive = '$baseUrl/transactionsRecurring/findRecuActive/users/{id}';
+  static const String getTransactionsRecurringById = '$baseUrl/transactionsRecurring/{id}';
+
   //
 }

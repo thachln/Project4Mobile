@@ -21,6 +21,8 @@ class _AddWalletPageState extends State<AddWalletPage> {
   late TextEditingController walletType;
   late TextEditingController walletTypeId;
   late TextEditingController currency;
+  late TextEditingController bankName;
+  late TextEditingController bankNumber;
   late Future<List<WalletType>> listWalletType;
   String dropdownValue = 'VND';
 
@@ -56,6 +58,8 @@ class _AddWalletPageState extends State<AddWalletPage> {
     walletType = TextEditingController();
     currency = TextEditingController();
     walletTypeId = TextEditingController();
+    bankName = TextEditingController();
+    bankNumber = TextEditingController();
     listWalletType = WalletService().GetWalletType();
   }
 
@@ -112,40 +116,6 @@ class _AddWalletPageState extends State<AddWalletPage> {
               ),
               Row(
                 children: [
-                  Icon(Icons.currency_exchange_rounded),
-                  SizedBox(
-                    width: 10,
-                  ),
-                  DropdownButton<String>(
-                    value: dropdownValue,
-                    icon: Icon(Icons.arrow_downward),
-                    iconSize: 24,
-                    elevation: 16,
-                    style: TextStyle(color: Colors.deepPurple),
-                    underline: Container(
-                      height: 2,
-                      color: Colors.deepPurpleAccent,
-                    ),
-                    onChanged: (String? newValue) {
-                      setState(() {
-                        dropdownValue = newValue!;
-                      });
-                    },
-                    items: <String>['VND', 'USD']
-                        .map<DropdownMenuItem<String>>((String value) {
-                      return DropdownMenuItem<String>(
-                        value: value,
-                        child: Text(value),
-                      );
-                    }).toList(),
-                  )
-                ],
-              ),
-              SizedBox(
-                height: 25,
-              ),
-              Row(
-                children: [
                   Icon(Icons.exposure),
                   SizedBox(
                     width: 10,
@@ -155,10 +125,12 @@ class _AddWalletPageState extends State<AddWalletPage> {
                       future: listWalletType,
                       builder: (BuildContext context,
                           AsyncSnapshot<List<WalletType>> snapshot) {
-                        if (snapshot.connectionState == ConnectionState.waiting) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
                           return Center(child: CircularProgressIndicator());
                         } else if (snapshot.hasError) {
-                          return Center(child: Text('Error: ${snapshot.error}'));
+                          return Center(
+                              child: Text('Error: ${snapshot.error}'));
                         } else {
                           return DropdownButtonFormField<WalletType>(
                             decoration: InputDecoration(
@@ -184,6 +156,86 @@ class _AddWalletPageState extends State<AddWalletPage> {
                   )
                 ],
               ),
+              SizedBox(
+                height: 25,
+              ),
+              Row(
+                children: [
+                  Icon(Icons.currency_exchange_rounded),
+                  SizedBox(
+                    width: 10,
+                  ),
+                  DropdownButton<String>(
+                    value: dropdownValue,
+                    icon: Icon(Icons.arrow_downward),
+                    iconSize: 24,
+                    elevation: 16,
+                    style: TextStyle(color: Colors.deepPurple),
+                    underline: Container(
+                      height: 2,
+                      color: Colors.deepPurpleAccent,
+                    ),
+                    onChanged: (String? newValue) {
+                      setState(() {
+                        dropdownValue = newValue!;
+                      });
+                    },
+                    items: walletTypeId.text == "3"
+                        ? <DropdownMenuItem<String>>[
+                            DropdownMenuItem<String>(
+                              value:
+                                  'VND', 
+                              child: Text('VND'),
+                            ),
+                          ]
+                        : <DropdownMenuItem<String>>[
+                            DropdownMenuItem<String>(
+                              value: 'VND',
+                              child: Text('VND'),
+                            ),
+                            DropdownMenuItem<String>(
+                              value: 'USD', 
+                              child: Text('USD'),
+                            ),
+                          ],
+                  )
+                ],
+              ),
+              if(walletTypeId.text == "2")...[
+                Row(
+                children: [
+                  Icon(Icons.abc),
+                  SizedBox(
+                    width: 10,
+                  ),
+                  Expanded(
+                    child: TextField(
+                      controller: bankName,
+                      keyboardType: TextInputType.text,
+                      decoration: InputDecoration(hintText: 'Bank Name'),
+                    ),
+                  )
+                ],
+              ),
+              SizedBox(
+                height: 25,
+              ),
+              Row(
+                children: [
+                  Icon(Icons.abc),
+                  SizedBox(
+                    width: 10,
+                  ),
+                  Expanded(
+                    child: TextField(
+                      controller: bankNumber,
+                      keyboardType: TextInputType.number,
+                      decoration: InputDecoration(hintText: 'Bank Number'),
+                    ),
+                  )
+                ],
+              ),
+              ],
               ElevatedButton(
                 onPressed: () async {
                   Wallet wallet = Wallet(
@@ -193,8 +245,8 @@ class _AddWalletPageState extends State<AddWalletPage> {
                     walletTypeID: int.parse(walletTypeId.text),
                     currency: dropdownValue,
                     userId: 0,
-                    bankName: '',
-                    bankAccountNum: '',
+                    bankName: bankName.text.isEmpty ? '' : bankName.text,
+                    bankAccountNum: bankNumber.text.isEmpty ? '' : bankNumber.text,
                   );
                   var result = await WalletService().InsertWallet(wallet);
                   if (result) {

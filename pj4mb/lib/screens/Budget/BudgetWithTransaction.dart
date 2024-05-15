@@ -180,6 +180,8 @@ class _BudgetWithTransactionPageState extends State<BudgetWithTransactionPage> {
           newTransactions); // Chú ý sử dụng Future.value để gán giá trị Future mới
       budgetData = newBudgetData;
       categoryData = newCategoryData;
+      progress =
+        ((budgetData.amount * 100) / budgetData.threshold_amount) / 100;
     });
   }
 }

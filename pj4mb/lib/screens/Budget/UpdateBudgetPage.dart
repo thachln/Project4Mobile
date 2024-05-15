@@ -139,7 +139,7 @@ class _UpdateBudgetPageState extends State<UpdateBudgetPage> {
                       context,
                       MaterialPageRoute(
                           builder: (context) => CategoryPage(
-                                flag: 1,
+                                Type:"Ex",
                               )),
                     );
 

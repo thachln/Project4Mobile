@@ -9,8 +9,8 @@ class Recurrence{
   late  int userId;
   final String frequency;
   final int every;
-  final String dayOfWeek;
-  final MonthOption monthOption;
+  final String? dayOfWeek;
+  final MonthOption? monthOption;
   late DateTime dueDate;
   final EndType endType;
   late DateTime? endDate;
@@ -30,7 +30,7 @@ class Recurrence{
         frequency: json['frequency'],
         every: json['every'],
         dayOfWeek: json['dayOfWeek'],
-        monthOption: MonthOption.values.firstWhere((e) => e.name == json['monthOption']),
+        monthOption: json['monthOption'] != null ? MonthOption.values.firstWhere((e) => e.name == json['monthOption']) : null,
         dueDate: DateTime.parse(json['dueDate']),
         endType: EndType.values.firstWhere((e) => e.name == json['endType']),
         endDate: json['endDate'] != null ? DateTime.parse(json['endDate']) : null,
@@ -47,7 +47,7 @@ class Recurrence{
     'frequency': frequency.toLowerCase(),
     'every': every,
     'dayOfWeek': dayOfWeek,
-    'monthOption': monthOption.name,
+    'monthOption': monthOption!.name,
     'dueDate': dueDate.toIso8601String(),
     'endType': endType.name,
     'endDate': endDate?.toIso8601String(),

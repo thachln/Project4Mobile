@@ -71,12 +71,7 @@ class _ListWalletState extends State<ListWallet> {
                             context,
                             MaterialPageRoute(
                                 builder: (context) => UpdateWalletPage(
-                                      walletID:
-                                          int.parse(wallet.walletID.toString()),
-                                      walletName: wallet.walletName,
-                                      balance: wallet.balance,
-                                      walletTypeIDParam: wallet.walletTypeID,
-                                      currency: wallet.currency,
+                                      wallet: wallet,
                                     )));
                         if (result) {
                           widget.onSave(result);

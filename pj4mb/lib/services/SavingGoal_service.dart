@@ -101,6 +101,32 @@ class SavingGoalService{
     }
   }
 
+  Future<List<SavingGoal>> GetSavingWithWallet(int walletId) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var userid = prefs.getString('userid');
+    var token = prefs.getString('token');
+     var headersValue = {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer $token',
+    };
+    final response = await http.get(Uri.parse(EndPoint.getSavingWithWallet.replaceAll('{walletid}', walletId.toString()).replaceAll('{userid}', userid.toString())),headers: headersValue);
+  
+    if (response.statusCode == 200) {     
+      final List<dynamic> parsed = jsonDecode(response.body);
+      List<SavingGoal> savingList = [];
+      for (var item in parsed) {
+        if (item is Map<String, dynamic>) {
+          savingList.add(SavingGoal.fromJson(item));
+        } else {
+          throw Exception('Invalid item format');
+        }
+      }
+      return savingList;
+    } else {   
+      return [];
+    }
+  }
+
   Future<List<SavingGoal>> findFinishedByUserId() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var userid = prefs.getString('userid');
@@ -192,11 +218,8 @@ class SavingGoalService{
       'Authorization': 'Bearer $token',
     };
     param.userId = int.parse(userid!);
-    print(param.toJson());
     final response = await http
         .post(Uri.parse(EndPoint.getSavingWithSavingID),body: jsonEncode(param.toJson()),headers: headersValue);
-        print(response.statusCode);
-        print(response.body);
     if (response.statusCode == 200) {
       final List<dynamic> parsed = jsonDecode(response.body);
       //return parsed.map((e) => Category.fromJson(e)).toList();

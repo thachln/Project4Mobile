@@ -101,15 +101,33 @@ class _UpdateBillPageState extends State<UpdateBillPage> {
     moneyNumber.text = widget.bill.amount.toString();
     categoryID = widget.bill.categoryId;
     everyDailyNumber.text = widget.bill.recurrence.every.toString();
-    frequencyType = FrequencyType.values.firstWhere((e) =>
+    // frequencyType = FrequencyType.values.firstWhere((e) =>
+    //     e.toString() == 'FrequencyType.${widget.bill.recurrence.frequency}');
+    // endType = EndType.values.firstWhere((e) =>
+    //     e.toString() == 'EndType.${widget.bill.recurrence.endType.name}');
+    // monthOption = MonthOption.values.firstWhere((e) =>
+    //     e.toString() ==
+    //     'MonthOption.${widget.bill.recurrence.monthOption!.name}');
+    // dayOfWeek = DayOfWeek.values.firstWhere(
+    //     (e) => e.toString() == 'DayOfWeek.${widget.bill.recurrence.dayOfWeek}');
+    if(widget.bill.recurrence.frequency != null){
+      frequencyType = FrequencyType.values.firstWhere((e) =>
         e.toString() == 'FrequencyType.${widget.bill.recurrence.frequency}');
-    endType = EndType.values.firstWhere((e) =>
+    }
+    if(widget.bill.recurrence.endType != null){
+       endType = EndType.values.firstWhere((e) =>
         e.toString() == 'EndType.${widget.bill.recurrence.endType.name}');
-    monthOption = MonthOption.values.firstWhere((e) =>
+    }
+   if(widget.bill.recurrence.monthOption != null){
+        monthOption = MonthOption.values.firstWhere((e) =>
         e.toString() ==
-        'MonthOption.${widget.bill.recurrence.monthOption.name}');
+        'MonthOption.${widget.bill.recurrence.monthOption!.name}');
+    }
+   
+   if(widget.bill.recurrence.dayOfWeek != null){
     dayOfWeek = DayOfWeek.values.firstWhere(
         (e) => e.toString() == 'DayOfWeek.${widget.bill.recurrence.dayOfWeek}');
+   }
     timeNumber.text = widget.bill.recurrence.times.toString();
     selectedToDate = widget.bill.recurrence.endDate;
     selectedFromDate = widget.bill.recurrence.startDate;
@@ -268,7 +286,7 @@ class _UpdateBillPageState extends State<UpdateBillPage> {
                           context,
                           MaterialPageRoute(
                               builder: (context) => CategoryPage(
-                                    flag: 1,
+                                    Type:"Ex",
                                   )));
                       setState(() {
                         if (valueCate != null) {
@@ -320,7 +338,7 @@ class _UpdateBillPageState extends State<UpdateBillPage> {
                                 walletName = value!.walletName;
                               });
                             },
-                            items: snapshot.data!.map((Wallet value) {
+                            items: snapshot.data!.where((element) => element.walletTypeID != 3 && element.currency == 'VND').map((Wallet value) {
                               return DropdownMenuItem<Wallet>(
                                 value: value,
                                 child: Text(value.walletName),
@@ -396,7 +414,7 @@ class _UpdateBillPageState extends State<UpdateBillPage> {
                             value: endType,
                             onChanged: (EndType? newValue) {
                               setState(() {
-                                setDateTime(newValue!);
+                                setDateTime(newValue!,int.parse(everyDailyNumber.text));
                                 endType = newValue!;
                               });
                             },
@@ -497,7 +515,7 @@ class _UpdateBillPageState extends State<UpdateBillPage> {
                             value: endType,
                             onChanged: (EndType? newValue) {
                               setState(() {
-                                setDateTime(newValue!);
+                                setDateTime(newValue!,(int.parse(everyDailyNumber.text) * 7) + 1);
                                 endType = newValue!;
                               });
                             },
@@ -599,7 +617,7 @@ class _UpdateBillPageState extends State<UpdateBillPage> {
                             value: endType,
                             onChanged: (EndType? newValue) {
                               setState(() {
-                                setDateTime(newValue!);
+                                setDateTime(newValue!,31 * int.parse(everyDailyNumber.text) + 1);
                                 endType = newValue!;
                               });
                             },
@@ -686,6 +704,7 @@ class _UpdateBillPageState extends State<UpdateBillPage> {
                             value: endType,
                             onChanged: (EndType? newValue) {
                               setState(() {
+                                setDateTime(newValue!,365 * int.parse(everyDailyNumber.text) + 1);
                                 endType = newValue!;
                               });
                             },
@@ -729,6 +748,149 @@ class _UpdateBillPageState extends State<UpdateBillPage> {
                 ),
               ElevatedButton(
                 onPressed: () async {
+                  if(moneyNumber.text.isEmpty){
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: Text('Alret'),
+                          content: Text('Money is required!'),
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                              child: Text('OK'),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                    return;
+                  }
+                  if(categoryID == 0){
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: Text('Alret'),
+                          content: Text('Category is required!'),
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                              child: Text('OK'),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                    return;
+                  }
+                  if(walletID == 0){
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: Text('Alret'),
+                          content: Text('Wallet is required!'),
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                              child: Text('OK'),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                    return;
+                  }
+                  if (everyDailyNumber.text.isEmpty || int.parse(everyDailyNumber.text) <= 0 || int.parse(everyDailyNumber.text) > 30) {
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: Text('Alret'),
+                          content: Text('Every must greater than 0 and less than 30!'),
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                              child: Text('OK'),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                    return;
+                  }
+                  if(selectedFromDate.isBefore(DateTime.now().subtract(Duration(days: 1)))){
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: Text('Alret'),
+                          content: Text('From date must be greater than today!'),
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                              child: Text('OK'),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                    return;
+                  }
+                  if(frequencyType == FrequencyType.DAILY || frequencyType == FrequencyType.MONTHLY || frequencyType == FrequencyType.WEEKLY || frequencyType == FrequencyType.YEARLY)
+                  {
+                    if(endType == EndType.UNTIL && selectedToDate!.isBefore(selectedFromDate)){
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: Text('Alret'),
+                            content: Text('To date must greater than from date'),
+                            actions: [
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                                child: Text('OK'),
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                      return;
+                    }
+                    if(endType == EndType.TIMES && timeNumber.text.isEmpty){
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: Text('Alret'),
+                            content: Text('Times is required!'),
+                            actions: [
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                                child: Text('OK'),
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                      return;
+                    }
+                  }
                   Recurrence recurrence = Recurrence(
                       frequency: "repeat ${frequencyType.name}",
                       every: int.parse(everyDailyNumber.text),
@@ -809,9 +971,9 @@ class _UpdateBillPageState extends State<UpdateBillPage> {
     dayOfWeek = DayOfWeek.MONDAY;
   }
 
-  void setDateTime(EndType endType) {
+   void setDateTime(EndType endType,int day) { 
     if (endType == EndType.UNTIL) {
-      selectedToDate = DateTime.now().add(Duration(days: 1));
+      selectedToDate = DateTime.now().add(Duration(days: day));
     }
     if (endType == EndType.TIMES) {
       selectedToDate = null;

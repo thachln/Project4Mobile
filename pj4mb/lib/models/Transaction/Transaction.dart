@@ -11,6 +11,7 @@ class Transaction{
   final DateTime transactionDate;
   final int categoryId;
   final String? notes;
+  final int? savingGoalId;
 
 
   Transaction({
@@ -20,7 +21,8 @@ class Transaction{
     required this.amount,
     required this.transactionDate,
     required this.categoryId,
-    required this.notes
+    required this.notes,
+    required this.savingGoalId
   });
 
 
@@ -32,7 +34,8 @@ class Transaction{
       amount: json['amount'],
       transactionDate: DateTime.parse(json['transactionDate']),
       categoryId: json['categoryId'],
-      notes: json['notes']
+      notes: json['notes'],
+      savingGoalId: json['savingGoalId'] ?? json['savingGoalId']
     );
   }
 
@@ -45,7 +48,8 @@ class Transaction{
       'amount': amount,
       'transactionDate': transactionDate.toIso8601String(),
       'categoryId': categoryId,
-      'notes': notes
+      'notes': notes,
+      'savingGoalId': savingGoalId
     };
   }
 }

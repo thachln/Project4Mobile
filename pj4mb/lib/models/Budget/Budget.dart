@@ -55,13 +55,18 @@ class BudgetResponse {
   late String categoryIcon;
   late double amount;
 	late double thresholdAmount;
+  late DateTime startDate;
+  late DateTime toDate;
   
+
   BudgetResponse({
     required this.budgetId,
     required this.categoryName,
     required this.categoryIcon,
     required this.amount,
-    required this.thresholdAmount
+    required this.thresholdAmount,
+    required this.startDate,
+    required this.toDate
   });
 
   factory BudgetResponse.fromJson(Map<String, dynamic> json) {
@@ -70,7 +75,9 @@ class BudgetResponse {
       categoryName: json['categoryName'],
       categoryIcon: json['categoryIcon'],
       amount: json['amount'],
-      thresholdAmount: json['thresholdAmount']
+      thresholdAmount: json['thresholdAmount'],
+      startDate: DateTime.parse(json['startDate']),
+      toDate: DateTime.parse(json['toDate'])
     );
   }
 
@@ -80,8 +87,12 @@ class BudgetResponse {
       'categoryName': categoryName,
       'categoryIcon': categoryIcon,
       'amount': amount,
-      'thresholdAmount': thresholdAmount
+      'thresholdAmount': thresholdAmount,
+      'startDate': startDate.toIso8601String(),
+      'toDate': toDate.toIso8601String()
     };
   }
+
+  
 
 }

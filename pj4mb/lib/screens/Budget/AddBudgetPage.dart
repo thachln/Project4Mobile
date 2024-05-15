@@ -43,7 +43,7 @@ class _AddBudgetPageState extends State<AddBudgetPage> {
     Wallet? valueWallet;
     return Scaffold(
       appBar: AppBar(
-        title: Text('Thêm Ngân Sách'),
+        title: Text('Add Budget'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -62,7 +62,7 @@ class _AddBudgetPageState extends State<AddBudgetPage> {
                       context,
                       MaterialPageRoute(
                           builder: (context) => CategoryPage(
-                                flag: 1,
+                                Type: "Ex",
                               )),
                     );
 
@@ -120,6 +120,47 @@ class _AddBudgetPageState extends State<AddBudgetPage> {
             ),
             ElevatedButton(
               onPressed: () async {
+                if (categoryId == 0) {
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: Text('Thông báo'),
+                        content: Text('Please choose category!'),
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: Text('OK'),
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                  return;
+                }
+                if (amountController.text.isEmpty) {
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: Text('Thông báo'),
+                        content: Text('Please enter amount!'),
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: Text('OK'),
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                  return;
+                }
+                
                 Budget budget = new Budget(
                   threshold_amount: double.parse(amountController.text),
                   categoryId: categoryId,
@@ -283,7 +324,7 @@ class _AddBudgetPageState extends State<AddBudgetPage> {
                           }
                         },
                         child: Text(
-                            'Chọn ngày bắt đầu: ${localCustomStartDate.toString().split(' ')[0]}'),
+                            'Choose Start Date: ${localCustomStartDate.toString().split(' ')[0]}'),
                       ),
                       ElevatedButton(
                         onPressed: () async {
@@ -304,7 +345,7 @@ class _AddBudgetPageState extends State<AddBudgetPage> {
                           }
                         },
                         child: Text(
-                            'Chọn ngày kết thúc: ${localCustomEndDate.toString().split(' ')[0]}'),
+                            'Choose End Date: ${localCustomEndDate.toString().split(' ')[0]}'),
                       ),
                     ],
                   ],
@@ -312,23 +353,45 @@ class _AddBudgetPageState extends State<AddBudgetPage> {
               ),
               actions: <Widget>[
                 TextButton(
-                  child: Text('Hủy'),
+                  child: Text('Cancle'),
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
                 ),
                 TextButton(
-                  child: Text('Xác nhận'),
+                  child: Text('Confirm?'),
                   onPressed: () {
                     if (DateFormat('dd-MM-yyyy').format(selectedDateStart) ==
                             '01-01-2000' &&
                         DateFormat('dd-MM-yyyy').format(selectedDateEnd) ==
-                            '01-01-2000') {
+                            '01-01-2000') {               
                       setState(() {
                         selectedDateStart = listDateTime.startOfWeek;
                         selectedDateEnd = listDateTime.endOfWeek;
                       });
-                    }
+                    }                   
+                      if (selectedDateEnd.isBefore(
+                          selectedDateStart.subtract(Duration(days: 1)))) {
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: Text('Thông báo'),
+                              content: Text(
+                                  'Please choose end date after date start!'),
+                              actions: [
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: Text('OK'),
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                        return;
+                      }
                     Navigator.of(context).pop(true);
                   },
                 ),

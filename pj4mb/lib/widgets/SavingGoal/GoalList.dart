@@ -24,8 +24,19 @@ class _GoalListState extends State<GoalList> {
       itemCount: widget.listGoal.length,
       itemBuilder: (context, index) {
         var goal = widget.listGoal[index];
-        double progress =
+        double progress = 0;
+        if(goal.currentAmount < 0){
+          progress =
+            ((goal.targetAmount * 100) / (-1 * goal.currentAmount)) / 100;
+        }
+        else if (goal.currentAmount >= goal.targetAmount){
+          progress = 100;
+        }
+        else{
+          progress =
             ((goal.currentAmount * 100) / goal.targetAmount) / 100;
+        }
+        
         return Container(
           
           child: GestureDetector(
@@ -79,7 +90,9 @@ class _GoalListState extends State<GoalList> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text('Money Start: ' + formatter.format(goal.currentAmount) + 'đ'),
-                    Text('Remaining: ${formatter.format(goal.targetAmount - goal.currentAmount)}đ'),
+                    goal.targetAmount - goal.currentAmount < 0 
+                    ? Text('Remaining: 0 đ') 
+                    : Text('Remaining: ${formatter.format(goal.targetAmount - goal.currentAmount)}đ'),
                   ],
                 ),
                 SizedBox(

@@ -17,7 +17,6 @@ class WalletService {
       'Authorization': 'Bearer $token',
     };
     final response = await http.get(Uri.parse(EndPoint.GetWallet.replaceAll("{userId}", userid!)),headers: headersValue );
-    print(response.body);
     if (response.statusCode == 200) {
       final List<dynamic> parsed = jsonDecode(response.body);
       //return parsed.map((e) => Category.fromJson(e)).toList();
@@ -29,7 +28,6 @@ class WalletService {
           throw Exception('Invalid item format');
         }
       }
-      print(categories.first.walletTypeID);
       return categories;
     } else {
       return [];
@@ -59,6 +57,25 @@ class WalletService {
       return categories;
     } else {
       return [];
+    }
+  }
+
+  Future<Wallet> GetWalletById(int id) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var userid = prefs.getString('userid');
+     var token = prefs.getString('token');
+     var headersValue = {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer $token',
+    };
+    final response = await http.get(Uri.parse(EndPoint.GetWalletWithId.replaceAll("{id}", id.toString())),headers: headersValue );
+    print(response.body);
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> parsed = jsonDecode(response.body);
+      return Wallet.fromJson(parsed);
+    } else {
+      return new Wallet(walletID: 0, walletName: "0", walletTypeID: 0, balance: 0, userId: 0, bankName: '', bankAccountNum: '', currency: '');
+     
     }
   }
 

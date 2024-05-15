@@ -59,7 +59,7 @@ class _AddSavingPageState extends State<AddSavingPage> {
     final DateTime? picked = await showDatePicker(
       context: context,
       initialDate: selectedToDate,
-      firstDate: DateTime(2000),
+      firstDate: selectedFromDate,
       lastDate: DateTime(2101),
     );
     if (picked != null && picked != selectedToDate) {
@@ -211,7 +211,7 @@ class _AddSavingPageState extends State<AddSavingPage> {
                     Expanded(
                         child: InkWell(
                       onTap: () async {
-                        await _selectFromDate(context);
+                        //await _selectFromDate(context);
                       },
                       child: Text(
                           DateFormat('dd-MM-yyyy').format(selectedFromDate)),
@@ -350,7 +350,87 @@ class _AddSavingPageState extends State<AddSavingPage> {
                         return;
                       }
                     }
-
+                    if(currentAmount.text.isEmpty){
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: Text('Alret'),
+                            content: Text('Current amount is required!'),
+                            actions: [
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                                child: Text('OK'),
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                      return;
+                    }
+                    if(targetAmount.text.isEmpty){
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: Text('Alret'),
+                            content: Text('Target amount is required!'),
+                            actions: [
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                                child: Text('OK'),
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                      return;
+                    }
+                    if(double.parse(targetAmount.text) < 0)
+                    {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: Text('Alret'),
+                            content: Text('Target amount must be greater than or equal to 0!'),
+                            actions: [
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                                child: Text('OK'),
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                      return;
+                    }
+                    if(double.parse(currentAmount.text) > double.parse(targetAmount.text)){
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: Text('Alret'),
+                            content: Text('Current amount must be less than target amount!'),
+                            actions: [
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                                child: Text('OK'),
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                      return;
+                    }
                     SavingGoal savingGoal = SavingGoal(
                         id: 0,
                         name: goalName.text,
