@@ -11,6 +11,7 @@ class FindListTransaction extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final formatter = NumberFormat("#,###");
     return Expanded(
               child: Container(
             padding: EdgeInsets.all(8),
@@ -33,10 +34,10 @@ class FindListTransaction extends StatelessWidget {
                           title: Text(trans.categoryName),
                           trailing: trans.Type == "INCOME"
                               ? Text(
-                                  trans.amount.toString(),
+                                  formatter.format(trans.amount),
                                   style: TextStyle(color: Colors.green[400]),
                                 )
-                              : Text(trans.amount.toString(),
+                              : Text(formatter.format(trans.amount),
                                   style: TextStyle(color: Colors.red[400])),
                         ),
                       ),

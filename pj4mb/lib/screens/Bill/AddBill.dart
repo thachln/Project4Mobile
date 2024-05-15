@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:pj4mb/models/Bill/Bill.dart';
 import 'package:pj4mb/models/Bill/DayOfWeeks.dart';
@@ -10,6 +11,7 @@ import 'package:pj4mb/models/Category/Category.dart';
 import 'package:pj4mb/models/Recurrence/Recurrence.dart';
 import 'package:pj4mb/models/Wallet/Wallet.dart';
 import 'package:pj4mb/screens/Account/Category.dart';
+import 'package:pj4mb/screens/ThousandsSeparatorInputFormatter.dart';
 import 'package:pj4mb/services/Bill_service.dart';
 import 'package:pj4mb/services/Wallet_service.dart';
 
@@ -39,6 +41,7 @@ class _AddBillPageState extends State<AddBillPage> {
   String categoryName = '';
   DateTime selectedFromDate = DateTime.now();
   DateTime? selectedToDate;
+
   final List<String> days = [
     'MONDAY',
     'Tuesday',
@@ -92,6 +95,8 @@ class _AddBillPageState extends State<AddBillPage> {
   void initState() {
     super.initState();
     valueWallet = WalletService().GetWalletVND();
+    timeNumber.text = "0";
+    everyDailyNumber.text = "0";
   }
 
   @override
@@ -143,6 +148,10 @@ class _AddBillPageState extends State<AddBillPage> {
                   Expanded(
                     child: TextField(
                       controller: moneyNumber,
+                      inputFormatters: [
+                        FilteringTextInputFormatter.digitsOnly,
+                        ThousandsSeparatorInputFormatter(),
+                      ],
                       keyboardType: TextInputType.number,
                       decoration: InputDecoration(hintText: 'Money'),
                     ),
@@ -183,7 +192,7 @@ class _AddBillPageState extends State<AddBillPage> {
               ),
               SizedBox(
                 height: 20,
-              ),             
+              ),
               Row(
                 children: [
                   Icon(Icons.exposure),
@@ -213,7 +222,11 @@ class _AddBillPageState extends State<AddBillPage> {
                                 walletName = value!.walletName;
                               });
                             },
-                            items: snapshot.data!.where((element) => element.walletTypeID != 3 && element.currency == 'VND').map((Wallet value) {
+                            items: snapshot.data!
+                                .where((element) =>
+                                    element.walletTypeID != 3 &&
+                                    element.currency == 'VND')
+                                .map((Wallet value) {
                               return DropdownMenuItem<Wallet>(
                                 value: value,
                                 child: Text(value.walletName),
@@ -257,6 +270,10 @@ class _AddBillPageState extends State<AddBillPage> {
                             width: 50,
                             child: TextField(
                               controller: everyDailyNumber,
+                              inputFormatters: [
+                                FilteringTextInputFormatter.digitsOnly,
+                                ThousandsSeparatorInputFormatter(),
+                              ],
                               keyboardType: TextInputType.number,
                             ),
                           ),
@@ -289,7 +306,10 @@ class _AddBillPageState extends State<AddBillPage> {
                             value: endType,
                             onChanged: (EndType? newValue) {
                               setState(() {
-                                setDateTime(newValue!,int.parse(everyDailyNumber.text));
+                                setDateTime(
+                                    newValue!,
+                                    int.parse(everyDailyNumber.text
+                                        .replaceAll(',', '')));
                                 endType = newValue!;
                               });
                             },
@@ -323,6 +343,10 @@ class _AddBillPageState extends State<AddBillPage> {
                               width: 50,
                               child: TextField(
                                 controller: timeNumber,
+                                inputFormatters: [
+                                  FilteringTextInputFormatter.digitsOnly,
+                                  ThousandsSeparatorInputFormatter(),
+                                ],
                                 keyboardType: TextInputType.number,
                               ),
                             ),
@@ -343,6 +367,10 @@ class _AddBillPageState extends State<AddBillPage> {
                           SizedBox(
                             width: 50,
                             child: TextField(
+                              inputFormatters: [
+                                FilteringTextInputFormatter.digitsOnly,
+                                ThousandsSeparatorInputFormatter(),
+                              ],
                               controller: everyDailyNumber,
                               keyboardType: TextInputType.number,
                             ),
@@ -390,7 +418,12 @@ class _AddBillPageState extends State<AddBillPage> {
                             value: endType,
                             onChanged: (EndType? newValue) {
                               setState(() {
-                                setDateTime(newValue!,(int.parse(everyDailyNumber.text) * 7) + 1);
+                                setDateTime(
+                                    newValue!,
+                                    (int.parse(everyDailyNumber.text
+                                                .replaceAll(',', '')) *
+                                            7) +
+                                        1);
                                 endType = newValue!;
                               });
                             },
@@ -425,6 +458,10 @@ class _AddBillPageState extends State<AddBillPage> {
                               width: 50,
                               child: TextField(
                                 controller: timeNumber,
+                                inputFormatters: [
+                                  FilteringTextInputFormatter.digitsOnly,
+                                  ThousandsSeparatorInputFormatter(),
+                                ],
                                 keyboardType: TextInputType.number,
                               ),
                             ),
@@ -445,6 +482,10 @@ class _AddBillPageState extends State<AddBillPage> {
                           SizedBox(
                             width: 50,
                             child: TextField(
+                              inputFormatters: [
+                                FilteringTextInputFormatter.digitsOnly,
+                                ThousandsSeparatorInputFormatter(),
+                              ],
                               controller: everyDailyNumber,
                               keyboardType: TextInputType.number,
                             ),
@@ -492,7 +533,12 @@ class _AddBillPageState extends State<AddBillPage> {
                             value: endType,
                             onChanged: (EndType? newValue) {
                               setState(() {
-                                setDateTime(newValue!,(31 * int.parse(everyDailyNumber.text)) + 1);
+                                setDateTime(
+                                    newValue!,
+                                    (31 *
+                                            int.parse(everyDailyNumber.text
+                                                .replaceAll(',', ''))) +
+                                        1);
                                 endType = newValue!;
                               });
                             },
@@ -525,6 +571,10 @@ class _AddBillPageState extends State<AddBillPage> {
                             SizedBox(
                               width: 50,
                               child: TextField(
+                                inputFormatters: [
+                                  FilteringTextInputFormatter.digitsOnly,
+                                  ThousandsSeparatorInputFormatter(),
+                                ],
                                 controller: timeNumber,
                                 keyboardType: TextInputType.number,
                               ),
@@ -546,6 +596,10 @@ class _AddBillPageState extends State<AddBillPage> {
                           SizedBox(
                             width: 50,
                             child: TextField(
+                              inputFormatters: [
+                                FilteringTextInputFormatter.digitsOnly,
+                                ThousandsSeparatorInputFormatter(),
+                              ],
                               controller: everyDailyNumber,
                               keyboardType: TextInputType.number,
                             ),
@@ -579,7 +633,12 @@ class _AddBillPageState extends State<AddBillPage> {
                             value: endType,
                             onChanged: (EndType? newValue) {
                               setState(() {
-                                setDateTime(newValue!,(365 * int.parse(everyDailyNumber.text)) + 1);
+                                setDateTime(
+                                    newValue!,
+                                    (365 *
+                                            int.parse(everyDailyNumber.text
+                                                .replaceAll(',', ''))) +
+                                        1);
                                 endType = newValue!;
                               });
                             },
@@ -612,6 +671,10 @@ class _AddBillPageState extends State<AddBillPage> {
                             SizedBox(
                               width: 50,
                               child: TextField(
+                                inputFormatters: [
+                                  FilteringTextInputFormatter.digitsOnly,
+                                  ThousandsSeparatorInputFormatter(),
+                                ],
                                 controller: timeNumber,
                                 keyboardType: TextInputType.number,
                               ),
@@ -624,7 +687,7 @@ class _AddBillPageState extends State<AddBillPage> {
               ElevatedButton(
                 onPressed: () async {
                   //Validate
-                  if(moneyNumber.text.isEmpty){
+                  if (moneyNumber.text.isEmpty) {
                     showDialog(
                       context: context,
                       builder: (BuildContext context) {
@@ -644,8 +707,7 @@ class _AddBillPageState extends State<AddBillPage> {
                     );
                     return;
                   }
-                  if(double.parse(moneyNumber.text) <= 0)
-                  {
+                  if (double.parse(moneyNumber.text.replaceAll(',', '')) <= 0) {
                     showDialog(
                       context: context,
                       builder: (BuildContext context) {
@@ -665,7 +727,7 @@ class _AddBillPageState extends State<AddBillPage> {
                     );
                     return;
                   }
-                  if(categoryID == 0){
+                  if (categoryID == 0) {
                     showDialog(
                       context: context,
                       builder: (BuildContext context) {
@@ -685,7 +747,7 @@ class _AddBillPageState extends State<AddBillPage> {
                     );
                     return;
                   }
-                  if(walletID == 0){
+                  if (walletID == 0) {
                     showDialog(
                       context: context,
                       builder: (BuildContext context) {
@@ -705,13 +767,18 @@ class _AddBillPageState extends State<AddBillPage> {
                     );
                     return;
                   }
-                  if (everyDailyNumber.text.isEmpty || int.parse(everyDailyNumber.text) <= 0 || int.parse(everyDailyNumber.text) > 30) {
+                  if (everyDailyNumber.text.isEmpty ||
+                      int.parse(everyDailyNumber.text.replaceAll(',', '')) <=
+                          0 ||
+                      int.parse(everyDailyNumber.text.replaceAll(',', '')) >
+                          30) {
                     showDialog(
                       context: context,
                       builder: (BuildContext context) {
                         return AlertDialog(
                           title: Text('Alret'),
-                          content: Text('Every must greater than 0 and less than 30!'),
+                          content: Text(
+                              'Every must greater than 0 and less than 30!'),
                           actions: [
                             TextButton(
                               onPressed: () {
@@ -725,13 +792,15 @@ class _AddBillPageState extends State<AddBillPage> {
                     );
                     return;
                   }
-                  if(selectedFromDate.isBefore(DateTime.now().subtract(Duration(days: 1)))){
+                  if (selectedFromDate
+                      .isBefore(DateTime.now().subtract(Duration(days: 1)))) {
                     showDialog(
                       context: context,
                       builder: (BuildContext context) {
                         return AlertDialog(
                           title: Text('Alret'),
-                          content: Text('From date must be greater than today!'),
+                          content:
+                              Text('From date must be greater than today!'),
                           actions: [
                             TextButton(
                               onPressed: () {
@@ -745,15 +814,19 @@ class _AddBillPageState extends State<AddBillPage> {
                     );
                     return;
                   }
-                  if(frequencyType == FrequencyType.DAILY || frequencyType == FrequencyType.MONTHLY || frequencyType == FrequencyType.WEEKLY || frequencyType == FrequencyType.YEARLY)
-                  {
-                    if(endType == EndType.UNTIL && selectedToDate!.isBefore(selectedFromDate)){
+                  if (frequencyType == FrequencyType.DAILY ||
+                      frequencyType == FrequencyType.MONTHLY ||
+                      frequencyType == FrequencyType.WEEKLY ||
+                      frequencyType == FrequencyType.YEARLY) {
+                    if (endType == EndType.UNTIL &&
+                        selectedToDate!.isBefore(selectedFromDate)) {
                       showDialog(
                         context: context,
                         builder: (BuildContext context) {
                           return AlertDialog(
                             title: Text('Alret'),
-                            content: Text('To date must greater than from date'),
+                            content:
+                                Text('To date must greater than from date'),
                             actions: [
                               TextButton(
                                 onPressed: () {
@@ -767,13 +840,13 @@ class _AddBillPageState extends State<AddBillPage> {
                       );
                       return;
                     }
-                    if(endType == EndType.TIMES && timeNumber.text.isEmpty){
+                    if (endType == EndType.TIMES && timeNumber.text.isEmpty || int.parse(timeNumber.text.replaceAll(',', '')) <= 0) {
                       showDialog(
                         context: context,
                         builder: (BuildContext context) {
                           return AlertDialog(
                             title: Text('Alret'),
-                            content: Text('Times is required!'),
+                            content: Text('Times is required! and time times must greater than 0!'),
                             actions: [
                               TextButton(
                                 onPressed: () {
@@ -791,12 +864,13 @@ class _AddBillPageState extends State<AddBillPage> {
                   //
                   Recurrence recurrence = Recurrence(
                       frequency: "repeat ${frequencyType.name}",
-                      every: int.parse(everyDailyNumber.text),
+                      every:
+                          int.parse(everyDailyNumber.text.replaceAll(',', '')),
                       startDate: selectedFromDate,
                       endType: endType,
                       endDate: selectedToDate,
                       times: timeNumber.text.isNotEmpty
-                          ? int.parse(timeNumber.text)
+                          ? int.parse(timeNumber.text.replaceAll(',', ''))
                           : 0,
                       monthOption: monthOption,
                       dayOfWeek: selectedDay!.toUpperCase(),
@@ -807,7 +881,8 @@ class _AddBillPageState extends State<AddBillPage> {
                   Bill bill = new Bill(
                       billId: 0,
                       userId: 0,
-                      amount: double.parse(moneyNumber.text),
+                      amount:
+                          double.parse(moneyNumber.text.replaceAll(',', '')),
                       recurrence: recurrence,
                       categoryId: categoryID,
                       walletId: walletID);
@@ -869,11 +944,11 @@ class _AddBillPageState extends State<AddBillPage> {
     dayOfWeek = DayOfWeek.MONDAY;
   }
 
-  void setDateTime(EndType endType,int day) { 
+  void setDateTime(EndType endType, int day) {
     if (endType == EndType.UNTIL) {
       selectedToDate = DateTime.now().add(Duration(days: day));
     }
-    if (endType == EndType.TIMES) {
+    else{
       selectedToDate = null;
     }
   }

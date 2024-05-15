@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:pj4mb/models/Bill/Bill.dart';
 import 'package:pj4mb/models/Bill/DayOfWeeks.dart';
@@ -11,6 +12,7 @@ import 'package:pj4mb/models/Recurrence/Recurrence.dart';
 import 'package:pj4mb/models/TransactionRecurrence/TransactionRecurrence.dart';
 import 'package:pj4mb/models/Wallet/Wallet.dart';
 import 'package:pj4mb/screens/Account/Category.dart';
+import 'package:pj4mb/screens/ThousandsSeparatorInputFormatter.dart';
 import 'package:pj4mb/services/Bill_service.dart';
 import 'package:pj4mb/services/Category_service.dart';
 import 'package:pj4mb/services/TransactionRecurrence_service.dart';
@@ -100,9 +102,9 @@ class _UpdateTransactionRecurrencePageState extends State<UpdateTransactionRecur
    
     valueWallet = WalletService().GetWallet();
     loadDefaultData();
-    moneyNumber.text = widget.transactionRecurrence.amount.toString();
+    moneyNumber.text =  NumberFormat('#,##0','en_US').format(widget.transactionRecurrence.amount);
     categoryID = widget.transactionRecurrence.categoryId;
-    everyDailyNumber.text = widget.transactionRecurrence.recurrence.every.toString();
+    everyDailyNumber.text = NumberFormat('#,##0','en_US').format(widget.transactionRecurrence.recurrence.every);
     if(widget.transactionRecurrence.recurrence.frequency != null){
       frequencyType = FrequencyType.values.firstWhere((e) =>
         e.toString() == 'FrequencyType.${widget.transactionRecurrence.recurrence.frequency}');
@@ -123,7 +125,7 @@ class _UpdateTransactionRecurrencePageState extends State<UpdateTransactionRecur
    }
    
     
-    timeNumber.text = widget.transactionRecurrence.recurrence.times.toString();
+    timeNumber.text = NumberFormat('#,##0','en_US').format(widget.transactionRecurrence.recurrence.times);
     selectedToDate = widget.transactionRecurrence.recurrence.endDate;
     selectedFromDate = widget.transactionRecurrence.recurrence.startDate;
   }
@@ -261,6 +263,10 @@ class _UpdateTransactionRecurrencePageState extends State<UpdateTransactionRecur
                     ),
                     Expanded(
                       child: TextField(
+                         inputFormatters: [
+                        FilteringTextInputFormatter.digitsOnly,
+                        ThousandsSeparatorInputFormatter(),
+                      ],
                         controller: moneyNumber,
                         keyboardType: TextInputType.number,
                       ),
@@ -379,6 +385,10 @@ class _UpdateTransactionRecurrencePageState extends State<UpdateTransactionRecur
                             SizedBox(
                               width: 50,
                               child: TextField(
+                                 inputFormatters: [
+                        FilteringTextInputFormatter.digitsOnly,
+                        ThousandsSeparatorInputFormatter(),
+                      ],
                                 controller: everyDailyNumber,
                                 keyboardType: TextInputType.number,
                               ),
@@ -412,7 +422,7 @@ class _UpdateTransactionRecurrencePageState extends State<UpdateTransactionRecur
                               value: endType,
                               onChanged: (EndType? newValue) {
                                 setState(() {
-                                  setDateTime(newValue!,int.parse(everyDailyNumber.text));
+                                  setDateTime(newValue!,int.parse(everyDailyNumber.text.replaceAll(',', '')));
                                   endType = newValue!;
                                 });
                               },
@@ -445,6 +455,10 @@ class _UpdateTransactionRecurrencePageState extends State<UpdateTransactionRecur
                               SizedBox(
                                 width: 50,
                                 child: TextField(
+                                   inputFormatters: [
+                        FilteringTextInputFormatter.digitsOnly,
+                        ThousandsSeparatorInputFormatter(),
+                      ],
                                   controller: timeNumber,
                                   keyboardType: TextInputType.number,
                                 ),
@@ -464,6 +478,10 @@ class _UpdateTransactionRecurrencePageState extends State<UpdateTransactionRecur
                             SizedBox(
                               width: 50,
                               child: TextField(
+                                 inputFormatters: [
+                        FilteringTextInputFormatter.digitsOnly,
+                        ThousandsSeparatorInputFormatter(),
+                      ],
                                 controller: everyDailyNumber,
                                 keyboardType: TextInputType.number,
                               ),
@@ -512,7 +530,7 @@ class _UpdateTransactionRecurrencePageState extends State<UpdateTransactionRecur
                               onChanged: (EndType? newValue) {
                                 print(newValue);
                                 setState(() {
-                                  setDateTime(newValue!,int.parse(everyDailyNumber.text) * 7);
+                                  setDateTime(newValue!,int.parse(everyDailyNumber.text.replaceAll(',', '')) * 7);
                                   endType = newValue!;
                                 });
                               },
@@ -546,6 +564,10 @@ class _UpdateTransactionRecurrencePageState extends State<UpdateTransactionRecur
                               SizedBox(
                                 width: 50,
                                 child: TextField(
+                                   inputFormatters: [
+                        FilteringTextInputFormatter.digitsOnly,
+                        ThousandsSeparatorInputFormatter(),
+                      ],
                                   controller: timeNumber,
                                   keyboardType: TextInputType.number,
                                 ),
@@ -565,6 +587,10 @@ class _UpdateTransactionRecurrencePageState extends State<UpdateTransactionRecur
                             SizedBox(
                               width: 50,
                               child: TextField(
+                                 inputFormatters: [
+                        FilteringTextInputFormatter.digitsOnly,
+                        ThousandsSeparatorInputFormatter(),
+                      ],
                                 controller: everyDailyNumber,
                                 keyboardType: TextInputType.number,
                               ),
@@ -612,7 +638,7 @@ class _UpdateTransactionRecurrencePageState extends State<UpdateTransactionRecur
                               value: endType,
                               onChanged: (EndType? newValue) {
                                 setState(() {
-                                  setDateTime(newValue!,31 * int.parse(everyDailyNumber.text) + 1);
+                                  setDateTime(newValue!,31 * int.parse(everyDailyNumber.text.replaceAll(',', '')) + 1);
                                   endType = newValue!;
                                 });
                               },
@@ -645,6 +671,10 @@ class _UpdateTransactionRecurrencePageState extends State<UpdateTransactionRecur
                               SizedBox(
                                 width: 50,
                                 child: TextField(
+                                   inputFormatters: [
+                        FilteringTextInputFormatter.digitsOnly,
+                        ThousandsSeparatorInputFormatter(),
+                      ],
                                   controller: timeNumber,
                                   keyboardType: TextInputType.number,
                                 ),
@@ -664,6 +694,10 @@ class _UpdateTransactionRecurrencePageState extends State<UpdateTransactionRecur
                             SizedBox(
                               width: 50,
                               child: TextField(
+                                 inputFormatters: [
+                        FilteringTextInputFormatter.digitsOnly,
+                        ThousandsSeparatorInputFormatter(),
+                      ],
                                 controller: everyDailyNumber,
                                 keyboardType: TextInputType.number,
                               ),
@@ -697,7 +731,7 @@ class _UpdateTransactionRecurrencePageState extends State<UpdateTransactionRecur
                               value: endType,
                               onChanged: (EndType? newValue) {
                                 setState(() {
-                                  setDateTime(newValue!,365 * int.parse(everyDailyNumber.text));
+                                  setDateTime(newValue!,365 * int.parse(everyDailyNumber.text.replaceAll(',', '')));
                                   endType = newValue!;
                                 });
                               },
@@ -730,6 +764,10 @@ class _UpdateTransactionRecurrencePageState extends State<UpdateTransactionRecur
                               SizedBox(
                                 width: 50,
                                 child: TextField(
+                                   inputFormatters: [
+                        FilteringTextInputFormatter.digitsOnly,
+                        ThousandsSeparatorInputFormatter(),
+                      ],
                                   controller: timeNumber,
                                   keyboardType: TextInputType.number,
                                 ),
@@ -801,7 +839,7 @@ class _UpdateTransactionRecurrencePageState extends State<UpdateTransactionRecur
                       );
                       return;
                     }
-                    if (everyDailyNumber.text.isEmpty || int.parse(everyDailyNumber.text) <= 0 || int.parse(everyDailyNumber.text) > 30) {
+                    if (everyDailyNumber.text.isEmpty || int.parse(everyDailyNumber.text.replaceAll(',', '')) <= 0 || int.parse(everyDailyNumber.text.replaceAll(',', '')) > 30) {
                       showDialog(
                         context: context,
                         builder: (BuildContext context) {
@@ -863,7 +901,7 @@ class _UpdateTransactionRecurrencePageState extends State<UpdateTransactionRecur
                         );
                         return;
                       }
-                      if(endType == EndType.TIMES && int.parse(timeNumber.text) <= 0){
+                      if(endType == EndType.TIMES && timeNumber.text.isEmpty || int.parse(timeNumber.text.replaceAll(',', '')) <= 0){
                         showDialog(
                           context: context,
                           builder: (BuildContext context) {
@@ -886,12 +924,12 @@ class _UpdateTransactionRecurrencePageState extends State<UpdateTransactionRecur
                     }
                     Recurrence recurrence = Recurrence(
                         frequency: "repeat ${frequencyType.name}",
-                        every: int.parse(everyDailyNumber.text),
+                        every: int.parse(everyDailyNumber.text.replaceAll(',', '')),
                         startDate: selectedFromDate,
                         endType: endType,
                         endDate: selectedToDate,
                         times: timeNumber.text.isNotEmpty
-                            ? int.parse(timeNumber.text)
+                            ? int.parse(timeNumber.text.replaceAll(',', ''))
                             : 0,
                         monthOption: monthOption,
                         dayOfWeek: selectedDay!.toUpperCase(),
@@ -902,7 +940,7 @@ class _UpdateTransactionRecurrencePageState extends State<UpdateTransactionRecur
                     TransactionRecurrence transRecu = TransactionRecurrence(
                         transactionRecurringId: widget.transactionRecurrence.transactionRecurringId,
                         userId: 0,
-                        amount: double.parse(moneyNumber.text),
+                        amount: double.parse(moneyNumber.text.replaceAll(',', '')),
                         recurrence: recurrence,
                         categoryId: categoryID,
                         walletId: walletID, notes: '');
@@ -969,7 +1007,7 @@ class _UpdateTransactionRecurrencePageState extends State<UpdateTransactionRecur
     if (endType == EndType.UNTIL) {
       selectedToDate = DateTime.now().add(Duration(days: day));
     }
-    if (endType == EndType.TIMES) {
+    else {
       selectedToDate = null;
     }
   }

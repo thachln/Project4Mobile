@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:pj4mb/models/Budget/Budget.dart';
 import 'package:pj4mb/models/Budget/ListDateTime.dart';
 import 'package:pj4mb/models/Category/Category.dart';
 import 'package:pj4mb/models/Wallet/Wallet.dart';
 import 'package:pj4mb/screens/Account/MyWallet.dart';
+import 'package:pj4mb/screens/ThousandsSeparatorInputFormatter.dart';
 import 'package:pj4mb/services/Budget_service.dart';
 
 import '../Account/Category.dart';
@@ -92,6 +94,10 @@ class _AddBudgetPageState extends State<AddBudgetPage> {
                 Expanded(
                   child: TextField(
                     controller: amountController,
+                     inputFormatters: [
+                        FilteringTextInputFormatter.digitsOnly,
+                        ThousandsSeparatorInputFormatter(),
+                      ],
                     keyboardType: TextInputType.number,
                     decoration: InputDecoration(hintText: 'Amount'),
                   ),
@@ -125,7 +131,7 @@ class _AddBudgetPageState extends State<AddBudgetPage> {
                     context: context,
                     builder: (BuildContext context) {
                       return AlertDialog(
-                        title: Text('Thông báo'),
+                        title: Text('Arlet'),
                         content: Text('Please choose category!'),
                         actions: [
                           TextButton(
@@ -145,7 +151,7 @@ class _AddBudgetPageState extends State<AddBudgetPage> {
                     context: context,
                     builder: (BuildContext context) {
                       return AlertDialog(
-                        title: Text('Thông báo'),
+                        title: Text('Arlet'),
                         content: Text('Please enter amount!'),
                         actions: [
                           TextButton(
@@ -160,9 +166,28 @@ class _AddBudgetPageState extends State<AddBudgetPage> {
                   );
                   return;
                 }
-                
+                if(double.parse(amountController.text.replaceAll(',', '')) <= 0){
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: Text('Arlet'),
+                        content: Text('Amount must be greater than 0!'),
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: Text('OK'),
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                  return;
+                }
                 Budget budget = new Budget(
-                  threshold_amount: double.parse(amountController.text),
+                  threshold_amount: double.parse(amountController.text.replaceAll(',', '')),
                   categoryId: categoryId,
                   userId: 0,
                   period_start: selectedDateStart,
@@ -176,7 +201,7 @@ class _AddBudgetPageState extends State<AddBudgetPage> {
                     context: context,
                     builder: (BuildContext context) {
                       return AlertDialog(
-                        title: Text('Thông báo'),
+                        title: Text('Arlet'),
                         content: Text('Insert success!'),
                         actions: [
                           TextButton(
@@ -195,7 +220,7 @@ class _AddBudgetPageState extends State<AddBudgetPage> {
                     context: context,
                     builder: (BuildContext context) {
                       return AlertDialog(
-                        title: Text('Thông báo'),
+                        title: Text('Arlet'),
                         content: Text('Error: Insert fail! ${result.message}'),
                         actions: [
                           TextButton(
@@ -376,7 +401,7 @@ class _AddBudgetPageState extends State<AddBudgetPage> {
                           context: context,
                           builder: (BuildContext context) {
                             return AlertDialog(
-                              title: Text('Thông báo'),
+                              title: Text('Arlet'),
                               content: Text(
                                   'Please choose end date after date start!'),
                               actions: [

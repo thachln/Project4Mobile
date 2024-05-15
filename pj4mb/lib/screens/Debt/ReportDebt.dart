@@ -55,8 +55,9 @@ class _ReportDebtState extends State<ReportDebt> {
     Colors.green,
     Colors.red,
     Colors.purple,
-    Colors.indigo,
-    Colors.pink
+    Colors.pink,
+    Colors.pink,
+    Colors.yellow
   ];
 
   void getDataDetail() async {
@@ -212,7 +213,7 @@ class _ReportDebtState extends State<ReportDebt> {
                                       " | " +
                                       debtData.number.toString(),
                                   style: TextStyle(
-                                      color: colors[index % colors.length],
+                                      color: colors[index],
                                       fontFamily: 'RobotoVietnamese')),
                               children: [
                                 ListView.builder(
@@ -231,7 +232,7 @@ class _ReportDebtState extends State<ReportDebt> {
                                         trailing: Text(
                                           detailData[index].amount.toString(),
                                           style: TextStyle(
-                                              color: colors[index % colors.length]),
+                                              color: colors[index]),
                                         ),
                                       );
                                     })
@@ -244,7 +245,7 @@ class _ReportDebtState extends State<ReportDebt> {
               ],
             );
           } else {
-            return Text("Không có dữ liệu.");
+            return Text("No data.");
           }
         },
       ),
@@ -257,7 +258,7 @@ class _ReportDebtState extends State<ReportDebt> {
       double percentage = item.number.toDouble() * 100 / totalNumber;
       String twoDigitsPercentage = percentage.toStringAsFixed(2);
       return PieChartSectionData(
-        color: colors[index % colors.length],
+        color: colors[index],
         value: double.parse(twoDigitsPercentage),
         title: '${double.parse(twoDigitsPercentage)}%',
         radius: 50.0,

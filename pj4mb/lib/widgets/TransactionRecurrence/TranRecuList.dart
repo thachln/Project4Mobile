@@ -13,7 +13,7 @@ class TranRecuList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final formatter = NumberFormat("#,###");
-    return Container(
+    return Expanded(
             child: ListView.builder(
                 itemCount: listTranRecu.length,
                padding: const EdgeInsets.all(8),

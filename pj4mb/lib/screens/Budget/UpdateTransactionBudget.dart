@@ -297,7 +297,7 @@ class _UpdateTransactionBudgetPageState extends State<UpdateTransactionBudgetPag
                       context: context,
                       builder: (BuildContext context) {
                         return AlertDialog(
-                          title: Text('Thông báo'),
+                          title: Text('Arlet'),
                           content: Text('Update success!'),
                           actions: [
                             TextButton(
@@ -316,7 +316,7 @@ class _UpdateTransactionBudgetPageState extends State<UpdateTransactionBudgetPag
                       context: context,
                       builder: (BuildContext context) {
                         return AlertDialog(
-                          title: Text('Thông báo'),
+                          title: Text('Arlet'),
                           content: Text('${result.message}'),
                           actions: [
                             TextButton(

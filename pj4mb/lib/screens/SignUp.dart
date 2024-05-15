@@ -91,23 +91,119 @@ class _LoginNextPageState extends State<SignUpPage> {
               width: double.infinity,
               child: ElevatedButton(
                 onPressed: () async {
+                  if(username.text.isEmpty)
+                  {
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: Text('Arlet'),
+                          content: Text('Username is required'),
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                              child: Text('OK'),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                    return;
+                  }
+                  if(email.text.isEmpty){
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: Text('Arlet'),
+                          content: Text('Email is required'),
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                              child: Text('OK'),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                    return;
+                  }
+                  if(password.text.isEmpty){
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: Text('Arlet'),
+                          content: Text('Password is required'),
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                              child: Text('OK'),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                    return;
+                  }
+                  if(confirmPassword.text.isEmpty){
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: Text('Arlet'),
+                          content: Text('Confirm Password is required'),
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                              child: Text('OK'),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                    return;
+                  } 
+                  if(confirmPassword.text != password.text){
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: Text('Arlet'),
+                          content: Text('Password and Confirm Password are not the same'),
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                              child: Text('OK'),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                    return;
+                  }
                   buildShowDialog(context);
                   var result = await LoginService().SignUp(email.text,
                       password.text, username.text, confirmPassword.text);
                   Navigator.of(context).pop();
-                  print(result.status);
                   if (result.status == 200) {
                     showDialog(
                       context: context,
                       builder: (BuildContext context) {
                         return AlertDialog(
-                          title: Text('Thông báo'),
+                          title: Text('Arlet'),
                           content: Text(result.message),
-                          actions: [
-                            TextButton(
-                              onPressed: () {},
-                              child: Text('Resend'),
-                            ),
+                          actions: [                          
                             TextButton(
                               onPressed: () {
                                 Navigator.pushAndRemoveUntil(
@@ -127,7 +223,7 @@ class _LoginNextPageState extends State<SignUpPage> {
                       context: context,
                       builder: (BuildContext context) {
                         return AlertDialog(
-                          title: Text('Thông báo'),
+                          title: Text('Arlet'),
                           content: Text(result.message),
                           actions: [
                             TextButton(
@@ -146,12 +242,12 @@ class _LoginNextPageState extends State<SignUpPage> {
                   backgroundColor: MaterialStateProperty.all(Colors.green),
                   foregroundColor: MaterialStateProperty.all(Colors.white),
                 ),
-                child: Text('Đăng ký'),
+                child: Text('Sign Up'),
               ),
             ),
             ElevatedButton(onPressed: () {
               Navigator.push(context, MaterialPageRoute(builder: (context) => LoginPage()));
-            }, child: Text('Đăng nhập'))
+            }, child: Text('Login'))
           ]),
         ),
       ),

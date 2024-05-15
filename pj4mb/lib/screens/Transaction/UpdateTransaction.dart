@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
 import 'package:pj4mb/models/Category/Category.dart';
@@ -10,6 +11,7 @@ import 'package:pj4mb/models/SavingGoal/TransactionWithSaving.dart';
 import 'package:pj4mb/models/Transaction/Transaction.dart';
 import 'package:pj4mb/models/Wallet/Wallet.dart';
 import 'package:pj4mb/screens/Account/Category.dart';
+import 'package:pj4mb/screens/ThousandsSeparatorInputFormatter.dart';
 import 'package:pj4mb/services/Category_service.dart';
 import 'package:pj4mb/services/SavingGoal_service.dart';
 import 'package:pj4mb/services/Transacsion_service.dart';
@@ -54,7 +56,7 @@ class _UpdateTransactionPageState extends State<UpdateTransactionPage> {
   void initState() {
     super.initState();
     valueWallet = WalletService().GetWallet();
-    moneyNumber.text = widget.trans.amount.toString();
+    moneyNumber.text = NumberFormat('#,##0','en_US').format(widget.trans.amount);
     noteText.text = widget.trans.notes != null ? widget.trans.notes! : '';
     categoryID = widget.cate.categoryID;
     categoryName = widget.cate.name;
@@ -204,28 +206,7 @@ class _UpdateTransactionPageState extends State<UpdateTransactionPage> {
                             readOnly: true,
                             controller: TextEditingController(text: wallet.walletName),
                           );
-                          // return DropdownButtonFormField<Wallet>(
-                          //   decoration: InputDecoration(
-                          //     hintText: 'Wallet',
-                          //   ),
-                          //   value: wallet,
-                          //   onChanged: (Wallet? value) {
-                          //     if(value!.walletTypeID == 3){
-                          //       loadSaving(value.walletID);
-                          //     }
-                          //     setState(() {
-                          //       walletID = value!.walletID;
-                          //       walletName = value!.walletName;
-                                
-                          //     });
-                          //   },
-                          //   items: listWallet.map((Wallet value) {
-                          //     return DropdownMenuItem<Wallet>(
-                          //       value: value,
-                          //       child: Text(value.walletName),
-                          //     );
-                          //   }).toList(),
-                          // );
+                          
                         }
                       },
                     ),
@@ -251,23 +232,7 @@ class _UpdateTransactionPageState extends State<UpdateTransactionPage> {
                             readOnly: true,
                             controller: TextEditingController(text: selectedSaving!.name),
                           );
-                          // return DropdownButtonFormField<SavingGoal>(
-                          //     decoration: InputDecoration(
-                          //       hintText: 'Select goal',
-                          //     ),
-                          //     value: selectedSaving,
-                          //     onChanged: (SavingGoal? value) {
-                          //       setState(() {
-                          //         goalId = value!.id;
-                          //       });
-                          //     },
-                          //     items: snapshot.data!.map((SavingGoal value) {
-                          //       return DropdownMenuItem<SavingGoal>(
-                          //         value: value,
-                          //         child: Text(value.name),
-                          //       );
-                          //     }).toList(),
-                          //   );
+                         
                         }
                       },
                     ),
@@ -282,6 +247,11 @@ class _UpdateTransactionPageState extends State<UpdateTransactionPage> {
                   ),
                   Expanded(
                     child: TextField(
+                       inputFormatters: [
+                        FilteringTextInputFormatter.digitsOnly,
+                        ThousandsSeparatorInputFormatter(),
+                        LengthLimitingTextInputFormatter(14)
+                      ],
                       controller: moneyNumber,
                       keyboardType: TextInputType.number,
                     ),
@@ -332,8 +302,10 @@ class _UpdateTransactionPageState extends State<UpdateTransactionPage> {
                   Expanded(
                     child: TextField(
                       controller: noteText,
+                      maxLength: 100,
+                      maxLines: 3,
                       keyboardType: TextInputType.number,
-                      decoration: InputDecoration(hintText: 'Thêm ghi chú'),
+                      decoration: InputDecoration(hintText: 'Note'),
                     ),
                   )
                 ],
@@ -362,12 +334,92 @@ class _UpdateTransactionPageState extends State<UpdateTransactionPage> {
               
               ElevatedButton(
                 onPressed: () async {
+                  if(walletID == 0){
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: Text('Alert'),
+                            content: Text('Please select wallet!'),
+                            actions: [
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                                child: Text('OK'),
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                      return;
+                    }
+                    if(categoryID == 0){
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: Text('Alert'),
+                            content: Text('Please select category!'),
+                            actions: [
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                                child: Text('OK'),
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                      return;
+                    }
+                    if(moneyNumber.text.isEmpty){
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: Text('Alert'),
+                            content: Text('Please enter money!'),
+                            actions: [
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                                child: Text('OK'),
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                      return;
+                    }
+                    if(double.parse(moneyNumber.text.replaceAll(',', '')) <= 0){
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: Text('Alert'),
+                            content: Text('Money must be greater than 0!'),
+                            actions: [
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                                child: Text('OK'),
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                      return;
+                    }
                   Transaction trans = new Transaction(
                       transactionId: widget.trans.transactionId,
                       userId: widget.trans.userId,
                       walletId: walletID,
                       categoryId: categoryID,
-                      amount: double.parse(moneyNumber.text),
+                      amount: double.parse(moneyNumber.text.replaceAll(',', '')),
                       notes: noteText.text,
                       transactionDate: selectedDate, savingGoalId: goalId);
                   var result =
@@ -377,7 +429,7 @@ class _UpdateTransactionPageState extends State<UpdateTransactionPage> {
                       context: context,
                       builder: (BuildContext context) {
                         return AlertDialog(
-                          title: Text('Thông báo'),
+                          title: Text('Arlet'),
                           content: Text('Update success!'),
                           actions: [
                             TextButton(
@@ -396,7 +448,7 @@ class _UpdateTransactionPageState extends State<UpdateTransactionPage> {
                       context: context,
                       builder: (BuildContext context) {
                         return AlertDialog(
-                          title: Text('Thông báo'),
+                          title: Text('Arlet'),
                           content: Text('${result.message}'),
                           actions: [
                             TextButton(

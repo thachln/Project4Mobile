@@ -108,8 +108,8 @@ class _TransactionsScreenState extends State<TransactionsScreen>
                     // Đặt index của tab hiện tại
                     onTap: (index) {},
                     tabs: [
-                      Tab(text: 'Tháng trước'),
-                      Tab(text: 'Tháng này'),
+                      Tab(text: 'Last Month'),
+                      Tab(text: 'This Month'),
                     ],
                   ),
                   Expanded(

@@ -1,11 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
 import 'package:pj4mb/models/Category/Cat_Icon.dart';
 import 'package:pj4mb/models/Category/CateTypeENum.dart';
 import 'package:pj4mb/models/Category/Category.dart';
 import 'package:pj4mb/models/Wallet/Wallet.dart';
 import 'package:pj4mb/models/Wallet/WalletType.dart';
 import 'package:pj4mb/screens/Account/Category.dart';
+import 'package:pj4mb/screens/ThousandsSeparatorInputFormatter.dart';
 import 'package:pj4mb/services/Category_service.dart';
 import 'package:pj4mb/services/Wallet_service.dart';
 
@@ -49,6 +52,22 @@ class _AddWalletPageState extends State<AddWalletPage> {
     'assets/icon/travel.png',
     'assets/icon/waterbill.png'
   ];
+
+  static const separator = '.'; // Sử dụng dấu chấm (.) như một dấu phân tách
+
+  @override
+  TextEditingValue formatEditUpdate(
+      TextEditingValue oldValue, TextEditingValue newValue) {
+    String newText = newValue.text.replaceAll(separator, '');
+    newText = NumberFormat("#,###")
+        .format(int.parse(newText))
+        .replaceAll(',', separator);
+
+    return newValue.copyWith(
+      text: newText,
+      selection: TextSelection.collapsed(offset: newText.length),
+    );
+  }
 
   @override
   void initState() {
@@ -105,6 +124,10 @@ class _AddWalletPageState extends State<AddWalletPage> {
                   Expanded(
                     child: TextField(
                       controller: balance,
+                      inputFormatters: [
+                        FilteringTextInputFormatter.digitsOnly,
+                        ThousandsSeparatorInputFormatter(),
+                      ],
                       keyboardType: TextInputType.number,
                       decoration: InputDecoration(hintText: 'Balace'),
                     ),
@@ -183,8 +206,7 @@ class _AddWalletPageState extends State<AddWalletPage> {
                     items: walletTypeId.text == "3"
                         ? <DropdownMenuItem<String>>[
                             DropdownMenuItem<String>(
-                              value:
-                                  'VND', 
+                              value: 'VND',
                               child: Text('VND'),
                             ),
                           ]
@@ -194,59 +216,60 @@ class _AddWalletPageState extends State<AddWalletPage> {
                               child: Text('VND'),
                             ),
                             DropdownMenuItem<String>(
-                              value: 'USD', 
+                              value: 'USD',
                               child: Text('USD'),
                             ),
                           ],
                   )
                 ],
               ),
-              if(walletTypeId.text == "2")...[
+              if (walletTypeId.text == "2") ...[
                 Row(
-                children: [
-                  Icon(Icons.abc),
-                  SizedBox(
-                    width: 10,
-                  ),
-                  Expanded(
-                    child: TextField(
-                      controller: bankName,
-                      keyboardType: TextInputType.text,
-                      decoration: InputDecoration(hintText: 'Bank Name'),
+                  children: [
+                    Icon(Icons.abc),
+                    SizedBox(
+                      width: 10,
                     ),
-                  )
-                ],
-              ),
-              SizedBox(
-                height: 25,
-              ),
-              Row(
-                children: [
-                  Icon(Icons.abc),
-                  SizedBox(
-                    width: 10,
-                  ),
-                  Expanded(
-                    child: TextField(
-                      controller: bankNumber,
-                      keyboardType: TextInputType.number,
-                      decoration: InputDecoration(hintText: 'Bank Number'),
+                    Expanded(
+                      child: TextField(
+                        controller: bankName,
+                        keyboardType: TextInputType.text,
+                        decoration: InputDecoration(hintText: 'Bank Name'),
+                      ),
+                    )
+                  ],
+                ),
+                SizedBox(
+                  height: 25,
+                ),
+                Row(
+                  children: [
+                    Icon(Icons.abc),
+                    SizedBox(
+                      width: 10,
                     ),
-                  )
-                ],
-              ),
+                    Expanded(
+                      child: TextField(
+                        controller: bankNumber,
+                        keyboardType: TextInputType.number,
+                        decoration: InputDecoration(hintText: 'Bank Number'),
+                      ),
+                    )
+                  ],
+                ),
               ],
               ElevatedButton(
                 onPressed: () async {
                   Wallet wallet = Wallet(
                     walletID: 0,
                     walletName: walletName.text,
-                    balance: double.parse(balance.text),
+                    balance: double.parse(balance.text.replaceAll(',','')),
                     walletTypeID: int.parse(walletTypeId.text),
                     currency: dropdownValue,
                     userId: 0,
                     bankName: bankName.text.isEmpty ? '' : bankName.text,
-                    bankAccountNum: bankNumber.text.isEmpty ? '' : bankNumber.text,
+                    bankAccountNum:
+                        bankNumber.text.isEmpty ? '' : bankNumber.text,
                   );
                   var result = await WalletService().InsertWallet(wallet);
                   if (result) {
@@ -254,7 +277,7 @@ class _AddWalletPageState extends State<AddWalletPage> {
                       context: context,
                       builder: (BuildContext context) {
                         return AlertDialog(
-                          title: Text('Thông báo'),
+                          title: Text('Arlet'),
                           content: Text('Insert success!'),
                           actions: [
                             TextButton(
@@ -273,7 +296,7 @@ class _AddWalletPageState extends State<AddWalletPage> {
                       context: context,
                       builder: (BuildContext context) {
                         return AlertDialog(
-                          title: Text('Thông báo'),
+                          title: Text('Arlet'),
                           content: Text('Error: Insert fail!'),
                           actions: [
                             TextButton(

@@ -24,7 +24,10 @@ class _IntroducePageState extends State<IntroducePage> {
     return Scaffold(
         appBar: AppBar(
             title: Row(
-          children: [Icon(Icons.money), SizedBox(width: 8), Text('Finance Tracking')],
+          children: [Container(
+            width: 50,
+            height: 50,
+            child: Image.asset('assets/images/logo.png'),), SizedBox(width: 8), Text('Finance Tracking')],
         )),
         body: Padding(
           padding: const EdgeInsets.all(46.0),
@@ -79,12 +82,12 @@ class _IntroducePageState extends State<IntroducePage> {
                     foregroundColor: MaterialStateProperty.all(
                         Colors.white), 
                   ),
-                  child: Text('Đăng ký'),
+                  child: Text('Sign Up'),
                 ),
               ),
               ElevatedButton(onPressed: () {
                 Navigator.push(context, MaterialPageRoute(builder: (context) => LoginPage()));
-              }, child: Text('Đăng nhập'))
+              }, child: Text('Login'))
             ],
           ),
         ));

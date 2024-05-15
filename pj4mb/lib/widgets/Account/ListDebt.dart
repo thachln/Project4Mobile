@@ -17,6 +17,7 @@ class ListDebt extends StatefulWidget {
 }
 
 class _ListDebtState extends State<ListDebt> {
+  final formatter = NumberFormat("#,###");
   @override
   Widget build(BuildContext context) {
     return Expanded(
@@ -32,7 +33,7 @@ class _ListDebtState extends State<ListDebt> {
                 children: [
                   GestureDetector(
                     onTap: () async {
-                      if (widget.flag == 0) {
+                      if (debt.isPaid == false) {
                         var result = await Navigator.push(
                             context,
                             MaterialPageRoute(
@@ -49,7 +50,7 @@ class _ListDebtState extends State<ListDebt> {
                             MaterialPageRoute(
                                 builder: (context) => UpdateDebtPage(
                                       debt: debt,
-                                      flag: 0,
+                                      flag: 1,
                                     )));
                       }
                     },
@@ -171,9 +172,9 @@ class _ListDebtState extends State<ListDebt> {
                                         child: Text('Mark as paid'),
                                       )),
                                   SizedBox(width: 10),
-                                  Text(debt.amount.toString() + " VND"),
+                                  Text(formatter.format(debt.amount) + " VND"),
                                 ])
-                              : Text(debt.amount.toString() + " VND")),
+                              : Text(formatter.format(debt.amount) + " VND")),
                     ),
                   )
                 ],

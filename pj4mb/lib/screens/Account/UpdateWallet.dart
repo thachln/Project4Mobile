@@ -1,11 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
 import 'package:pj4mb/models/Category/Cat_Icon.dart';
 import 'package:pj4mb/models/Category/CateTypeENum.dart';
 import 'package:pj4mb/models/Category/Category.dart';
 import 'package:pj4mb/models/Wallet/Wallet.dart';
 import 'package:pj4mb/models/Wallet/WalletType.dart';
 import 'package:pj4mb/screens/Account/Category.dart';
+import 'package:pj4mb/screens/ThousandsSeparatorInputFormatter.dart';
 import 'package:pj4mb/services/Category_service.dart';
 import 'package:pj4mb/services/Wallet_service.dart';
 
@@ -75,7 +78,7 @@ class _UpdateWalletPageState extends State<UpdateWalletPage> {
   @override
   Widget build(BuildContext context) {
     walletName.text = widget.wallet.walletName;
-    balance.text = widget.wallet.balance.toString();
+    balance.text = NumberFormat('#,##0','en_US').format(widget.wallet.balance);
     currency.text = widget.wallet.currency;
     bankName.text = widget.wallet.bankName;
     bankNumber.text = widget.wallet.bankAccountNum;
@@ -121,6 +124,10 @@ class _UpdateWalletPageState extends State<UpdateWalletPage> {
                   child: TextField(
                     readOnly: widget.wallet.walletTypeID == 3 ? true : false,
                     controller: balance,
+                     inputFormatters: [
+                        FilteringTextInputFormatter.digitsOnly,
+                        ThousandsSeparatorInputFormatter(),
+                      ],
                     keyboardType: TextInputType.number,
                     decoration: InputDecoration(hintText: 'Balace Name'),
                   ),
@@ -151,25 +158,7 @@ class _UpdateWalletPageState extends State<UpdateWalletPage> {
                                 element.TypeID == widget.wallet.walletTypeID);
                         walletType.text = selectedWalletType!.TypeName;
                         walletTypeId.text =
-                            selectedWalletType!.TypeID.toString();
-                        // return DropdownButtonFormField<WalletType>(
-                        //   decoration: InputDecoration(
-                        //     hintText: 'Wallet Type',
-                        //   ),
-                        //   value: selectedWalletType,
-                        //   onChanged: (WalletType? value) {
-                        //     setState(() {
-                        //       walletType.text = value!.TypeName;
-                        //       walletTypeId.text = value!.TypeID.toString();
-                        //     });
-                        //   },
-                        //   items: snapshot.data!.map((WalletType value) {
-                        //     return DropdownMenuItem<WalletType>(
-                        //       value: value,
-                        //       child: Text(value.TypeName),
-                        //     );
-                        //   }).toList(),
-                        // );
+                            selectedWalletType!.TypeID.toString();                     
                         walletType.text = snapshot.data!.where((element) => element.TypeID == widget.wallet.walletTypeID).first.TypeName;
                         return TextField(
                             readOnly: true,
@@ -241,7 +230,7 @@ class _UpdateWalletPageState extends State<UpdateWalletPage> {
                 Wallet wallet = Wallet(
                   walletID: widget.wallet.walletID,
                   walletName: walletName.text,
-                  balance: double.parse(balance.text),
+                  balance: double.parse(balance.text.replaceAll(',','')),
                   walletTypeID: int.parse(walletTypeId.text),
                   currency: dropdownValue,
                   userId: 0,
@@ -256,7 +245,7 @@ class _UpdateWalletPageState extends State<UpdateWalletPage> {
                     context: context,
                     builder: (BuildContext context) {
                       return AlertDialog(
-                        title: Text('Thông báo'),
+                        title: Text('Arlet'),
                         content: Text('Update success!'),
                         actions: [
                           TextButton(
@@ -275,7 +264,7 @@ class _UpdateWalletPageState extends State<UpdateWalletPage> {
                     context: context,
                     builder: (BuildContext context) {
                       return AlertDialog(
-                        title: Text('Thông báo'),
+                        title: Text('Arlet'),
                         content: Text('Error: Update fail!'),
                         actions: [
                           TextButton(

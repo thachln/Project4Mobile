@@ -6,7 +6,7 @@ class EndPoint{
   //Account
   static const String SignIn = '$baseUrl/auth/signin';
   static const String SignUp = '$baseUrl/auth/signup';
-  static const String ChangeInformation = '$baseUrl/auth/updateEmailUsernameProfile/{id}';
+  static const String ChangeInformation = '$baseUrl/auth/updateEmailUsernameProfile';
   static const String ResetPass = '$baseUrl/auth/updateEmailUsernameProfile/{id}';
   static const String ChangePass = '$baseUrl/auth/updateProfile/updatePassword';
   static const String ForgotPass = '$baseUrl/auth/forgot-password';
@@ -33,8 +33,8 @@ class EndPoint{
   static const String InsertBill = '$baseUrl/bills/create';
   static const String UpdateBill = '$baseUrl/bills/update/{id}';
   static const String DeleteBill = '$baseUrl/bills/delete/{id}';
-  static const String findBillExpired = '$baseUrl/bills/findBillExpired/users/{id}';
-  static const String findBillActive = '$baseUrl/bills/findBillActive/users/{id}';
+  static const String findBillExpired = '$baseUrl/bills/findBillExpired';
+  static const String findBillActive = '$baseUrl/bills/findBillActive';
   static const String findBillWithId = '$baseUrl/bills/{id}';
   //
 
@@ -106,8 +106,8 @@ class EndPoint{
   static const String InsertTransactionRecurrence = '$baseUrl/transactionsRecurring/create';
   static const String UpdateTransactionRecurrence = '$baseUrl/transactionsRecurring/update/{id}';
   static const String DeleteTransactionRecurrence = '$baseUrl/transactionsRecurring/delete/{id}';
-  static const String findRecuExpired = '$baseUrl/transactionsRecurring/findRecuExpired/users/{id}';
-  static const String findRecuActive = '$baseUrl/transactionsRecurring/findRecuActive/users/{id}';
+  static const String findRecuExpired = '$baseUrl/transactionsRecurring/findRecuExpired';
+  static const String findRecuActive = '$baseUrl/transactionsRecurring/findRecuActive';
   static const String getTransactionsRecurringById = '$baseUrl/transactionsRecurring/{id}';
 
   //

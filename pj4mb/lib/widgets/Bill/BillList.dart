@@ -13,7 +13,7 @@ class BillList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final formatter = NumberFormat("#,###");
-    return Container(
+    return Expanded(
             child: ListView.builder(
                 itemCount: listBill.length,
                padding: const EdgeInsets.all(8),

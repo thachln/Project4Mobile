@@ -19,12 +19,12 @@ class ListWithTime extends StatelessWidget {
     final formatter = NumberFormat("#,###");
     if(listTransactionReport.length == 0){
       return Center(
-        child: Text('Không có dữ liệu'),
+        child: Text('No data'),
       );
     }
     if(listTransactionTop5.length == 0){
       return Center(
-        child: Text('Không có dữ liệu'),
+        child: Text('No data'),
       );
     }
     var maxAmount = listTransactionReport.map((transaction) => transaction.amount).reduce((value, element) => value > element ? value : element);
@@ -72,7 +72,7 @@ class ListWithTime extends StatelessWidget {
           )),
         ),
         SizedBox(height: 10.0),
-        Text('Chi tiêu nhiều nhất',
+        Text('Expense hightest',
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
         ListView.builder(
             itemCount: listTransactionTop5.length,

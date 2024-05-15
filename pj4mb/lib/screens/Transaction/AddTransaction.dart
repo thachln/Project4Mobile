@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
 import 'package:pj4mb/models/Category/CateTypeENum.dart';
@@ -10,6 +11,7 @@ import 'package:pj4mb/models/SavingGoal/SavingGoal.dart';
 import 'package:pj4mb/models/Transaction/Transaction.dart';
 import 'package:pj4mb/models/Wallet/Wallet.dart';
 import 'package:pj4mb/screens/Account/Category.dart';
+import 'package:pj4mb/screens/ThousandsSeparatorInputFormatter.dart';
 import 'package:pj4mb/services/SavingGoal_service.dart';
 import 'package:pj4mb/services/Transacsion_service.dart';
 import 'package:pj4mb/services/Wallet_service.dart';
@@ -240,6 +242,11 @@ class _AddTransactionPageState extends State<AddTransactionPage> {
                     ),
                     Expanded(
                       child: TextField(
+                         inputFormatters: [
+                        FilteringTextInputFormatter.digitsOnly,
+                        ThousandsSeparatorInputFormatter(),
+                        LengthLimitingTextInputFormatter(14)
+                      ],
                         controller: moneyNumber,
                         keyboardType: TextInputType.number,
                       ),
@@ -258,8 +265,10 @@ class _AddTransactionPageState extends State<AddTransactionPage> {
                     Expanded(
                       child: TextField(
                         controller: noteText,
+                        maxLines: 3,
+                        maxLength: 100,
                         keyboardType: TextInputType.number,
-                        decoration: InputDecoration(hintText: 'Thêm ghi chú'),
+                        decoration: InputDecoration(hintText: 'Note'),
                       ),
                     )
                   ],
@@ -347,14 +356,33 @@ class _AddTransactionPageState extends State<AddTransactionPage> {
                       );
                       return;
                     }
-            
-            
+                    if(double.parse(moneyNumber.text.replaceAll(',', '')) <= 0){
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: Text('Alert'),
+                            content: Text('Money must be greater than 0!'),
+                            actions: [
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                                child: Text('OK'),
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                      return;
+                    }
+                    
                     Transaction trans = new Transaction(
                         transactionId: 0,
                         userId: 0,
                         walletId: walletID,
                         categoryId: categoryID,
-                        amount: double.parse(moneyNumber.text),
+                        amount: double.parse(moneyNumber.text.replaceAll(',', '')),
                         notes: noteText.text,
                         transactionDate: selectedDate, savingGoalId: goalId == 0 ? null : goalId);
                     var result =

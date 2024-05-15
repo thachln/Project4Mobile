@@ -33,10 +33,14 @@ class _LoginPageState extends State<LoginPage> {
     return Scaffold(
       appBar: AppBar(),
       body: Padding(
-        padding: const EdgeInsets.all(40.0),
+        padding: const EdgeInsets.all(10),
         child: Column(children: [
-          SizedBox(height: 60),
-          Text('Login'),
+          Container(
+            width: 250,
+            height: 250,
+            child: Image.asset('assets/images/logo.png'),
+          ),
+          Text('LOGIN'),
           TextField(
               controller: email,
               decoration: InputDecoration(hintText: 'Email'),
@@ -71,8 +75,8 @@ class _LoginPageState extends State<LoginPage> {
                     context: context,
                     builder: (BuildContext context) {
                       return AlertDialog(
-                        title: Text('Thông báo'),
-                        content: Text('Vui lòng nhập đầy đủ thông tin'),
+                        title: Text('Arlet'),
+                        content: Text('Please fill in all fields'),
                         actions: [
                           TextButton(
                             onPressed: () {
@@ -97,7 +101,7 @@ class _LoginPageState extends State<LoginPage> {
                       context: context,
                       builder: (BuildContext context) {
                         return AlertDialog(
-                          title: Text('Thông báo'),
+                          title: Text('Arlet'),
                           content: Text(user.message),
                           actions: [
                             TextButton(
@@ -115,8 +119,8 @@ class _LoginPageState extends State<LoginPage> {
                       context: context,
                       builder: (BuildContext context) {
                         return AlertDialog(
-                          title: Text('Thông báo'),
-                          content: Text('Tài khoản của bạn chưa xác thực'),
+                          title: Text('Arlet'),
+                          content: Text('Your account is not verify'),
                           actions: [
                             TextButton(
                               onPressed: () {
@@ -133,7 +137,7 @@ class _LoginPageState extends State<LoginPage> {
                       context: context,
                       builder: (BuildContext context) {
                         return AlertDialog(
-                          title: Text('Thông báo'),
+                          title: Text('Arlet'),
                           content: Text(
                               'Error: ${user.statusCode} - ${user.message}'),
                           actions: [
@@ -154,7 +158,7 @@ class _LoginPageState extends State<LoginPage> {
                 backgroundColor: MaterialStateProperty.all(Colors.green),
                 foregroundColor: MaterialStateProperty.all(Colors.white),
               ),
-              child: Text('Đăng nhập'),
+              child: Text('Login'),
             ),
           ),
           Row(
@@ -164,14 +168,14 @@ class _LoginPageState extends State<LoginPage> {
                 onTap: () {
                    Navigator.push(context, MaterialPageRoute(builder: (context) => SignUpPage()));
                 },
-                child: Text('Đăng ký'),
+                child: Text('Sign Up'),
               ),
               InkWell(
                 onTap: () {
                   Navigator.push(context, MaterialPageRoute(builder: (context) => ForgetPassPage()));
                   
                 },
-                child: Text('Quên mật khẩu'),
+                child: Text('Forgot Password'),
               )
             ],
           ),

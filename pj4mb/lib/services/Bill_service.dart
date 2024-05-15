@@ -5,6 +5,7 @@ import 'package:pj4mb/models/Bill/Bill.dart';
 import 'package:pj4mb/models/Bill/BillResponse.dart';
 import 'package:pj4mb/models/Bill/EndType.dart';
 import 'package:pj4mb/models/Bill/MonthOption.dart';
+import 'package:pj4mb/models/Budget/ParamBudget.dart';
 import 'package:pj4mb/models/Recurrence/Recurrence.dart';
 import 'package:pj4mb/models/Response.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -87,7 +88,7 @@ class BillService {
     }
   }
 
-  Future<List<BillResponse>> findBillActive() async {
+  Future<List<BillResponse>> findBillActive(ParamPudget param) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var userid = prefs.getString('userid');
     var token = prefs.getString('token');
@@ -96,8 +97,11 @@ class BillService {
       'Content-Type': 'application/json',
       'Authorization': 'Bearer $token',
     };
-    final response = await http.get(
-        Uri.parse(EndPoint.findBillActive.replaceAll('{id}', userid!)),
+    param.userId = int.parse(userid!);
+    var bodyValue = jsonEncode(param.toJson());
+    final response = await http.post(
+        Uri.parse(EndPoint.findBillActive),
+        body: bodyValue,
         headers: headersValue);
 
     if (response.statusCode == 200) {
@@ -158,7 +162,7 @@ class BillService {
     }
   }
 
-  Future<List<BillResponse>> findBillExpired() async {
+  Future<List<BillResponse>> findBillExpired(ParamPudget param) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var userid = prefs.getString('userid');
     var token = prefs.getString('token');
@@ -167,8 +171,11 @@ class BillService {
       'Content-Type': 'application/json',
       'Authorization': 'Bearer $token',
     };
-    final response = await http.get(
-        Uri.parse(EndPoint.findBillExpired.replaceAll('{id}', userid!)),
+    param.userId = int.parse(userid!);
+    var bodyValue = jsonEncode(param.toJson());
+    final response = await http.post(
+        Uri.parse(EndPoint.findBillExpired),
+        body: bodyValue,
         headers: headersValue);
 
     if (response.statusCode == 200) {

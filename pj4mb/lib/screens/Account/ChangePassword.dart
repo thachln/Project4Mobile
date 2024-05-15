@@ -111,7 +111,7 @@ class ChangePasswordPage extends StatelessWidget {
                                   context: context,
                                   builder: (BuildContext context) {
                                     return AlertDialog(
-                                      title: Text('Thông báo'),
+                                      title: Text('Arlet'),
                                       content: Text('Update success!'),
                                       actions: [
                                         TextButton(
@@ -132,7 +132,7 @@ class ChangePasswordPage extends StatelessWidget {
                                   context: context,
                                   builder: (BuildContext context) {
                                     return AlertDialog(
-                                      title: Text('Thông báo'),
+                                      title: Text('Arlet'),
                                       content: Text('Update fail! ${resultOTP.message}'),
                                       actions: [
                                         TextButton(
@@ -164,7 +164,7 @@ class ChangePasswordPage extends StatelessWidget {
                   //   context: context,
                   //   builder: (BuildContext context) {
                   //     return AlertDialog(
-                  //       title: Text('Thông báo'),
+                  //       title: Text('Arlet'),
                   //       content: Text('Update success!'),
                   //       actions: [
                   //         TextButton(
@@ -183,7 +183,7 @@ class ChangePasswordPage extends StatelessWidget {
                     context: context,
                     builder: (BuildContext context) {
                       return AlertDialog(
-                        title: Text('Thông báo'),
+                        title: Text('Arlet'),
                         content: Text('Update fail! ${result.message}'),
                         actions: [
                           TextButton(

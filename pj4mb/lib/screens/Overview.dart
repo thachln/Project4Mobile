@@ -36,17 +36,17 @@ class _OverviewState extends State<Overview> with TickerProviderStateMixin {
   late Future<List<TransactionView>> transactionListTop5NewTransaction;
   late Future<List<TransactionReport>> getTransactionReportThisWeek;
   late Future<List<TransactionReport>> getTransactionReportThisMonth;
-  late List<NotificationDTO> getNotifaction;
+  late Future<List<NotificationDTO>> getNotifaction;
+  late List<NotificationDTO> listNotification;
   late int numberNotification = 0;
   late ListDateTime listDateTime;
   @override
   void initState() {
-     
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
-   loadNotification();
+    loadNotification();
     walletList = WalletService().GetWallet();
-
+    //getNotifaction = NotificationService().GetNotification();
     transactionListTop5NewTransaction =
         TransactionService().getTop5NewTransaction();
     listDateTime = getFullDays(DateTime.now());
@@ -66,15 +66,14 @@ class _OverviewState extends State<Overview> with TickerProviderStateMixin {
         TransactionService().GetTransactionReport(paramThisWeek);
     getTransactionReportThisMonth =
         TransactionService().GetTransactionReportMonth(paramThisMonth);
-        
   }
 
   void loadNotification() async {
-    getNotifaction = await NotificationService().GetNotification();
+    listNotification = await NotificationService().GetNotification();
     setState(() {
-      numberNotification = getNotifaction.where((element) => element.read == false).length;
+      print(1);
+      numberNotification = listNotification.where((element) => element.read == false).length;
     });
-    
   }
 
   @override
@@ -89,7 +88,10 @@ class _OverviewState extends State<Overview> with TickerProviderStateMixin {
       appBar: AppBar(
         title: Row(
           children: [
-            Icon(Icons.money),
+            Container(
+            width: 50,
+            height: 50,
+            child: Image.asset('assets/images/logo.png'),),
             SizedBox(width: 8),
             Text('Finance Tracking')
           ],
@@ -98,19 +100,21 @@ class _OverviewState extends State<Overview> with TickerProviderStateMixin {
           Stack(
             children: [
               IconButton(
-                icon: Icon(Icons.notifications),
-                onPressed: () async {
-                  var result = await Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => NotificationPage(listNotification: getNotifaction,)));
-                  if(result){
-                    setState(() {
-                      loadNotification();
-                    });
-                  }
-                },
-              ),
+                        icon: Icon(Icons.notifications),
+                        onPressed: () async {
+                          var result = await Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => NotificationPage(
+                                        listNotification: listNotification,
+                                      )));
+                          if (result) {
+                            setState(() {
+                              loadNotification();
+                            });
+                          }
+                        },
+                      ),
               Positioned(
                 right: 11,
                 top: 11,
@@ -125,7 +129,7 @@ class _OverviewState extends State<Overview> with TickerProviderStateMixin {
                     minHeight: 12,
                   ),
                   child: Text(
-                    numberNotification.toString(), 
+                    numberNotification.toString(),
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 8,
@@ -158,7 +162,7 @@ class _OverviewState extends State<Overview> with TickerProviderStateMixin {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text('Ví của tôi',
+                        Text('My wallet',
                             style: TextStyle(fontWeight: FontWeight.bold)),
                         InkWell(
                           onTap: () {
@@ -169,7 +173,7 @@ class _OverviewState extends State<Overview> with TickerProviderStateMixin {
                                           flag: true,
                                         )));
                           },
-                          child: Text('Xem tất cả',
+                          child: Text('See all',
                               style: TextStyle(color: Colors.blue)),
                         )
                       ],
@@ -211,7 +215,7 @@ class _OverviewState extends State<Overview> with TickerProviderStateMixin {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('Báo cáo chi tiêu',
+                  Text('Expense report',
                       style: TextStyle(fontWeight: FontWeight.bold)),
                 ],
               ),
@@ -231,8 +235,8 @@ class _OverviewState extends State<Overview> with TickerProviderStateMixin {
                       TabBar(
                         controller: _tabController,
                         tabs: [
-                          Tab(text: 'Tuần'),
-                          Tab(text: 'Tháng'),
+                          Tab(text: 'Week'),
+                          Tab(text: 'Month'),
                         ],
                       ),
                       Container(
@@ -304,7 +308,7 @@ class _OverviewState extends State<Overview> with TickerProviderStateMixin {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('Giao dịch gần đây',
+                  Text('Recent transactions',
                       style: TextStyle(fontWeight: FontWeight.bold)),
                   InkWell(
                     onTap: () {
@@ -313,7 +317,7 @@ class _OverviewState extends State<Overview> with TickerProviderStateMixin {
                           MaterialPageRoute(
                               builder: (context) => TransactionsScreen()));
                     },
-                    child: Text('Xem tất cả'),
+                    child: Text('See all'),
                   )
                 ],
               ),

@@ -132,7 +132,7 @@ class _BudgetWithTransactionPageState extends State<BudgetWithTransactionPage> {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 Text(
-                    'Còn lại: ${formatter.format(budgetData.threshold_amount - budgetData.amount)}đ'),
+                    'Remaining: ${formatter.format(budgetData.threshold_amount - budgetData.amount)}đ'),
               ],
             ),
           ),

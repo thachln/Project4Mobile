@@ -46,7 +46,7 @@ class HistoryWidgets extends StatelessWidget {
         children: [
           Row(
             children: [
-              Text(('Tiền vào')),
+              Text(('Income')),
               Expanded(
                   child: Text(
                 formatter.format(Income.totalAmount),
@@ -56,7 +56,7 @@ class HistoryWidgets extends StatelessWidget {
           ),
           Row(
             children: [
-              Text(('Tiền ra')),
+              Text(('Expense')),
               Expanded(
                   child: Text(
                 formatter.format(Expense.totalAmount),

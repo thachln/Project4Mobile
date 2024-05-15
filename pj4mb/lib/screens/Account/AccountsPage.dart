@@ -96,7 +96,7 @@ class _AccountsPageState extends State<AccountsPage> {
               },
             ),
             ListTile(
-              leading: Icon(Icons.document_scanner),
+              leading: Icon(Icons.blinds_closed),
               title: Text("Bill"),
               trailing: Icon(Icons.arrow_forward_ios),
               onTap: () {
@@ -120,7 +120,7 @@ class _AccountsPageState extends State<AccountsPage> {
               },
             ),
             ListTile(
-              leading: Icon(Icons.credit_card),
+              leading: Icon(Icons.savings),
               title: Text("Saving Goals"),
               trailing: Icon(Icons.arrow_forward_ios),
               onTap: () {
@@ -136,7 +136,7 @@ class _AccountsPageState extends State<AccountsPage> {
               },
             ),
              ListTile(
-              leading: Icon(Icons.info),
+              leading: Icon(Icons.password),
               title: Text("Change Pasword"),
               trailing: Icon(Icons.arrow_forward_ios),
               onTap: () {

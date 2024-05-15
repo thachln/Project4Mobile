@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:pj4mb/models/Category/Category.dart';
 import 'package:pj4mb/models/Debt/Debt.dart';
 import 'package:pj4mb/screens/Account/Category.dart';
+import 'package:pj4mb/screens/ThousandsSeparatorInputFormatter.dart';
 import 'package:pj4mb/services/Category_service.dart';
 import 'package:pj4mb/services/Debt_service.dart';
 
@@ -30,7 +32,7 @@ class _UpdateDebtPageState extends State<UpdateDebtPage> {
     final DateTime? picked = await showDatePicker(
       context: context,
       initialDate: dueDate,
-      firstDate: DateTime(2000),
+      firstDate: DateTime.now(),
       lastDate: DateTime(2101),
     );
     if (picked != null && picked != dueDate) {
@@ -58,11 +60,12 @@ class _UpdateDebtPageState extends State<UpdateDebtPage> {
   void initState() {
     super.initState();
     name.text = widget.debt.name;
-    amount.text = widget.debt.amount.toString();
+    amount.text = NumberFormat('#,##0','en_US').format(widget.debt.amount);
     creditor.text = widget.debt.creditor;
     notes.text = widget.debt.notes;
     dueDate = widget.debt.dueDate;
     paidDate = widget.debt.paidDate != null ? widget.debt.paidDate! : null;
+    isPaid = widget.debt.isPaid;
     LoadCategory();
   }
 
@@ -253,6 +256,10 @@ class _UpdateDebtPageState extends State<UpdateDebtPage> {
                 Expanded(
                   child: TextField(
                     controller: amount,
+                     inputFormatters: [
+                        FilteringTextInputFormatter.digitsOnly,
+                        ThousandsSeparatorInputFormatter(),
+                      ],
                     keyboardType: TextInputType.number,
                     decoration: InputDecoration(hintText: 'Amount'),
                   ),
@@ -291,9 +298,113 @@ class _UpdateDebtPageState extends State<UpdateDebtPage> {
                 controlAffinity: ListTileControlAffinity.leading),
             ElevatedButton(
               onPressed: () async {
+                if(name.text.isEmpty){
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: Text('Arlet'),
+                        content: Text('Name is required!'),
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: Text('OK'),
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                  return;
+                
+                }
+                if(categoryId == 0){
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: Text('Arlet'),
+                        content: Text('Category is required!'),
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: Text('OK'),
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                  return;
+                
+                }
+                if(creditor.text.isEmpty){
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: Text('Arlet'),
+                        content: Text('Creditor is required!'),
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: Text('OK'),
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                  return;
+                }
+                if(amount.text.isEmpty){
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: Text('Arlet'),
+                        content: Text('Amount is required!'),
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: Text('OK'),
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                  return;       
+                }
+                if(double.parse(amount.text.replaceAll(',', '')) <= 0)
+                {
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: Text('Arlet'),
+                        content: Text('Amount must be greater than 0!'),
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: Text('OK'),
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                  return;       
+                }
+                
                 Debt debt = new Debt(
                     name: name.text,
-                    amount: double.parse(amount.text),
+                    amount: double.parse(amount.text.replaceAll(',', '')),
                     creditor: creditor.text,
                     notes: notes.text,
                     categoryId: categoryId,
@@ -310,7 +421,7 @@ class _UpdateDebtPageState extends State<UpdateDebtPage> {
                     context: context,
                     builder: (BuildContext context) {
                       return AlertDialog(
-                        title: Text('Thông báo'),
+                        title: Text('Arlet'),
                         content: Text('Update success!'),
                         actions: [
                           TextButton(
@@ -329,7 +440,7 @@ class _UpdateDebtPageState extends State<UpdateDebtPage> {
                     context: context,
                     builder: (BuildContext context) {
                       return AlertDialog(
-                        title: Text('Thông báo'),
+                        title: Text('Arlet'),
                         content: Text('Error: Update fail! ${result.message}'),
                         actions: [
                           TextButton(
@@ -361,7 +472,7 @@ class _UpdateDebtPageState extends State<UpdateDebtPage> {
           children: [
             Row(
               children: [
-                Icon(Icons.question_mark_outlined),
+                Icon(Icons.abc_outlined),
                 SizedBox(
                   width: 10,
                 ),
@@ -412,7 +523,7 @@ class _UpdateDebtPageState extends State<UpdateDebtPage> {
             ),
             Row(
               children: [
-                Icon(Icons.question_mark_outlined),
+                Icon(Icons.abc_outlined),
                 SizedBox(
                   width: 10,
                 ),
@@ -431,7 +542,7 @@ class _UpdateDebtPageState extends State<UpdateDebtPage> {
             ),
             Row(
               children: [
-                Icon(Icons.question_mark_outlined),
+                Icon(Icons.monetization_on_rounded),
                 SizedBox(
                   width: 10,
                 ),

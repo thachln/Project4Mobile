@@ -23,6 +23,8 @@ class _DebtPageState extends State<DebtPage> with TickerProviderStateMixin {
   late Future<List<Debt>> loan;
   late DateTime fromDate;
   late DateTime toDate;
+  late DateTime fromDateLoan;
+  late DateTime toDateLoan;
   late ListDateTime listDateTime;
   late ParamPudget param;
   @override
@@ -34,6 +36,8 @@ class _DebtPageState extends State<DebtPage> with TickerProviderStateMixin {
     listDateTime = getFullDays(DateTime.now());
     fromDate = listDateTime.startOfMonth;
     toDate = listDateTime.endOfMonth;
+    fromDateLoan = listDateTime.startOfMonth;
+    toDateLoan = listDateTime.endOfMonth;
     param = ParamPudget(userId: 0, fromDate: fromDate, toDate: toDate);
     debt = DebthService().findDebt(param);
     loan = DebthService().findLoan(param);
@@ -75,6 +79,34 @@ class _DebtPageState extends State<DebtPage> with TickerProviderStateMixin {
       }
     }
 
+    Future<void> _selectFromDateLoan(BuildContext context) async {
+      final DateTime? picked = await showDatePicker(
+        context: context,
+        initialDate: fromDateLoan,
+        firstDate: DateTime(2000),
+        lastDate: DateTime(2101),
+      );
+      if (picked != null && picked != fromDateLoan) {
+        setState(() {
+          fromDateLoan = picked;
+        });
+      }
+    }
+
+    Future<void> _selectToDateLoan(BuildContext context) async {
+      final DateTime? picked = await showDatePicker(
+        context: context,
+        initialDate: toDateLoan,
+        firstDate: DateTime(2000),
+        lastDate: DateTime(2101),
+      );
+      if (picked != null && picked != toDateLoan) {
+        setState(() {
+          toDateLoan = picked;
+        });
+      }
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Debt'),
@@ -84,7 +116,7 @@ class _DebtPageState extends State<DebtPage> with TickerProviderStateMixin {
                 Navigator.push(context,
                     MaterialPageRoute(builder: (context) => ReportDebt()));
               },
-              child: Text('Xem báo cáo'))
+              child: Text('View report'))
         ],
       ),
       body: Column(
@@ -94,8 +126,8 @@ class _DebtPageState extends State<DebtPage> with TickerProviderStateMixin {
             controller: _tabController,
             onTap: (index) {},
             tabs: [
-              Tab(text: 'Cần trả'),
-              Tab(text: 'Cần thu'),
+              Tab(text: 'Debt'),
+              Tab(text: 'Loan'),
             ],
           ),
           Expanded(
@@ -155,6 +187,9 @@ class _DebtPageState extends State<DebtPage> with TickerProviderStateMixin {
                                           child: InkWell(
                                         onTap: () async {
                                           await _selectToDate(context);
+                                          if (toDate.isBefore(fromDate)) {
+                                            toDate = fromDate;
+                                          }
                                         },
                                         child: Text(DateFormat('dd-MM-yyyy')
                                             .format(toDate)),
@@ -226,10 +261,10 @@ class _DebtPageState extends State<DebtPage> with TickerProviderStateMixin {
                                       Expanded(
                                           child: InkWell(
                                         onTap: () async {
-                                          await _selectFromDate(context);
+                                          await _selectFromDateLoan(context);
                                         },
                                         child: Text(DateFormat('dd-MM-yyyy')
-                                            .format(fromDate)),
+                                            .format(fromDateLoan)),
                                       ))
                                     ])),
                                 Container(
@@ -241,15 +276,15 @@ class _DebtPageState extends State<DebtPage> with TickerProviderStateMixin {
                                       Expanded(
                                           child: InkWell(
                                         onTap: () async {
-                                          await _selectToDate(context);
+                                          await _selectToDateLoan(context);
                                         },
                                         child: Text(DateFormat('dd-MM-yyyy')
-                                            .format(toDate)),
+                                            .format(toDateLoan)),
                                       ))
                                     ])),
                                 TextButton(
                                     onPressed: () async {
-                                      ParamPudget param = ParamPudget(userId: 0, fromDate: fromDate, toDate: toDate);
+                                      ParamPudget param = ParamPudget(userId: 0, fromDate: fromDateLoan, toDate: toDateLoan);
                                       var result =  DebthService().findLoan(param);
                                       setState(() {
                                         loan = result;

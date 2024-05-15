@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:pj4mb/models/Bill/Bill.dart';
 import 'package:pj4mb/models/Bill/DayOfWeeks.dart';
@@ -11,6 +12,7 @@ import 'package:pj4mb/models/Recurrence/Recurrence.dart';
 import 'package:pj4mb/models/TransactionRecurrence/TransactionRecurrence.dart';
 import 'package:pj4mb/models/Wallet/Wallet.dart';
 import 'package:pj4mb/screens/Account/Category.dart';
+import 'package:pj4mb/screens/ThousandsSeparatorInputFormatter.dart';
 import 'package:pj4mb/services/Bill_service.dart';
 import 'package:pj4mb/services/TransactionRecurrence_service.dart';
 import 'package:pj4mb/services/Wallet_service.dart';
@@ -95,6 +97,8 @@ class _AddTranRecuPageState extends State<AddTranRecuPage> {
   void initState() {
     super.initState();
     valueWallet = WalletService().GetWalletVND();
+    timeNumber.text = "0";
+    everyDailyNumber.text = "0";
   }
 
   @override
@@ -146,6 +150,10 @@ class _AddTranRecuPageState extends State<AddTranRecuPage> {
                   Expanded(
                     child: TextField(
                       controller: moneyNumber,
+                      inputFormatters: [
+                        FilteringTextInputFormatter.digitsOnly,
+                        ThousandsSeparatorInputFormatter(),
+                      ],
                       keyboardType: TextInputType.number,
                       decoration: InputDecoration(hintText: 'Money'),
                     ),
@@ -295,6 +303,10 @@ class _AddTranRecuPageState extends State<AddTranRecuPage> {
                           SizedBox(
                             width: 50,
                             child: TextField(
+                              inputFormatters: [
+                        FilteringTextInputFormatter.digitsOnly,
+                        ThousandsSeparatorInputFormatter(),
+                      ],
                               controller: everyDailyNumber,
                               keyboardType: TextInputType.number,
                             ),
@@ -328,7 +340,7 @@ class _AddTranRecuPageState extends State<AddTranRecuPage> {
                             value: endType,
                             onChanged: (EndType? newValue) {
                               setState(() {
-                                setDateTime(newValue!,int.parse(everyDailyNumber.text));
+                                setDateTime(newValue!,int.parse(everyDailyNumber.text.replaceAll(',', '')));
                                 endType = newValue!;         
                               });
                             },
@@ -361,6 +373,10 @@ class _AddTranRecuPageState extends State<AddTranRecuPage> {
                             SizedBox(
                               width: 50,
                               child: TextField(
+                                inputFormatters: [
+                        FilteringTextInputFormatter.digitsOnly,
+                        ThousandsSeparatorInputFormatter(),
+                      ],
                                 controller: timeNumber,
                                 keyboardType: TextInputType.number,
                               ),
@@ -382,6 +398,10 @@ class _AddTranRecuPageState extends State<AddTranRecuPage> {
                           SizedBox(
                             width: 50,
                             child: TextField(
+                              inputFormatters: [
+                        FilteringTextInputFormatter.digitsOnly,
+                        ThousandsSeparatorInputFormatter(),
+                      ],
                               controller: everyDailyNumber,
                               keyboardType: TextInputType.number,
                             ),
@@ -431,7 +451,7 @@ class _AddTranRecuPageState extends State<AddTranRecuPage> {
                             onChanged: (EndType? newValue) {
                               setState(() {
                                 
-                                setDateTime(newValue!,(int.parse(everyDailyNumber.text) * 7) + 1);
+                                setDateTime(newValue!,(int.parse(everyDailyNumber.text.replaceAll(',', '')) * 7) + 1);
                                 endType = newValue!;
                                 
                               });
@@ -467,6 +487,10 @@ class _AddTranRecuPageState extends State<AddTranRecuPage> {
                             SizedBox(
                               width: 50,
                               child: TextField(
+                                inputFormatters: [
+                        FilteringTextInputFormatter.digitsOnly,
+                        ThousandsSeparatorInputFormatter(),
+                      ],
                                 controller: timeNumber,
                                 keyboardType: TextInputType.number,
                               ),
@@ -488,6 +512,10 @@ class _AddTranRecuPageState extends State<AddTranRecuPage> {
                           SizedBox(
                             width: 50,
                             child: TextField(
+                              inputFormatters: [
+                        FilteringTextInputFormatter.digitsOnly,
+                        ThousandsSeparatorInputFormatter(),
+                      ],
                               controller: everyDailyNumber,
                               keyboardType: TextInputType.number,
                             ),
@@ -535,7 +563,7 @@ class _AddTranRecuPageState extends State<AddTranRecuPage> {
                             value: endType,
                             onChanged: (EndType? newValue) {
                               setState(() {
-                                setDateTime(newValue!,(31 * int.parse(everyDailyNumber.text)) + 1);
+                                setDateTime(newValue!,(31 * int.parse(everyDailyNumber.text.replaceAll(',', ''))) + 1);
                                 endType = newValue!;
                               });
                             },
@@ -568,6 +596,10 @@ class _AddTranRecuPageState extends State<AddTranRecuPage> {
                             SizedBox(
                               width: 50,
                               child: TextField(
+                                inputFormatters: [
+                        FilteringTextInputFormatter.digitsOnly,
+                        ThousandsSeparatorInputFormatter(),
+                      ],
                                 controller: timeNumber,
                                 keyboardType: TextInputType.number,
                               ),
@@ -589,6 +621,10 @@ class _AddTranRecuPageState extends State<AddTranRecuPage> {
                           SizedBox(
                             width: 50,
                             child: TextField(
+                              inputFormatters: [
+                        FilteringTextInputFormatter.digitsOnly,
+                        ThousandsSeparatorInputFormatter(),
+                      ],
                               controller: everyDailyNumber,
                               keyboardType: TextInputType.number,
                             ),
@@ -622,7 +658,7 @@ class _AddTranRecuPageState extends State<AddTranRecuPage> {
                             value: endType,
                             onChanged: (EndType? newValue) {
                               setState(() {
-                                setDateTime(newValue!,(365 * int.parse(everyDailyNumber.text))+1);
+                                setDateTime(newValue!,(365 * int.parse(everyDailyNumber.text.replaceAll(',', '')))+1);
                                 endType = newValue!;
                                 
                               });
@@ -656,6 +692,10 @@ class _AddTranRecuPageState extends State<AddTranRecuPage> {
                             SizedBox(
                               width: 50,
                               child: TextField(
+                                inputFormatters: [
+                        FilteringTextInputFormatter.digitsOnly,
+                        ThousandsSeparatorInputFormatter(),
+                      ],
                                 controller: timeNumber,
                                 keyboardType: TextInputType.number,
                               ),
@@ -728,7 +768,7 @@ class _AddTranRecuPageState extends State<AddTranRecuPage> {
                     );
                     return;
                   }
-                  if (everyDailyNumber.text.isEmpty || int.parse(everyDailyNumber.text) <= 0 || int.parse(everyDailyNumber.text) > 30) {
+                  if (everyDailyNumber.text.isEmpty || int.parse(everyDailyNumber.text.replaceAll(',', '')) <= 0 || int.parse(everyDailyNumber.text.replaceAll(',', '')) > 30) {
                     showDialog(
                       context: context,
                       builder: (BuildContext context) {
@@ -796,7 +836,7 @@ class _AddTranRecuPageState extends State<AddTranRecuPage> {
                       );
                       return;
                     }
-                    if (endType == EndType.TIMES && int.parse(timeNumber.text) <= 0) {
+                    if (endType == EndType.TIMES && timeNumber.text.isEmpty || int.parse(timeNumber.text.replaceAll(',', '')) <= 0) {
                       showDialog(
                         context: context,
                         builder: (BuildContext context) {
@@ -820,12 +860,12 @@ class _AddTranRecuPageState extends State<AddTranRecuPage> {
                   //
                   Recurrence recurrence = Recurrence(
                       frequency: "repeat ${frequencyType.name}",
-                      every: int.parse(everyDailyNumber.text),
+                      every: int.parse(everyDailyNumber.text.replaceAll(',', '')),
                       startDate: selectedFromDate,
                       endType: endType,
                       endDate: selectedToDate,
                       times: timeNumber.text.isNotEmpty
-                          ? int.parse(timeNumber.text)
+                          ? int.parse(timeNumber.text.replaceAll(',', ''))
                           : 0,
                       monthOption: monthOption,
                       dayOfWeek: selectedDay!.toUpperCase(),
@@ -836,7 +876,7 @@ class _AddTranRecuPageState extends State<AddTranRecuPage> {
                   TransactionRecurrence transRecu = TransactionRecurrence(
                       transactionRecurringId: 0,
                       userId: 0,
-                      amount: double.parse(moneyNumber.text),
+                      amount: double.parse(moneyNumber.text.replaceAll(',', '')),
                       recurrence: recurrence,
                       categoryId: categoryID,
                       walletId: walletID,

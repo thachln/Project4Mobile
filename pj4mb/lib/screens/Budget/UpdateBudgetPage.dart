@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:pj4mb/models/Budget/Budget.dart';
 import 'package:pj4mb/models/Budget/ListDateTime.dart';
 import 'package:pj4mb/models/Category/Category.dart';
 import 'package:pj4mb/models/Wallet/Wallet.dart';
 import 'package:pj4mb/screens/Account/MyWallet.dart';
+import 'package:pj4mb/screens/ThousandsSeparatorInputFormatter.dart';
 import 'package:pj4mb/services/Budget_service.dart';
 
 import '../Account/Category.dart';
@@ -36,7 +38,7 @@ class _UpdateBudgetPageState extends State<UpdateBudgetPage> {
   @override
   void initState() {
     super.initState();
-    amountController.text = widget.budget.threshold_amount.toString();
+    amountController.text = NumberFormat('#,##0','en_US').format(widget.budget.threshold_amount);
     selectedDateStart = widget.budget.period_start;
     selectedDateEnd = widget.budget.period_end;
     categoryId = widget.budget.categoryId;
@@ -162,12 +164,16 @@ class _UpdateBudgetPageState extends State<UpdateBudgetPage> {
             ),
             Row(
               children: [
-                Icon(Icons.numbers),
+                Icon(Icons.monetization_on_rounded),
                 SizedBox(
                   width: 10,
                 ),
                 Expanded(
                   child: TextField(
+                     inputFormatters: [
+                        FilteringTextInputFormatter.digitsOnly,
+                        ThousandsSeparatorInputFormatter(),
+                      ],
                     controller: amountController,
                     keyboardType: TextInputType.number,
                     decoration: InputDecoration(hintText: 'Amount'),
@@ -197,8 +203,68 @@ class _UpdateBudgetPageState extends State<UpdateBudgetPage> {
             ),
             ElevatedButton(
               onPressed: () async {
+                if(categoryId == 0){
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: Text('Alert'),
+                        content: Text('Please choose category!'),
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: Text('OK'),
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                  return;
+                }
+                if(amountController.text.isEmpty){
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: Text('Alert'),
+                        content: Text('Please enter amount!'),
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: Text('OK'),
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                  return;
+                }
+                if(double.parse(amountController.text.replaceAll(',', '')) <= 0){
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: Text('Alert'),
+                        content: Text('Amount must be greater than 0!'),
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: Text('OK'),
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                  return;
+                }
                 Budget budget = new Budget(
-                  threshold_amount: double.parse(amountController.text),
+                  threshold_amount: double.parse(amountController.text.replaceAll(',', '')),
                   categoryId: categoryId,
                   userId: 0,
                   period_start: selectedDateStart,
@@ -212,7 +278,7 @@ class _UpdateBudgetPageState extends State<UpdateBudgetPage> {
                     context: context,
                     builder: (BuildContext context) {
                       return AlertDialog(
-                        title: Text('Thông báo'),
+                        title: Text('Arlet'),
                         content: Text('Update success!'),
                         actions: [
                           TextButton(
@@ -231,7 +297,7 @@ class _UpdateBudgetPageState extends State<UpdateBudgetPage> {
                     context: context,
                     builder: (BuildContext context) {
                       return AlertDialog(
-                        title: Text('Thông báo'),
+                        title: Text('Arlet'),
                         content: Text('${result.message.toString()}'),
                         actions: [
                           TextButton(

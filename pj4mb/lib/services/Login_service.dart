@@ -62,10 +62,10 @@ class LoginService {
       'Content-Type': 'application/json',
       'Authorization': 'Bearer $token',
     };
-    print(change.toJson());
-    print(token);
+
+    change.userId = int.parse(userid!);
     final response = await http
-        .put(Uri.parse(EndPoint.ChangeInformation.replaceAll('{id}', userid!)),body: jsonEncode(change.toJson()),headers: headersValue);
+        .post(Uri.parse(EndPoint.ChangeInformation.replaceAll('{id}', userid!)),body: jsonEncode(change.toJson()),headers: headersValue);
         print(response.statusCode);
         print(response.body);
     if (response.statusCode == 200) {

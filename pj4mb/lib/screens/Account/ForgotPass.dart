@@ -34,6 +34,27 @@ class ForgetPassPage extends StatelessWidget {
               ),
             ),
             ElevatedButton(onPressed: () async {
+              if(email.text.isEmpty){
+                showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: Text('Alert'),
+                          content: Text('Please enter your email!'),
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                              child: Text('OK'),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                    return;
+              }
+              else
               buildShowDialog(context);
               var result = await LoginService().ForgotPass(email.text);
               if (result.status == 200) {
@@ -63,10 +84,11 @@ class ForgetPassPage extends StatelessWidget {
                       builder: (BuildContext context) {
                         return AlertDialog(
                           title: Text('Alert'),
-                          content: Text('Update fail!'),
+                          content: Text('Wrong Email!'),
                           actions: [
                             TextButton(
                               onPressed: () {
+                                Navigator.of(context).pop();
                                 Navigator.of(context).pop();
                               },
                               child: Text('OK'),

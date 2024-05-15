@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:pj4mb/api/endpoint.dart';
 import 'package:pj4mb/models/Bill/EndType.dart';
 import 'package:pj4mb/models/Bill/MonthOption.dart';
+import 'package:pj4mb/models/Budget/ParamBudget.dart';
 import 'package:pj4mb/models/Recurrence/Recurrence.dart';
 import 'package:pj4mb/models/Response.dart';
 import 'package:pj4mb/models/TransactionRecurrence/TransRecuResponce.dart';
@@ -87,7 +88,7 @@ class TransactionRecurrence_Service {
     }
   }
 
-  Future<List<TransRecuResponce>> findRecuActive() async {
+  Future<List<TransRecuResponce>> findRecuActive(ParamPudget param) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var userid = prefs.getString('userid');
     var token = prefs.getString('token');
@@ -96,8 +97,11 @@ class TransactionRecurrence_Service {
       'Content-Type': 'application/json',
       'Authorization': 'Bearer $token',
     };
-    final response = await http.get(
-        Uri.parse(EndPoint.findRecuActive.replaceAll('{id}', userid!)),
+    param.userId = int.parse(userid!);
+    var bodyValue = jsonEncode(param.toJson());
+    final response = await http.post(
+        Uri.parse(EndPoint.findRecuActive),
+        body: bodyValue,
         headers: headersValue);
     if (response.statusCode == 200) {
       final List<dynamic> parsed = jsonDecode(response.body);
@@ -116,7 +120,7 @@ class TransactionRecurrence_Service {
     }
   }
 
-  Future<List<TransRecuResponce>> findRecuExpired() async {
+  Future<List<TransRecuResponce>> findRecuExpired(ParamPudget param) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var userid = prefs.getString('userid');
     var token = prefs.getString('token');
@@ -125,8 +129,11 @@ class TransactionRecurrence_Service {
       'Content-Type': 'application/json',
       'Authorization': 'Bearer $token',
     };
-    final response = await http.get(
-        Uri.parse(EndPoint.findRecuExpired.replaceAll('{id}', userid!)),
+    param.userId = int.parse(userid!);
+    var bodyValue = jsonEncode(param.toJson());
+    final response = await http.post(
+        Uri.parse(EndPoint.findRecuExpired),
+        body: bodyValue,
         headers: headersValue);
 
     if (response.statusCode == 200) {

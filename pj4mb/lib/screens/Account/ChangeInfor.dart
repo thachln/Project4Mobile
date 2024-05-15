@@ -52,11 +52,51 @@ class ChangeInforPage extends StatelessWidget {
             padding: const EdgeInsets.all(8.0),
             child: ElevatedButton(
               onPressed: () async {
+                if(userName.text.isEmpty){
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: Text('Alert'),
+                        content: Text('Please enter your username!'),
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: Text('OK'),
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                  return;
+                }
+                if(email.text.isEmpty){
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: Text('Alert'),
+                        content: Text('Please enter your email!'),
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: Text('OK'),
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                  return;
+                }
                 buildShowDialog(context);
-                ChangeInfor change = new ChangeInfor(
+                ChangeInfor change =  ChangeInfor(
                   email: email.text,
                   username: userName.text,
-                  confirmNewEmail: true,
+                  confirmNewEmail: true, userId: 0,
                 );
                 var result = await LoginService().ChangeInformation(change);
                 Navigator.of(context).pop();
@@ -65,7 +105,7 @@ class ChangeInforPage extends StatelessWidget {
                     context: context,
                     builder: (BuildContext context) {
                       return AlertDialog(
-                        title: Text('Thông báo'),
+                        title: Text('Arlet'),
                         content: Text('Update success!'),
                         actions: [
                           TextButton(
@@ -86,8 +126,8 @@ class ChangeInforPage extends StatelessWidget {
                     context: context,
                     builder: (BuildContext context) {
                       return AlertDialog(
-                        title: Text('Thông báo'),
-                        content: Text('Update fail!'),
+                        title: Text('Arlet'),
+                        content: Text('Update fail! ${result.message}'),
                         actions: [
                           TextButton(
                             onPressed: () {

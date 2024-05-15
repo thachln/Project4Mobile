@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:pj4mb/models/Bill/EndType.dart';
 import 'package:pj4mb/models/Category/Category.dart';
 import 'package:pj4mb/models/SavingGoal/EndDateType.dart';
 import 'package:pj4mb/models/SavingGoal/SavingGoal.dart';
 import 'package:pj4mb/models/Wallet/Wallet.dart';
+import 'package:pj4mb/screens/ThousandsSeparatorInputFormatter.dart';
 import 'package:pj4mb/services/SavingGoal_service.dart';
 import 'package:pj4mb/services/Wallet_service.dart';
 
@@ -126,6 +128,10 @@ class _AddSavingPageState extends State<AddSavingPage> {
                     Expanded(
                       child: TextField(
                         controller: targetAmount,
+                        inputFormatters: [
+                        FilteringTextInputFormatter.digitsOnly,
+                        ThousandsSeparatorInputFormatter(),
+                      ],
                         keyboardType: TextInputType.number,
                         decoration: InputDecoration(hintText: 'Target amount'),
                       ),
@@ -144,6 +150,10 @@ class _AddSavingPageState extends State<AddSavingPage> {
                     Expanded(
                       child: TextField(
                         controller: currentAmount,
+                        inputFormatters: [
+                        FilteringTextInputFormatter.digitsOnly,
+                        ThousandsSeparatorInputFormatter(),
+                      ],
                         keyboardType: TextInputType.number,
                         decoration: InputDecoration(hintText: 'Current amount'),
                       ),
@@ -390,7 +400,7 @@ class _AddSavingPageState extends State<AddSavingPage> {
                       );
                       return;
                     }
-                    if(double.parse(targetAmount.text) < 0)
+                    if(double.parse(targetAmount.text.replaceAll(',', '')) < 0)
                     {
                       showDialog(
                         context: context,
@@ -411,7 +421,7 @@ class _AddSavingPageState extends State<AddSavingPage> {
                       );
                       return;
                     }
-                    if(double.parse(currentAmount.text) > double.parse(targetAmount.text)){
+                    if(double.parse(currentAmount.text.replaceAll(',', '')) > double.parse(targetAmount.text.replaceAll(',', ''))){
                       showDialog(
                         context: context,
                         builder: (BuildContext context) {
@@ -434,8 +444,8 @@ class _AddSavingPageState extends State<AddSavingPage> {
                     SavingGoal savingGoal = SavingGoal(
                         id: 0,
                         name: goalName.text,
-                        targetAmount: double.parse(targetAmount.text),
-                        currentAmount: double.parse(currentAmount.text),
+                        targetAmount: double.parse(targetAmount.text.replaceAll(',', '')),
+                        currentAmount: double.parse(currentAmount.text.replaceAll(',', '')),
                         startDate: selectedFromDate,
                         endDate: selectedToDate,
                         endDateType: endDateType,

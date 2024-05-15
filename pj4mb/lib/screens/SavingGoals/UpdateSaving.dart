@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:pj4mb/models/Bill/EndType.dart';
 import 'package:pj4mb/models/Category/Category.dart';
 import 'package:pj4mb/models/SavingGoal/EndDateType.dart';
 import 'package:pj4mb/models/SavingGoal/SavingGoal.dart';
 import 'package:pj4mb/models/Wallet/Wallet.dart';
+import 'package:pj4mb/screens/ThousandsSeparatorInputFormatter.dart';
 import 'package:pj4mb/services/SavingGoal_service.dart';
 import 'package:pj4mb/services/Wallet_service.dart';
 
@@ -72,8 +74,8 @@ class _UpdateSavingPageState extends State<UpdateSavingPage> {
     super.initState();
     valueWallet = WalletService().GetWallet();
     goalName.text = widget.saving.name;
-    targetAmount.text = widget.saving.targetAmount.toString();
-    currentAmount.text = widget.saving.currentAmount.toString();
+    targetAmount.text = NumberFormat('#,##0','en_US').format(widget.saving.targetAmount);
+    currentAmount.text = NumberFormat('#,##0','en_US').format(widget.saving.currentAmount);
     selectedFromDate = widget.saving.startDate;
     selectedToDate = widget.saving.endDate;
     endDateType = widget.saving.endDateType;
@@ -203,6 +205,10 @@ class _UpdateSavingPageState extends State<UpdateSavingPage> {
                     Expanded(
                       child: TextField(
                         controller: targetAmount,
+                         inputFormatters: [
+                        FilteringTextInputFormatter.digitsOnly,
+                        ThousandsSeparatorInputFormatter(),
+                      ],
                         keyboardType: TextInputType.number,
                         decoration: InputDecoration(hintText: 'Target amount'),
                       ),
@@ -222,6 +228,10 @@ class _UpdateSavingPageState extends State<UpdateSavingPage> {
                       child: TextField(
                         controller: currentAmount,
                         keyboardType: TextInputType.number,
+                         inputFormatters: [
+                        FilteringTextInputFormatter.digitsOnly,
+                        ThousandsSeparatorInputFormatter(),
+                      ],
                         decoration: InputDecoration(hintText: 'Current amount'),
                       ),
                     )
@@ -292,7 +302,7 @@ class _UpdateSavingPageState extends State<UpdateSavingPage> {
                     Expanded(
                         child: InkWell(
                       onTap: () async {
-                        await _selectFromDate(context);
+                        
                       },
                       child: Text(
                           DateFormat('dd-MM-yyyy').format(selectedFromDate)),
@@ -429,18 +439,97 @@ class _UpdateSavingPageState extends State<UpdateSavingPage> {
                         return;
                       }
                     }
-
+                    if(currentAmount.text.isEmpty){
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: Text('Alret'),
+                            content: Text('Current amount is required!'),
+                            actions: [
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                                child: Text('OK'),
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                      return;
+                    }
+                    if(targetAmount.text.isEmpty){
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: Text('Alret'),
+                            content: Text('Target amount is required!'),
+                            actions: [
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                                child: Text('OK'),
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                      return;
+                    }
+                    if(double.parse(targetAmount.text.replaceAll(',', '')) < 0)
+                    {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: Text('Alret'),
+                            content: Text('Target amount must be greater than or equal to 0!'),
+                            actions: [
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                                child: Text('OK'),
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                      return;
+                    }
+                    if(double.parse(currentAmount.text.replaceAll(',', '')) > double.parse(targetAmount.text.replaceAll(',', ''))){
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: Text('Alret'),
+                            content: Text('Current amount must be less than target amount!'),
+                            actions: [
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                                child: Text('OK'),
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                      return;
+                    }
                     SavingGoal savingGoal = SavingGoal(
                         id: widget.saving.id,
                         name: goalName.text,
-                        targetAmount: double.parse(targetAmount.text),
-                        currentAmount: double.parse(currentAmount.text),
+                        targetAmount: double.parse(targetAmount.text.replaceAll(',', '')),
+                        currentAmount: double.parse(currentAmount.text.replaceAll(',', '')),
                         startDate: selectedFromDate,
                         endDate: selectedToDate,
                         endDateType: endDateType,
                         userId: 0,
                         walletId: walletID);
-                    print(savingGoal.toJson());
                     var result =
                         await SavingGoalService().UpdateGoal(savingGoal);
                     if (result.status == 200) {
