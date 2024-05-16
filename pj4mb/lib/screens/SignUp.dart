@@ -36,17 +36,19 @@ class _LoginNextPageState extends State<SignUpPage> {
       appBar: AppBar(),
       body: Center(
         child: Padding(
-          padding: const EdgeInsets.all(40.0),
+          padding: const EdgeInsets.all(10.0),
           child: Column(children: [
-            SizedBox(height: 60),
+            SizedBox(height: 30),
             Text('Sign Up'),
             TextField(
               controller: username,
+              maxLength: 25,
               decoration: InputDecoration(hintText: 'Username'),
               keyboardType: TextInputType.text,
             ),
             TextField(
                 controller: email,
+                maxLength: 40,
                 decoration: InputDecoration(hintText: 'Email'),
                 keyboardType: TextInputType.emailAddress,
                 inputFormatters: [
@@ -55,6 +57,7 @@ class _LoginNextPageState extends State<SignUpPage> {
                 ]),
             TextField(
               controller: password,
+              maxLength: 40,
               obscureText: _isObscure, 
               decoration: InputDecoration(
                 hintText: 'Password', 
@@ -72,6 +75,7 @@ class _LoginNextPageState extends State<SignUpPage> {
             ),
             TextField(
               controller: confirmPassword,
+              maxLength: 25,
               obscureText: _isObscure, 
               decoration: InputDecoration(
                 hintText: 'Confirm Password', 

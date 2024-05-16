@@ -65,14 +65,12 @@ class _AddDebtPageState extends State<AddDebtPage> {
                 Expanded(
                   child: TextField(
                     controller: name,
+                    maxLength: 25,
                     keyboardType: TextInputType.text,
                     decoration: InputDecoration(hintText: 'Name'),
                   ),
                 )
               ],
-            ),
-            SizedBox(
-              height: 25,
             ),
             Row(
               children: [
@@ -98,12 +96,12 @@ class _AddDebtPageState extends State<AddDebtPage> {
                     });
                   },
                   child: categoryName.trim().isEmpty
-                      ? Text('Chọn nhóm')
+                      ? Text('Choose category')
                       : Text(categoryName),
                 ))
               ],
             ),
-            SizedBox(
+                 SizedBox(
               height: 25,
             ),
             Row(
@@ -115,6 +113,7 @@ class _AddDebtPageState extends State<AddDebtPage> {
                 Expanded(
                   child: TextField(
                     controller: creditor,
+                    maxLength: 25,
                     keyboardType: TextInputType.number,
                     decoration: InputDecoration(hintText: 'Creditor'),
                   ),
@@ -136,6 +135,7 @@ class _AddDebtPageState extends State<AddDebtPage> {
                      inputFormatters: [
                         FilteringTextInputFormatter.digitsOnly,
                         ThousandsSeparatorInputFormatter(),
+                        LengthLimitingTextInputFormatter(14)
                       ],
                     keyboardType: TextInputType.number,
                     decoration: InputDecoration(hintText: 'Amount'),
@@ -268,7 +268,6 @@ class _AddDebtPageState extends State<AddDebtPage> {
                   );
                   return;       
                 }
-                
                 Debt debt = new Debt(
                     name: name.text,
                     amount: double.parse(amount.text.replaceAll(',', '')),

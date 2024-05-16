@@ -106,6 +106,7 @@ class _AddWalletPageState extends State<AddWalletPage> {
                   Expanded(
                     child: TextField(
                       controller: walletName,
+                      maxLength: 25,
                       keyboardType: TextInputType.text,
                       decoration: InputDecoration(hintText: 'Wallet Name'),
                     ),
@@ -127,6 +128,7 @@ class _AddWalletPageState extends State<AddWalletPage> {
                       inputFormatters: [
                         FilteringTextInputFormatter.digitsOnly,
                         ThousandsSeparatorInputFormatter(),
+                        LengthLimitingTextInputFormatter(14)
                       ],
                       keyboardType: TextInputType.number,
                       decoration: InputDecoration(hintText: 'Balace'),

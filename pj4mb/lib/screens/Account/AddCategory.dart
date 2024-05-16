@@ -72,6 +72,7 @@ class _AddCategoryPageState extends State<AddCategoryPage> {
                 Expanded(
                   child: TextField(
                     controller: categoryName,
+                    maxLength: 25,
                     keyboardType: TextInputType.text,
                     decoration: InputDecoration(hintText: 'Category Name'),
                   ),
@@ -139,7 +140,7 @@ class _AddCategoryPageState extends State<AddCategoryPage> {
                     );
                   },
                   child: categoryIcon.text.isEmpty
-                      ? Text('Chọn icon')
+                      ? Text('Choose icon')
                       : Image.asset(
                           categoryIcon.text, // Hiển thị icon đã chọn
                           width: 50,

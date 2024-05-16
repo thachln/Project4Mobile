@@ -77,6 +77,7 @@ class _UpdateCategoryPageState extends State<UpdateCategoryPage> {
                 Expanded(
                   child: TextField(
                     controller: categoryName,
+                    maxLength: 25,
                     keyboardType: TextInputType.text,
                     decoration: InputDecoration(hintText: 'Category Name'),
                   ),
@@ -116,7 +117,7 @@ class _UpdateCategoryPageState extends State<UpdateCategoryPage> {
                       context: context,
                       builder: (BuildContext context) {
                         return AlertDialog(
-                          title: Text('Chọn icon'),
+                          title: Text('Choose icon'),
                           content: Container(
                             width: double.maxFinite,
                             child: GridView.builder(

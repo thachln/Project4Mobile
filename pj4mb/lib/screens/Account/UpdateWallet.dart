@@ -104,6 +104,7 @@ class _UpdateWalletPageState extends State<UpdateWalletPage> {
                 Expanded(
                   child: TextField(
                     readOnly: widget.wallet.walletTypeID == 3 ? true : false,
+                    maxLength: 25,
                     controller: walletName,
                     keyboardType: TextInputType.text,
                     decoration: InputDecoration(hintText: 'Wallet Name'),
@@ -127,6 +128,7 @@ class _UpdateWalletPageState extends State<UpdateWalletPage> {
                      inputFormatters: [
                         FilteringTextInputFormatter.digitsOnly,
                         ThousandsSeparatorInputFormatter(),
+                        LengthLimitingTextInputFormatter(14)
                       ],
                     keyboardType: TextInputType.number,
                     decoration: InputDecoration(hintText: 'Balace Name'),

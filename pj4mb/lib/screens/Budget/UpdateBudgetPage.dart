@@ -173,6 +173,7 @@ class _UpdateBudgetPageState extends State<UpdateBudgetPage> {
                      inputFormatters: [
                         FilteringTextInputFormatter.digitsOnly,
                         ThousandsSeparatorInputFormatter(),
+                        LengthLimitingTextInputFormatter(14)
                       ],
                     controller: amountController,
                     keyboardType: TextInputType.number,

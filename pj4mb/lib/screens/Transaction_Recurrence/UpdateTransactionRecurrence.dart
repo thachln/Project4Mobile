@@ -266,6 +266,7 @@ class _UpdateTransactionRecurrencePageState extends State<UpdateTransactionRecur
                          inputFormatters: [
                         FilteringTextInputFormatter.digitsOnly,
                         ThousandsSeparatorInputFormatter(),
+                        LengthLimitingTextInputFormatter(14)
                       ],
                         controller: moneyNumber,
                         keyboardType: TextInputType.number,
@@ -352,7 +353,7 @@ class _UpdateTransactionRecurrencePageState extends State<UpdateTransactionRecur
                         });
                       },
                       child: categoryName.trim().isEmpty
-                          ? Text('Chọn nhóm')
+                          ? Text('Choose category')
                           : Text(categoryName),
                     ))
                   ],

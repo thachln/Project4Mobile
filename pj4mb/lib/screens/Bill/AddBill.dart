@@ -151,6 +151,7 @@ class _AddBillPageState extends State<AddBillPage> {
                       inputFormatters: [
                         FilteringTextInputFormatter.digitsOnly,
                         ThousandsSeparatorInputFormatter(),
+                        LengthLimitingTextInputFormatter(14)
                       ],
                       keyboardType: TextInputType.number,
                       decoration: InputDecoration(hintText: 'Money'),
@@ -185,7 +186,7 @@ class _AddBillPageState extends State<AddBillPage> {
                       });
                     },
                     child: categoryName.trim().isEmpty
-                        ? Text('Chọn nhóm')
+                        ? Text('Choose category')
                         : Text(categoryName),
                   ))
                 ],

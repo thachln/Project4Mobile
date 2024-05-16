@@ -109,6 +109,7 @@ class _AddSavingPageState extends State<AddSavingPage> {
                     Expanded(
                       child: TextField(
                         controller: goalName,
+                        maxLength: 25,
                         keyboardType: TextInputType.text,
                         decoration:
                             InputDecoration(hintText: 'Saving goal name'),
@@ -131,6 +132,7 @@ class _AddSavingPageState extends State<AddSavingPage> {
                         inputFormatters: [
                         FilteringTextInputFormatter.digitsOnly,
                         ThousandsSeparatorInputFormatter(),
+                        LengthLimitingTextInputFormatter(14)
                       ],
                         keyboardType: TextInputType.number,
                         decoration: InputDecoration(hintText: 'Target amount'),
@@ -153,6 +155,7 @@ class _AddSavingPageState extends State<AddSavingPage> {
                         inputFormatters: [
                         FilteringTextInputFormatter.digitsOnly,
                         ThousandsSeparatorInputFormatter(),
+                        LengthLimitingTextInputFormatter(14)
                       ],
                         keyboardType: TextInputType.number,
                         decoration: InputDecoration(hintText: 'Current amount'),

@@ -97,6 +97,7 @@ class _AddBudgetPageState extends State<AddBudgetPage> {
                      inputFormatters: [
                         FilteringTextInputFormatter.digitsOnly,
                         ThousandsSeparatorInputFormatter(),
+                        LengthLimitingTextInputFormatter(14)
                       ],
                     keyboardType: TextInputType.number,
                     decoration: InputDecoration(hintText: 'Amount'),

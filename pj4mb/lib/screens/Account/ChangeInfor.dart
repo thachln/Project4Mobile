@@ -31,6 +31,7 @@ class ChangeInforPage extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: TextField(
+              maxLength: 25,
               controller: userName,
               decoration: InputDecoration(
                 border: OutlineInputBorder(),
@@ -42,6 +43,7 @@ class ChangeInforPage extends StatelessWidget {
             padding: const EdgeInsets.all(8.0),
             child: TextField(
               controller: email,
+              maxLength: 40,
               decoration: InputDecoration(
                 border: OutlineInputBorder(),
                 labelText: 'Email',

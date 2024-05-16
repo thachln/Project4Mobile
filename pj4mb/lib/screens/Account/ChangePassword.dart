@@ -36,6 +36,7 @@ class ChangePasswordPage extends StatelessWidget {
             padding: const EdgeInsets.all(8.0),
             child: TextField(
               controller: email,
+              maxLength: 40,
               decoration: InputDecoration(
                 border: OutlineInputBorder(),
                 labelText: 'Email',
@@ -46,6 +47,7 @@ class ChangePasswordPage extends StatelessWidget {
             padding: const EdgeInsets.all(8.0),
             child: TextField(
               controller: oldPassword,
+              maxLength: 40,
               decoration: InputDecoration(
                 border: OutlineInputBorder(),
                 labelText: 'Old Password',
@@ -56,6 +58,7 @@ class ChangePasswordPage extends StatelessWidget {
             padding: const EdgeInsets.all(8.0),
             child: TextField(
               controller: newPassword,
+              maxLength: 40,
               decoration: InputDecoration(
                 border: OutlineInputBorder(),
                 labelText: 'New Password',
@@ -66,6 +69,7 @@ class ChangePasswordPage extends StatelessWidget {
             padding: const EdgeInsets.all(8.0),
             child: TextField(
               controller: confirmNewPassword,
+              maxLength: 40,
               decoration: InputDecoration(
                 border: OutlineInputBorder(),
                 labelText: 'Confirm Password',

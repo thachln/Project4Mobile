@@ -188,6 +188,7 @@ class _UpdateDebtPageState extends State<UpdateDebtPage> {
                 Expanded(
                   child: TextField(
                     controller: name,
+                    maxLength: 25,
                     keyboardType: TextInputType.text,
                     decoration: InputDecoration(hintText: 'Name'),
                   ),
@@ -221,7 +222,7 @@ class _UpdateDebtPageState extends State<UpdateDebtPage> {
                     });
                   },
                   child: categoryName.trim().isEmpty
-                      ? Text('Chọn nhóm')
+                      ? Text('Choose category')
                       : Text(categoryName),
                 ))
               ],
@@ -238,6 +239,7 @@ class _UpdateDebtPageState extends State<UpdateDebtPage> {
                 Expanded(
                   child: TextField(
                     controller: creditor,
+                    maxLength: 25,
                     keyboardType: TextInputType.text,
                     decoration: InputDecoration(hintText: 'Creditor'),
                   ),
@@ -259,6 +261,7 @@ class _UpdateDebtPageState extends State<UpdateDebtPage> {
                      inputFormatters: [
                         FilteringTextInputFormatter.digitsOnly,
                         ThousandsSeparatorInputFormatter(),
+                        LengthLimitingTextInputFormatter(14)
                       ],
                     keyboardType: TextInputType.number,
                     decoration: InputDecoration(hintText: 'Amount'),

@@ -153,6 +153,7 @@ class _AddTranRecuPageState extends State<AddTranRecuPage> {
                       inputFormatters: [
                         FilteringTextInputFormatter.digitsOnly,
                         ThousandsSeparatorInputFormatter(),
+                        LengthLimitingTextInputFormatter(14)
                       ],
                       keyboardType: TextInputType.number,
                       decoration: InputDecoration(hintText: 'Money'),
@@ -268,7 +269,7 @@ class _AddTranRecuPageState extends State<AddTranRecuPage> {
                       });
                     },
                     child: categoryName.trim().isEmpty
-                        ? Text('Chọn nhóm')
+                        ? Text('Choose category')
                         : Text(categoryName),
                   ))
                 ],
@@ -944,7 +945,7 @@ class _AddTranRecuPageState extends State<AddTranRecuPage> {
     if (endType == EndType.UNTIL) {
       selectedToDate = DateTime.now().add(Duration(days: day));
     }
-    if (endType == EndType.TIMES) {
+     else {
       selectedToDate = null;
     }
   }
