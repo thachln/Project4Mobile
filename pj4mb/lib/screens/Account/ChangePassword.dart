@@ -80,6 +80,108 @@ class ChangePasswordPage extends StatelessWidget {
             padding: const EdgeInsets.all(8.0),
             child: ElevatedButton(
               onPressed: () async {
+                if (email.text.isEmpty) {
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: Text('Alert'),
+                        content: Text('Please enter your email!'),
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: Text('OK'),
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                  return;
+                }
+                if (oldPassword.text.isEmpty) {
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: Text('Alert'),
+                        content: Text('Please enter your old password!'),
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: Text('OK'),
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                  return;
+                }
+                if (newPassword.text.isEmpty) {
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: Text('Alert'),
+                        content: Text('Please enter your new password!'),
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: Text('OK'),
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                  return;
+                }
+                if (confirmNewPassword.text.isEmpty) {
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: Text('Alert'),
+                        content:
+                            Text('Please enter your confirm new password!'),
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: Text('OK'),
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                  return;
+                }
+                if (newPassword.text != confirmNewPassword.text) {
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: Text('Alert'),
+                        content: Text(
+                            'New password and confirm new password are not the same!'),
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: Text('OK'),
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                  return;
+                }
                 buildShowDialog(context);
                 UpdatePass change = new UpdatePass(
                     userId: 0,
@@ -94,23 +196,25 @@ class ChangePasswordPage extends StatelessWidget {
                     context: context,
                     builder: (BuildContext context) {
                       return AlertDialog(
-                        title: const Text('Please check your email and enter OTP code'),
+                        title: const Text(
+                            'Please check your email and enter OTP code'),
                         content: TextField(
                           controller: otp,
-                          decoration: const InputDecoration(
-                              hintText: "OTP"),
+                          decoration: const InputDecoration(hintText: "OTP"),
                         ),
                         actions: <Widget>[
                           TextButton(
                             onPressed: () async {
                               buildShowDialog(context);
-                              ChangePasswordWithOTP changeOTP = new ChangePasswordWithOTP(
-                                  passwordDTO: change,
-                                  verifyOTPDTO: new VerifyOTPDTO(
-                                      email: email.text, pin: otp.text));
-                              var resultOTP = await LoginService().ChangePassWithOTP(changeOTP);
+                              ChangePasswordWithOTP changeOTP =
+                                  new ChangePasswordWithOTP(
+                                      passwordDTO: change,
+                                      verifyOTPDTO: new VerifyOTPDTO(
+                                          email: email.text, pin: otp.text));
+                              var resultOTP = await LoginService()
+                                  .ChangePassWithOTP(changeOTP);
                               Navigator.of(context).pop();
-                              if(resultOTP.status == 200){
+                              if (resultOTP.status == 200) {
                                 showDialog(
                                   context: context,
                                   builder: (BuildContext context) {
@@ -129,14 +233,14 @@ class ChangePasswordPage extends StatelessWidget {
                                     );
                                   },
                                 );
-                              }
-                              else{
+                              } else {
                                 showDialog(
                                   context: context,
                                   builder: (BuildContext context) {
                                     return AlertDialog(
                                       title: Text('Arlet'),
-                                      content: Text('Update fail! ${resultOTP.message}'),
+                                      content: Text(
+                                          'Update fail! ${resultOTP.message}'),
                                       actions: [
                                         TextButton(
                                           onPressed: () {
@@ -148,7 +252,7 @@ class ChangePasswordPage extends StatelessWidget {
                                     );
                                   },
                                 );
-                              }                         
+                              }
                             },
                             child: Text('OK'),
                           ),
