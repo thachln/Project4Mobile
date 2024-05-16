@@ -837,7 +837,7 @@ class _AddTranRecuPageState extends State<AddTranRecuPage> {
                       );
                       return;
                     }
-                    if (endType == EndType.TIMES && timeNumber.text.isEmpty || int.parse(timeNumber.text.replaceAll(',', '')) <= 0) {
+                    if (endType == EndType.TIMES && (timeNumber.text.isEmpty || int.parse(timeNumber.text.replaceAll(',', '')) <= 0)) {
                       showDialog(
                         context: context,
                         builder: (BuildContext context) {

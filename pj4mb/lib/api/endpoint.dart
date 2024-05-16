@@ -1,7 +1,7 @@
 class EndPoint{
 
-  static const String baseUrl = 'http://192.168.1.2:8080/api'; // Sửa lại ip máy
-  //static const String baseUrl = 'http://172.16.39.60:8080/api'; // Sửa lại ip máy
+  //static const String baseUrl = 'http://192.168.1.2:8080/api'; // Sửa lại ip máy
+  static const String baseUrl = 'http://172.16.1.210:8080/api'; // Sửa lại ip máy
 
   //Account
   static const String SignIn = '$baseUrl/auth/signin';

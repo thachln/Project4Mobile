@@ -48,7 +48,7 @@ class _LoginNextPageState extends State<SignUpPage> {
             ),
             TextField(
                 controller: email,
-                maxLength: 40,
+                maxLength: 50,
                 decoration: InputDecoration(hintText: 'Email'),
                 keyboardType: TextInputType.emailAddress,
                 inputFormatters: [
@@ -57,7 +57,7 @@ class _LoginNextPageState extends State<SignUpPage> {
                 ]),
             TextField(
               controller: password,
-              maxLength: 40,
+              maxLength: 25,
               obscureText: _isObscure, 
               decoration: InputDecoration(
                 hintText: 'Password', 

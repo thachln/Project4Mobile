@@ -50,11 +50,11 @@ class _HomePageState extends State<HomePage> {
           BottomNavigationBarItem(
             backgroundColor: Colors.white,
             icon: new Icon(Icons.home),
-            label: 'Tổng quan',
+            label: 'Overview',
           ),
           BottomNavigationBarItem(
             icon: new Icon(Icons.list),
-            label: 'Giao dịch',
+            label: 'Transactions',
           ),
           BottomNavigationBarItem(
             icon: FloatingActionButton(
@@ -68,7 +68,7 @@ class _HomePageState extends State<HomePage> {
               },
               child: Icon(Icons.add, color: Colors.white),
               backgroundColor: Colors.green,
-              tooltip: 'Thêm giao dịch',
+              tooltip: 'Add transaction',
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(20.0),
               ),
@@ -77,11 +77,11 @@ class _HomePageState extends State<HomePage> {
           ),
           BottomNavigationBarItem(
             icon: new Icon(Icons.pie_chart),
-            label: 'Ngân sách',
+            label: 'Budget',
           ),
           BottomNavigationBarItem(
             icon: new Icon(Icons.account_balance_wallet),
-            label: 'Tài khoản',
+            label: 'Account',
           ),
         ],
         type: BottomNavigationBarType.fixed,

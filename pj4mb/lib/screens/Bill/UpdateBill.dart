@@ -910,14 +910,16 @@ class _UpdateBillPageState extends State<UpdateBillPage> {
                           },
                         );
                         return;
-                      }
-                      if(endType == EndType.TIMES && timeNumber.text.isEmpty){
+                      }                     
+                    }
+
+                    if(endType == EndType.TIMES && int.parse(timeNumber.text.replaceAll(',', '')) <= 0){
                         showDialog(
                           context: context,
                           builder: (BuildContext context) {
                             return AlertDialog(
                               title: Text('Alret'),
-                              content: Text('Times is required!'),
+                              content: Text('Times must be greater than 0!'),
                               actions: [
                                 TextButton(
                                   onPressed: () {
@@ -931,7 +933,7 @@ class _UpdateBillPageState extends State<UpdateBillPage> {
                         );
                         return;
                       }
-                    }
+                    
                     Recurrence recurrence = Recurrence(
                         frequency: "repeat ${frequencyType.name}",
                         every: int.parse(everyDailyNumber.text.replaceAll(',', '')),

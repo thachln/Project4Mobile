@@ -124,6 +124,8 @@ class _AddTransactionPageState extends State<AddTransactionPage> {
                                   walletName = value.walletName;
                                   walletTypeId = value.walletTypeID;
                                   walletCurrency = value.currency;
+                                  categoryID = 0;
+                                  categoryName = '';
                                 });
                               },
                               items: snapshot.data!.map((Wallet value) {
@@ -226,7 +228,7 @@ class _AddTransactionPageState extends State<AddTransactionPage> {
                         });
                       },
                       child: categoryName.trim().isEmpty
-                          ? Text('Chọn nhóm')
+                          ? Text('Choose category')
                           : Text(categoryName),
                     ))
                   ],

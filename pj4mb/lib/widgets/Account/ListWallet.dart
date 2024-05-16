@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:pj4mb/models/SavingGoal/SavingGoal.dart';
 import 'package:pj4mb/models/Wallet/Wallet.dart';
 import 'package:pj4mb/models/Wallet/WalletType.dart';
 import 'package:pj4mb/screens/Account/UpdateWallet.dart';
+import 'package:pj4mb/screens/ThousandsSeparatorInputFormatter.dart';
 import 'package:pj4mb/services/SavingGoal_service.dart';
 import 'package:pj4mb/services/Wallet_service.dart';
 import 'package:http/http.dart' as http;
@@ -113,7 +115,6 @@ class _ListWalletState extends State<ListWallet> {
                                           showDialog(
                                             context: context,
                                             builder: (BuildContext context) {
-
                                               return StatefulBuilder(builder:
                                                   (BuildContext context,
                                                       StateSetter
@@ -128,6 +129,13 @@ class _ListWalletState extends State<ListWallet> {
                                                         TextField(
                                                           controller:
                                                               amountController,
+                                                          inputFormatters: [
+                                                            FilteringTextInputFormatter
+                                                                .digitsOnly,
+                                                            ThousandsSeparatorInputFormatter(),
+                                                            LengthLimitingTextInputFormatter(
+                                                                14)
+                                                          ],
                                                           decoration:
                                                               InputDecoration(
                                                             hintText: 'Amount',
@@ -171,7 +179,6 @@ class _ListWalletState extends State<ListWallet> {
                                                               walletTypeIdDestination =
                                                                   value
                                                                       .walletTypeID;
-                                                              
                                                             });
                                                           },
                                                           items: listWalletVND
