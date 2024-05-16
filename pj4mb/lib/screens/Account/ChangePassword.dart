@@ -122,7 +122,6 @@ class ChangePasswordPage extends StatelessWidget {
                                           onPressed: () {
                                             Navigator.of(context).pop();
                                             Navigator.of(context).pop();
-                                            Navigator.of(context).pop();
                                           },
                                           child: Text('OK'),
                                         ),
@@ -155,7 +154,6 @@ class ChangePasswordPage extends StatelessWidget {
                           ),
                           TextButton(
                             onPressed: () {
-                              Navigator.pop(context, true);
                               Navigator.pop(context, true);
                             },
                             child: Text('Cancle'),
